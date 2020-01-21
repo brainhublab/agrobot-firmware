@@ -1,0 +1,108 @@
+{
+  
+  "isConfigured": true,
+  "16": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "5": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "4": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "0": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "2": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "12": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "13": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "15": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "3": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "1": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "9": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "10": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  },
+   "17": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":[1, 255],
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112"
+  }
+}
