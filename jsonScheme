@@ -1,5 +1,359 @@
+
+#define DIGITAL_PIN 1
+#define ANALOG_PIN 2
+#define I2C_PINS 3
+#define SPI_PINS 4
+
+//data type
+#define INPUT_DATA 1
+#define OUTPUT_DATA 2
+//#define INPUT_I2C 3 //TODO onlu IN OUT needed
+//#define OUTPUT_I2C 4
+//#define INPUT_SPI 5
+//#define OUTPUT_SPI 6
+
+//behavior
+#define TIME_SERIES_BEHAVIOR 1 //read periodical
+#define TRIGER_BEHAVIOR 2//input as a trieger
+#define PWM_BEHAVIOR 3
+
+
+  "16": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "behaviorParams":[255, 255, 255, 255],
+    "dataTypeParams":[255, 255, 255, 255]
+  },
+///NEW PINS CFG
 {
-  
+
+  "isConfigured": true,
+
+  "16": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "5": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "4": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "0": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "2": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+  "14": {
+   "isActive": "false",
+   "type": 1,
+    "behavior":1,
+   "dataType": 0,
+   "processing": 1,
+   "UID":"21212112",
+   "params":[255, 255, 255, 255]
+ },
+   "12": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "13": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "15": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "3": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "1": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":0,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[23, 255, 255, 255]
+  },
+   "17": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  }
+}
+
+//I2C CFG PINS
+
+  "i2C":{
+  "type": 1,
+   "behavior":1,
+  "dataType": 0,
+  "processing": 1,
+  "UID":"21212112",
+  "addressess":[ ],
+  "registes":[],
+  "bytesToRead":[],
+}
+"16": {
+  "isActive": "false",
+  "type": 1,
+   "behavior":1,
+  "dataType": 0,
+  "processing": 1,
+  "UID":"21212112",
+  "params":[255, 255, 255, 255]
+},
+ "0": {
+  "isActive": "false",
+  "type": 1,
+   "behavior":1,
+  "dataType": 0,
+  "processing": 1,
+  "UID":"21212112",
+  "params":[255, 255, 255, 255]
+},
+ "2": {
+  "isActive": "false",
+  "type": 1,
+   "behavior":1,
+  "dataType": 0,
+  "processing": 1,
+  "UID":"21212112",
+  "params":[255, 255, 255, 255]
+},
+"14": {
+ "isActive": "false",
+ "type": 1,
+  "behavior":1,
+ "dataType": 0,
+ "processing": 1,
+ "UID":"21212112",
+ "params":[255, 255, 255, 255]
+},
+ "12": {
+  "isActive": "false",
+  "type": 1,
+   "behavior":1,
+  "dataType": 0,
+  "processing": 1,
+  "UID":"21212112",
+  "params":[255, 255, 255, 255]
+},
+ "13": {
+  "isActive": "false",
+  "type": 1,
+   "behavior":1,
+  "dataType": 0,
+  "processing": 1,
+  "UID":"21212112",
+  "params":[255, 255, 255, 255]
+},
+ "15": {
+  "isActive": "false",
+  "type": 1,
+   "behavior":1,
+  "dataType": 0,
+  "processing": 1,
+  "UID":"21212112",
+  "params":[255, 255, 255, 255]
+},
+ "3": {
+  "isActive": "false",
+  "type": 1,
+   "behavior":1,
+  "dataType": 0,
+  "processing": 1,
+  "UID":"21212112",
+  "params":[255, 255, 255, 255]
+},
+ "1": {
+  "isActive": "false",
+  "type": 1,
+   "behavior":0,
+  "dataType": 0,
+  "processing": 1,
+  "UID":"21212112",
+  "params":[23, 255, 255, 255]
+},
+ "17": {
+  "isActive": "false",
+  "type": 1,
+   "behavior":1,
+  "dataType": 0,
+  "processing": 1,
+  "UID":"21212112",
+  "params":[255, 255, 255, 255]
+}
+}
+
+//SPI CFG PINS
+{
+
+  "isConfigured": true,
+  "spi":{
+  "isActive": "false",
+  "type": 1,
+   "behavior":1,
+  "dataType": 0,
+  "processing": 1,
+  "UID":"21212112",
+  "params":[255, 255]
+  },
+  "16": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "5": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "4": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "0": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "2": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "3": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  },
+   "1": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":0,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[23, 255, 255, 255]
+  },
+   "17": {
+    "isActive": "false",
+    "type": 1,
+     "behavior":1,
+    "dataType": 0,
+    "processing": 1,
+    "UID":"21212112",
+    "params":[255, 255, 255, 255]
+  }
+}
+
+//SRV CFG
+{
+"isConfigured":false,
+"mqttUser":"12212121212121212121212121212121",
+"mqttPass":"12212121212121212121212121212121",
+"mqttSrv":"1221212121212121212121212121212112212121212121212121212121212121",
+"mqttPort":"212121",
+"httpSrv":"1221212121212121212121212121212112212121212121212121212121212121",
+"httpPort":"212121",
+"httpToken":"12212121212121212121212121212121122121212121212121212121212121211221212121212121212121212121212112212121212121212121212121212121"
+}
+
+//HTTP CFG
+
+
+//MAIN CFG
+//PINS CFG
+
+{
+
   "isConfigured": true,
   "16": {
     "isActive": "false",
@@ -105,4 +459,76 @@
     "processing": 1,
     "UID":"21212112"
   }
+}
+
+
+
+
+
+struct pinConfig
+{
+  bool isActive;
+  byte id;
+  byte type;
+  byte dataType;
+  byte behavior;
+  byte processing;
+  char UID[PIN_UID_SIZE];
+  void (*processingCallback)(void*);
+  void (*processingCallback)(void*, void(*)(void*), void*);
+  void* behaviorParams;
+  void* dataTypeParams;
+  char dataBuffer[64];
+};
+////testing
+
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+
+using namespace std;
+
+struct ttype
+{
+    int a;
+    int b;
+};
+void cbk(void* ttp){
+    ((ttype*)ttp)->a = 5;
+    ((ttype*)ttp)->b = 10;
+}
+
+void* settype(void (*cb)(void*), void *ttp1)
+{
+    ttype ttpm1 = {6, 11};
+    cb(&ttpm1);
+    cout<<(ttpm1).a<<"inSettime"<<endl;
+    void* ret = &ttpm1;
+    return ret;
+}
+
+int main()
+{
+    cout<<"Hello World"<<endl;
+    ttype ttpm = {6, 11};
+    void* ttpmm;
+
+    ttpmm = settype(cbk, &ttpm);
+    cout<<"TTM  "<<((ttype*)ttpmm)->a<<" : "<<((ttype*)ttpmm)->b<<endl;
+
+    return 0;
 }

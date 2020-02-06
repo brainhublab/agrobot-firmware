@@ -6,6 +6,7 @@
    https://circuits4you.com
 */
 #include "config.h"
+//#include "helpers.h"
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
@@ -22,12 +23,14 @@
 
 #include <Wire.h>
 #include<SPI.h>
+#include <SPISlave.h>
+//ESPMaster esp(SS); //TODO need to be implemented master slave example
 
 
 
 
-const size_t flagsCfgCapacity = JSON_OBJECT_SIZE(2) + 50;
-DynamicJsonDocument flagsJsonCfg(flagsCfgCapacity);
+//const size_t flagsCfgCapacity = JSON_OBJECT_SIZE(2) + 50;
+//DynamicJsonDocument flagsJsonCfg(flagsCfgCapacity);
 
 /*const size_t  pinsCfgCapacity = 14*JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(14) + 910;
   DynamicJsonDocument pinJsonCfg(pinsCfgCapacity);*/
@@ -35,8 +38,13 @@ DynamicJsonDocument flagsJsonCfg(flagsCfgCapacity);
 /*const size_t wifiCfgCapacity = JSON_OBJECT_SIZE(4) + 190;
   DynamicJsonDocument wifiJsonCfg(wifiCfgCapacity);*/
 
+const size_t pinsCfgCapacity = 11 * JSON_ARRAY_SIZE(4) + 11 * JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(12) + 890;
+//DynamicJsonDocument pinsJsonCfg(pinsCfgCapacity);
+StaticJsonDocument<pinsCfgCapacity> pinsJsonCfg;
+
+
 char _errMsg[60];
-bool shouldSaveMqttCfg = false;
+bool shouldSaveSrvCfg = false;
 
 
 
@@ -46,59 +54,105 @@ long lastMsg = 0;
 char msg[50];
 int value = 0;
 
+void theCb(void* p)
+{
 
+  Serial.println("THE CALLBACK IS CALLED------------------_>");
+  delay(500);
+}
+pinConfig testPinCfg;
 
+byte pin  = LED_BUILTIN;
 void setup(void) {
-  Serial.begin(115200);
 
-
-  WiFiManager wifiManager;
-  // Wait for connection
   /* while (WiFi.status() != WL_CONNECTED)
     {
-     delay(500);
+    delay(500);
     // Serial.print(".");
     }*/
 
-  if (RESET_SETTINGS)
+
+  Serial.begin(115200);
+
+  if (!SPIFFS.begin())
   {
-    if (SPIFFS.format())
+    Serial.println("ERRPR: Failed to mount FS");
+  }
+  /*if (RESET_CONFIG)
     {
-      Serial.println("formated file system");
+    resetConfig();
+    if (FORMAT_FLASH)
+    {
+      if (SPIFFS.format())
+      {
+        Serial.println("formated file system");
+      }
     }
 
-  }
-  SPIFFS.begin();
-  if (!mqttCfgFileExists())
-  {
+    }
+    if (!srvCfgFileExists())
+    {
+    initSrvCfgFile();
+    }
+    else
+    {
+    readSrvCfgFile();
+    }
+    if (!srvCfgFileExists() || !isSrvConfigured)
+    {
     setupWifiManager();
+    }
+    else
+    {
+    // setupAutoConnection();
+    readSrvCfgFile();
+    }
+    if (shouldSaveSrvCfg)
+    {
+    saveSrvParams(&mqttParams, &httpParams, true);
 
-  }
-  if (shouldSaveMqttCfg)
-  {
-    setMqttParams(mqttUser, mqttPass);
-  }
-  if (!pinsCfgFileExists())
-  {
+    }
+    if (!pinsCfgFileExists())
+    {
     initPinsArr();
     initPinsCfgFile();
-  }
-  if (!flagsCfgFileExists())
-  {
-    initFlagsCfgFile();
-  }
+    }
+  */
   // initCfgFiles();
   //  setupCfgFiles();
-  readPinsConfig();
-  readMqttConfig();
+
+  // initCfgFiles();
+  // initIO();
+
 
   //mqttPass
 
-  Serial.println("FROM STRUCTARR");
-  Serial.println(_managedPins[0].UID);
-  Serial.println(WiFi.gatewayIP()[0]);
+  Serial.println("-----------------------------------------------------------------------------------------////////-----------");
+  savePinsCfgFile(_managedPins, true);
 
+  testPinCfg.processingCallback = timeSeriesCaller;
+  testPinCfg.behaviorCallback = timeSeriesCaller1;
+  testPinCfg.behaviorParams[0] = 1;
+  testPinCfg.behaviorParams[1] = 0;
+  testPinCfg.dataBufferTX[0] = (char)1;
+  testPinCfg.id = 16;
+  pinMode(16, OUTPUT);
 }
 
 void loop(void) {
+  long p = 5;
+  //tpin.processingCallback(&tparam);
+  //tpin.processingCallback(&tsp, theCb, &tparam);
+  //Serial.println(analogRead(17));
+  //  while(p< 10000)
+  //  {
+  //    Serial.print("-------------------------------------> JSON SIZE ");
+  //      Serial.println(p);
+  //    Serial.println(pinsCfgCapacity);
+  //    p++;
+  //    delay(50);
+  //  }
+//  testPinCfg.processingCallback(testPinCfg.behaviorParams, writeDigitalPin, &testPinCfg.id, testPinCfg.dataBufferTX);
+  testPinCfg.behaviorCallback(4, testPinCfg.behaviorParams, writeDigitalPin1, &testPinCfg.id, testPinCfg.dataBufferTX);
+
 }
