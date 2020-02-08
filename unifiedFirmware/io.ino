@@ -269,10 +269,10 @@ void processPin(pinConfig* pin)
       {
         case INPUT_DATA:
           // digitalRead(pin->id);//Store value to buffer and set BEHAVIOR;
-          pin->processingCallback(pin->behaviorParams, readDigitalPin, &pin->id, pin->dataBufferRX);
+          pin->behaviorCallback(4, pin->type, pin->behaviorParams, readDigitalPin, &pin->id, pin->dataBufferRX);
           break;
         case OUTPUT_DATA:
-          pin->processingCallback(pin->behaviorParams, writeDigitalPin, &pin->id, pin->dataBufferTX);
+          pin->behaviorCallback(4, pin->type, pin->behaviorParams, writeDigitalPin, &pin->id, pin->dataBufferTX);
           break;
       }
       break;
@@ -284,10 +284,10 @@ void processPin(pinConfig* pin)
       switch (pin->dataType)
       {
         case INPUT_DATA:
-          pin->processingCallback(pin->behaviorParams, readI2C, pin->dataTypeParams, pin->dataBufferRX);
+          pin->behaviorCallback(4, pin->type, pin->behaviorParams, readI2C, pin->dataTypeParams, pin->dataBufferRX);
           break;
         case OUTPUT_DATA:
-          pin->processingCallback(pin->behaviorParams, writeI2C, pin->dataTypeParams, pin->dataBufferTX);
+          pin->behaviorCallback(4, pin->type, pin->behaviorParams, writeI2C, pin->dataTypeParams, pin->dataBufferTX);
           break;
       }
       //process i2c io
@@ -296,10 +296,10 @@ void processPin(pinConfig* pin)
       switch (pin->behavior)
       {
         case INPUT_DATA:
-          pin->processingCallback(pin->behaviorParams, readSPI, pin->dataTypeParams, pin->dataBufferRX);
+          pin->behaviorCallback(4, pin->type, pin->behaviorParams, readSPI, pin->dataTypeParams, pin->dataBufferRX);
           break;
         case OUTPUT_DATA:
-          pin->processingCallback(pin->behaviorParams, writeSPI, pin->dataTypeParams, pin->dataBufferTX);
+          pin->behaviorCallback(4, pin->type, pin->behaviorParams, writeSPI, pin->dataTypeParams, pin->dataBufferTX);
           break;
       }
       //proces spi io
@@ -312,33 +312,33 @@ void processPin(pinConfig* pin)
 
 
 
-void readDigitalPin(void* pinId, void* data)
+void readDigitalPin(int argCount, ...) //TODO
 {
-  static_cast<char*>(data)[0] = digitalRead(*(static_cast<byte*>(pinId)));
-}
-
-void writeDigitalPin(void* pinId, void* data)
-{
-  // digitalWrite(((digitalIOParams*)outParams)->pinId, *((digitalIOParams*)outParams)->data);
-
-
-  if ((int)(static_cast<char*>(data)[0]) == 1)
+  va_list argList;
+  va_start(argList, argCount);
+  byte* pinId = va_arg(argList, byte*);
+  char* inData = va_arg(argList, char*);
+  if(digitalRead(*pinId) == HIGH)
   {
-    static_cast<char*>(data)[0] = (char)0;
+    inData[0] = (char)1;
+    Serial.print("------------------------------------------>HIGH");
   }
   else
   {
-    static_cast<char*>(data)[0] = (char)1;
+    Serial.print("------------------------------------------>LOW");
+    inData[0] = (char)0;
   }
-  Serial.println((int)(static_cast<char*>(data)[0]));
-  digitalWrite(*(static_cast<byte*>(pinId)), (int)(static_cast<char*>(data)[0]));
-  Serial.println("the digital write is called ------------------------------------_>");
+  Serial.print("------------------------------------------>");
+  Serial.println(inData[0]);
+
+  va_end(argList);
 
 }
 
-void writeDigitalPin1(int argCount, ...)
+
+
+void writeDigitalPin(int argCount, ...)
 {
-  // digitalWrite(((digitalIOParams*)outParams)->pinId, *((digitalIOParams*)outParams)->data);
   va_list argList;
   va_start(argList, argCount);
   byte* pinId = va_arg(argList, byte*);
@@ -352,12 +352,11 @@ void writeDigitalPin1(int argCount, ...)
   {
     data[0] = (char)1;
   }
-  Serial.println((int)data[0]);
   digitalWrite(*pinId, (int)data[0]);
-  Serial.println("the digital write is called ------------------------------------_>");
+  va_end(argList);
 
 }
-void readI2C(void* params, void* data)
+void readI2C(int argCount, ...)
 {
 
 }
@@ -394,8 +393,9 @@ void readI2C1(char* inData, uint8_t addr, int reqRegister, uint8_t bytesToRead) 
 }
 
 
-void writeI2C(void* params, void* data) //TODO need to be called in setup function
+void writeI2C(int argCount, ...) //TODO need to be called in setup function
 {
+  //void* params, void* data
   //TODO out data need to be char*
   Wire.onReceive(_receiveEvent);
   Wire.onRequest(_requestEvent);
@@ -423,8 +423,9 @@ void setupMasterSPI()
   SPI.setClockDivider(SPI_CLOCK_DIV8); //need to be parametrical now is 8 (16/8=2Mhz)
   digitalWrite(SS, HIGH);
 }
-void readSPI(void* params, void* data) //TODO need to call master setup function
+void readSPI(int argCount, ...) //TODO need to call master setup function
 {
+  //void* params, void* data
   //char* inData
   byte masterSend, masterReceive; //TODO need to be parametrical
   digitalWrite(SS, LOW);
@@ -486,138 +487,112 @@ void setupSlaveSPI()
   received = true;//Sets received as True
   }*/
 
-void writeSPI(void* params, void* data) //TODO need to call slave setup function
+void writeSPI(int argCount, ...) //TODO need to call slave setup function
 {
+  //void* params, void* data
   //char* outData
 
 }
 
-
-/*void timeSeriesCaller(unsigned long* timerInterval, unsigned long* previousMillis, void (*callback)(void*), void* params)
-  {
-  //tmpTimer = millis();
-  if (millis() - *previousMillis >= *timerInterval)
-  {
-
-    callback(params);
-  }
-  }*/
-void timeSeriesCaller(long* params, void (*callback)(void*, void*), void* dtParams, void* data)
+void timeSeriesCaller(int argCount, byte type, ...)
 {
   //  if ( == NULL)
   //  {
   //    Serial.println("ERROR: Cannot call timeseriesCaller with empty params");
   //    return;
   //  }
-
-  //tmpTimer = millis();
-  if (millis() - (params[1]) >= (params[0]  * 1000)) //TODO convert it in setup to milliseconds
-  {
-    Serial.println("--------------------------------------------> TIMER TRIGERED");
-    params[1] = millis();
-    callback(dtParams, data);
-  }
-}
-
-void timeSeriesCaller1(int argCount, ...)
-{
-  //  if ( == NULL)
-  //  {
-  //    Serial.println("ERROR: Cannot call timeseriesCaller with empty params");
-  //    return;
-  //  }
-
-  //tmpTimer = millis();
   va_list argList;
   va_start(argList, argCount);
-  long * params = va_arg(argList, long*);
-
+  long* params = va_arg(argList, long*);
   void (*callback)(int, ...) = va_arg(argList, void (*)(int, ...));
-
 
   if (millis() - (params[1]) >= (params[0]  * 1000)) //TODO convert it in setup to milliseconds
   {
-    Serial.println("--------------------------------------------> TIMER TRIGERED");
     params[1] = millis();
-    callback(2, va_arg(argList, byte*), va_arg(argList, char*));
+    //callback(2, va_arg(argList, byte*), va_arg(argList, char*));
+    if (type == DIGITAL_PIN || type == ANALOG_PIN)
+    {
+      callback(2, va_arg(argList, byte*), va_arg(argList, char*)); // callback(2, pinID, ioBuff)
+    }
+    else if (type == I2C_PINS)
+    {
+      callback(2, va_arg(argList, byte*)); //TODO place rigtht parameters for i3c iter
+    }
+    else if (type == SPI_PINS)
+    {
+      Serial.println("SPITRIGERED");
+    }
+
   }
+  va_end(argList);
 }
 
 
-
-
-/*
-  void timeSeriesCaller(unsigned long* timerInterval, unsigned long* previousMillis, void (*callback)())
-  {
-  //tmpTimer = millis();
-  if (millis() - *previousMillis >= *timerInterval)
-  {
-    callback();
-  }
-  }
-*/
-
-void trigerCaller(long* params, void (*callback)(void*, void*), void* dtParams, void* data)
+void trigerCaller(int argCount, byte type, ...)
 {
+  va_list argList;
+  va_start(argList, argCount);
+
+  //  long* val = va_arg(argList, long*);
+  //  long* triger = va_arg(argList, long*);
+  long* params = va_arg(argList, long*);
+  void (*callback)(int, ...) = va_arg(argList, void(*)(int, ...));
+  if (params[1] == params[0])
+  {
+    if (type == DIGITAL_PIN || type == ANALOG_PIN)
+    {
+      callback(2, va_arg(argList, byte*), va_arg(argList, char*)); // callback(2, pinID, ioBuff)
+    }
+    else if (type == I2C_PINS)
+    {
+      callback(2, va_arg(argList, byte*)); //TODO place rigtht parameters for i3c iter
+    }
+    else if (type == SPI_PINS)
+    {
+      Serial.println("SPITRIGERED");
+    }
+
+  }
+
+  if (params[1] == params[0])
+  {
+    Serial.println("TRIGERED");
+  }
+  else
+  {
+    Serial.println("NOT TRIGERED");
+  }
+
+  //long* params, void (*callback)(void*, void*), void* dtParams, void* data
+
   //  if (tParams == NULL)
   //  {
   //    Serial.println("ERROR: Triger params are NULL");
   //    return;
   //  }
-  //  if (((trigerParams*)tParams)->triger == ((trigerParams*)tParams)->value)
-  //  {
-  //    callback(cbParams);
-  //  }
+  //    if (((trigerParams*)tParams)->triger == ((trigerParams*)tParams)->value)
+  //    {
+  //      callback(2, );
+  //    }
+  va_end(argList);
 }
 
 
 
-/*void pwmCaller(int dutyCycle, void (*callback)(void*), void* params)
-  {
 
-  }
-*/
-void pwmCaller(long* params, void (*callback)(void*, void*), void* dtParams, void* data)
+void pwmCaller(int argCount, byte type, ...)
 {
+  va_list argList;
+  va_start(argList, argCount);
+  long* params = va_arg(argList, long*);
+  byte* pinId = va_arg(argList, byte*);
+  analogWrite(*pinId, params[0] );
+  //void (*callback)(int, ...) = va_arg(argList, void (*)(int, ...);
+  //long* params, void (*callback)(void*, void*), void* dtParams, void* data
+
   //  if (pParams == NULL)
   //  {
   //    Serial.println("ERROR: pwm params are NULL");
   //    return;
   //  }
 }
-
-//void setupProcessingCallback(byte pinId, JsonObject* jsonPinCfgIn)
-//{
-//  if (_managedPins[pinId].behavior == TIME_SERIES_PIN)
-//  {
-//    _managedPins[pinId].processingCallback = timeSeriesCaller;
-//    timeSeriesParams tparams = {(*jsonPinCfgIn)["behavior"][0], (*jsonPinCfgIn)["behavior"][1]};
-//    _managedPins[pinId].behaviorParams = &tparams;
-//  }
-//  else if (_managedPins[pinId].behavior == TRIGER_PIN)
-//  {
-//    _managedPins[pinId].processingCallback = trigerCaller;
-//  }
-//  else if (_managedPins[pinId].behavior == PWM_PIN)
-//  {
-//    _managedPins[pinId].processingCallback = pwmCaller;
-//  }
-//  else
-//  {
-//    Serial.print("ERROR: There is no behaviorCallback with id: ");
-//    Serial.println(_managedPins[pinId].behavior);
-//    return;
-//  }
-//}
-
-
-//void setupPinCallerCallback(byte pinId, JsonObject* jsonPinCfgIn)
-//{
-//  if (_managedPins[pinId].type == DIGITAL_PIN)
-//  {
-//    if (_managedPins[pinId].dataType == INPUT_DATA)
-//    {
-//
-//    }
-//  }
-//}

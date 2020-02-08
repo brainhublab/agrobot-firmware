@@ -65,10 +65,8 @@ typedef struct
   byte behavior;
   byte processing;
   char UID[PIN_UID_SIZE];
-  // void (*processingCallback)(void*);
-  void (*processingCallback)(long*, void(*)(void*, void*), void*, void*);
-  void (*behaviorCallback)(int, ...);
-  //void (*processingCallback)(long*, void(*)(char*, int), char*, int);
+  //void (*processingCallback)(long*, void(*)(void*, void*), void*, void*);
+  void (*behaviorCallback)(int, byte dataType, ...);
   long behaviorParams[4];
   long dataTypeParams[4];
   char dataBufferTX[64];

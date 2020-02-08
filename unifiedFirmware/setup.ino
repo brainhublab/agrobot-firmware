@@ -194,7 +194,7 @@ void setSPIParams(pinConfig* pinCfg, JsonArray paramsArr)//TODO need to finalize
 void setTimeSeriesBehavior(pinConfig* pinCfg, JsonArray paramsArr) //TODO processing callback need to be behacior callback
 {
   //timeSeriesParams tparams = {(unsigned long)paramsArr[0], 0};
-  pinCfg->processingCallback = timeSeriesCaller;
+  pinCfg->behaviorCallback = timeSeriesCaller;
   pinCfg->behaviorParams[0] = (unsigned long)paramsArr[0] ; //TODO check maybe unsecure ponter
 }
 
@@ -203,14 +203,14 @@ void setTimeSeriesBehavior(pinConfig* pinCfg, JsonArray paramsArr) //TODO proces
 void setTrigerBehavior(pinConfig* pinCfg, JsonArray paramsArr)
 {
   trigerParams tparams = {(int)paramsArr[0], 0};
-  pinCfg->processingCallback = trigerCaller;
+  pinCfg->behaviorCallback = trigerCaller;
   pinCfg->behaviorParams[0] = (int)paramsArr[0];
 }
 
 void setPwmBehavior(pinConfig* pinCfg, JsonArray paramsArr)
 {
  // pwmParams tparams = {(int)paramsArr[0]};
-  pinCfg->processingCallback = pwmCaller;
+  pinCfg->behaviorCallback = pwmCaller;
   pinCfg->behaviorParams[0] = (int)paramsArr[0];
 }
 

@@ -61,8 +61,8 @@ void theCb(void* p)
   delay(500);
 }
 pinConfig testPinCfg;
-
-byte pin  = LED_BUILTIN;
+//byte 
+byte pin  = 12;
 void setup(void) {
 
   /* while (WiFi.status() != WL_CONNECTED)
@@ -130,29 +130,33 @@ void setup(void) {
   Serial.println("-----------------------------------------------------------------------------------------////////-----------");
   savePinsCfgFile(_managedPins, true);
 
-  testPinCfg.processingCallback = timeSeriesCaller;
-  testPinCfg.behaviorCallback = timeSeriesCaller1;
-  testPinCfg.behaviorParams[0] = 1;
+  //testPinCfg.behaviorCallback = timeSeriesCaller;
+  testPinCfg.behaviorCallback = pwmCaller;
+  testPinCfg.behaviorParams[0] = 512;
   testPinCfg.behaviorParams[1] = 0;
   testPinCfg.dataBufferTX[0] = (char)1;
-  testPinCfg.id = 16;
-  pinMode(16, OUTPUT);
+  testPinCfg.dataBufferRX[0] = (char)1;
+  testPinCfg.id = 12;
+  testPinCfg.type = DIGITAL_PIN;
+  pinMode(4, INPUT);
+  pinMode(pin, INPUT);
+  analogWrite(12, 512);
 }
 
 void loop(void) {
-  long p = 5;
-  //tpin.processingCallback(&tparam);
-  //tpin.processingCallback(&tsp, theCb, &tparam);
-  //Serial.println(analogRead(17));
-  //  while(p< 10000)
-  //  {
-  //    Serial.print("-------------------------------------> JSON SIZE ");
-  //      Serial.println(p);
-  //    Serial.println(pinsCfgCapacity);
-  //    p++;
-  //    delay(50);
-  //  }
-//  testPinCfg.processingCallback(testPinCfg.behaviorParams, writeDigitalPin, &testPinCfg.id, testPinCfg.dataBufferTX);
-  testPinCfg.behaviorCallback(4, testPinCfg.behaviorParams, writeDigitalPin1, &testPinCfg.id, testPinCfg.dataBufferTX);
+  long p = 1;
 
+  if(testPinCfg.behaviorParams[0] >= 1023)
+  {
+    testPinCfg.behaviorParams[0]=  0 ;
+  }
+  testPinCfg.behaviorParams[0]+= p;
+  //testPinCfg.behaviorCallback(4, testPinCfg.type, testPinCfg.behaviorParams, writeDigitalPin, &testPinCfg.id, testPinCfg.dataBufferTX); //time series
+  //testPinCfg.behaviorParams[1] = char(1);//digitalRead(4);
+  //testPinCfg.behaviorCallback(5, testPinCfg.type, testPinCfg.behaviorParams, readDigitalPin, &pin, testPinCfg.dataBufferRX); //triger
+  testPinCfg.behaviorCallback(2, testPinCfg.type, testPinCfg.behaviorParams, &pin); //pwm 
+ // Serial.print("------------------------------------DUTY_CYCLE--_>");
+  //Serial.println(testPinCfg.behaviorParams[0]);
+  //analogWrite(12, 512);
+  delay(5);
 }
