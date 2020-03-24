@@ -1,3 +1,5 @@
+
+
 char* getPinUID(byte index)
 {
 
@@ -11,6 +13,7 @@ void writeParam(byte addr, byte param)
 
 void resetConfig()
 {
+  Serial.println("Reseting all configs");
 
 }
 void loadCfgFiles()
@@ -73,7 +76,8 @@ void saveSrvParams(mqtt_params_t* mqttParamsCfg, http_params_t* httpParamsCfg, b
   {
     Serial.println("Initializing wifi file");
     // const size_t mqttCfgCapacity = JSON_OBJECT_SIZE(3) + 110;
-    const size_t srvCfgCapacity = JSON_OBJECT_SIZE(8) + 460; //TODO chesk and fix if needed
+
+    const size_t srvCfgCapacity = JSON_OBJECT_SIZE(8);
     DynamicJsonDocument srvJsonCfgOut(srvCfgCapacity);
 
     srvJsonCfgOut["isConfigured"] = isConfigured;
@@ -95,6 +99,65 @@ void saveSrvParams(mqtt_params_t* mqttParamsCfg, http_params_t* httpParamsCfg, b
   }
   srvCfgFile.close();
 
+}
+
+void readSrvCfgFile()
+{
+  Serial.println("-----------------------------> READING SRV FILE");
+
+  if (SPIFFS.exists("/srv_cfg.json"))
+  {
+    File srvCfgFile = SPIFFS.open("/srv_cfg.json", "r");
+    if (srvCfgFile)
+    {
+      Serial.println("Reading mqtt config ...");
+      const size_t srvCfgCapacity = JSON_OBJECT_SIZE(8) + 460;
+      DynamicJsonDocument srvJsonCfgIn(srvCfgCapacity);
+
+      DeserializationError err = deserializeJson(srvJsonCfgIn, srvCfgFile);
+      if (err)
+      {
+        Serial.println(F("ERROR: failed to read file, using default configuration"));
+      }
+
+
+
+      isSrvConfigured = srvJsonCfgIn["isConfigured"];
+
+      strlcpy(mqttParams.mqttUser,
+              srvJsonCfgIn["mqttUser"] | "exampleMqttUser",
+              sizeof(mqttParams.mqttUser));
+      strlcpy(mqttParams.mqttPass,
+              srvJsonCfgIn["mqttPass"] | "exampleMqttPass",
+              sizeof(mqttParams.mqttPass));
+      strlcpy(mqttParams.mqttSrv,
+              srvJsonCfgIn["mqttSrv"] | "example.com",
+              sizeof(mqttParams.mqttSrv));
+      strlcpy(mqttParams.mqttPort,
+              srvJsonCfgIn["mqttPort"] | "1883",
+              sizeof( mqttParams.mqttPort));
+
+
+      strlcpy(httpParams.httpSrv,
+              srvJsonCfgIn["httpSrv"] | "example.com",
+              sizeof(httpParams.httpSrv));
+      strlcpy(httpParams.httpPort,
+              srvJsonCfgIn["httpPort"] | "80",
+              sizeof(httpParams.httpPort));
+      strlcpy(httpParams.httpToken,
+              srvJsonCfgIn["httpToken"] | "exampleToken",
+              sizeof(httpParams.httpToken));
+
+      serializeJson(srvJsonCfgIn, Serial);
+
+
+    }
+    srvCfgFile.close();
+  }
+  else
+  {
+    Serial.println("ERROR mqttCfg file does not exists");
+  }
 }
 
 void initPinsCfgFile()
@@ -119,30 +182,46 @@ void savePinsCfgFile(pinConfig* pinsArr, bool isConfigured)
   if (pinsCfgFile)
   {
     Serial.println("Initializing...");
-    const size_t  pinsCfgCapacity = 14 * JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(15) + 930;
+
+    const size_t pinsCfgCapacity =  26 * JSON_ARRAY_SIZE(4) + 2 * JSON_OBJECT_SIZE(6) + 12 * JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(17);
     DynamicJsonDocument pinJsonCfgOut(pinsCfgCapacity);
-    pinsJsonCfg["isConfigured"] = isConfigured;
+
+    pinJsonCfgOut["isConfigured"] = isConfigured;
     for (byte i = 0; i < N_PINS; i++)
     {
       String key = String(pinsArr[i].id);
       JsonObject pin = pinJsonCfgOut.createNestedObject(key);
       pin["isActive"] = pinsArr[i].isActive;
+      //pin["id"] = pinsArr[i].id
       pin["type"] = pinsArr[i].type;
       pin["behavior"] = pinsArr[i].behavior;
       pin["dataType"] = pinsArr[i].dataType;
       pin["processing"] = pinsArr[i].processing;
-      pin["UID"] = pinsArr[i].UID;
+
+      JsonArray behaviorParams = pin.createNestedArray("behaviorParams");
+      for (int j = 0; j < SIZEOF_ARRAY(pinsArr[i].behaviorParams); j++)
+      {
+        behaviorParams[j] = pinsArr[i].behaviorParams[j];
+      }
+
+      JsonArray dataTypeParams = pin.createNestedArray("dataTypeParams");
+      for (int j = 0; j < SIZEOF_ARRAY(pinsArr[i].dataTypeParams); j++)
+      {
+        dataTypeParams[j] = pinsArr[i].dataTypeParams[j];
+      }
+
     }
-    Serial.println("-------------------------------------> JSON SIZE");
+    Serial.println("-------------------------------------> JSON SIZE SAVE PINS _1");
     Serial.println(pinJsonCfgOut.memoryUsage());
+    serializeJson(pinJsonCfgOut, Serial);
     if (serializeJson(pinJsonCfgOut, pinsCfgFile) == 0)
     {
       Serial.println("ERROR: failed to write init cfg");
     }
 
 
-    Serial.println("-------------------------------------> JSON SIZE");
-    Serial.println(pinsJsonCfg.memoryUsage());
+    Serial.println("-------------------------------------> JSON SIZE SAVE PINS _1");
+    Serial.println(pinJsonCfgOut.memoryUsage());
     pinsCfgFile.close();
 
   }
@@ -153,59 +232,6 @@ void savePinsCfgFile(pinConfig* pinsArr, bool isConfigured)
 
 }
 
-void readSrvCfgFile()
-{
-  Serial.println("-----------------------------> READING SRV FILE");
-  if (SPIFFS.exists("/srv_cfg.json"))
-  {
-    File srvCfgFile = SPIFFS.open("/srv_cfg.json", "r");
-    if (srvCfgFile)
-    {
-      Serial.println("Reading mqtt config ...");
-      const size_t srvCfgCapacity = JSON_OBJECT_SIZE(8) + 460;
-      DynamicJsonDocument srvJsonCfgIn(srvCfgCapacity);
-
-      DeserializationError err = deserializeJson(srvJsonCfgIn, srvCfgFile);
-      if (err)
-      {
-        Serial.println(F("ERROR: failed to read file, using default configuration"));
-      }
-      serializeJson(srvJsonCfgIn, Serial);
-
-      isSrvConfigured = srvJsonCfgIn["isConfigured"];
-      strlcpy(mqttParams.mqttUser,
-              srvJsonCfgIn["mqttUser"],
-              sizeof(mqttParams.mqttUser));
-      strlcpy(mqttParams.mqttPass,
-              srvJsonCfgIn["mqttPass"],
-              sizeof(srvJsonCfgIn["mqttPass"]));
-      strlcpy(mqttParams.mqttSrv,
-              srvJsonCfgIn["mqttSrv"],
-              sizeof(srvJsonCfgIn["mqttSrv"]));
-      strlcpy(mqttParams.mqttPort,
-              srvJsonCfgIn["mqttPort"],
-              sizeof( srvJsonCfgIn["mqttPort"]));
-
-
-      strlcpy(httpParams.httpSrv,
-              srvJsonCfgIn["httpSrv"],
-              sizeof(srvJsonCfgIn["httpSrv"]));
-      strlcpy(httpParams.httpPort,
-              srvJsonCfgIn["httpPort"],
-              sizeof(srvJsonCfgIn["httpPort"]));
-      strlcpy(httpParams.httpToken,
-              srvJsonCfgIn["httpToken"],
-              sizeof(srvJsonCfgIn["httpToken"]));
-
-    }
-    srvCfgFile.close();
-  }
-  else
-  {
-    Serial.println("ERROR mqttCfg file does not exists");
-  }
-}
-
 void readPinsConfig()
 {
   if (SPIFFS.exists("/pins_cfg.json"))
@@ -214,31 +240,47 @@ void readPinsConfig()
     File pinsCfgFile = SPIFFS.open("/pins_cfg.json", "r");
     if (pinsCfgFile)
     {
-      Serial.println("Reading pins config...");
-      //const size_t  pinsCfgCapacity = 14 * JSON_OBJECT_SIZE(6) + JSON_OBJECT_SIZE(15) + 930;
-      //DynamicJsonDocument pinJsonCfgIn(pinsCfgCapacity);
+      Serial.println("-------------------- READING PINS CFG");
 
-      DeserializationError err = deserializeJson(pinsJsonCfg, pinsCfgFile);
+      
+      Serial.println("Reading pins config...");
+      const size_t  pinsCfgCapacity = 26 * JSON_ARRAY_SIZE(4) + 2 * JSON_OBJECT_SIZE(6) + 12 * JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(17) + 1270;
+      DynamicJsonDocument pinJsonCfgIn(pinsCfgCapacity);
+
+      DeserializationError err = deserializeJson(pinJsonCfgIn, pinsCfgFile);
       if (err)
       {
         Serial.println(F("ERROR: failed to read file, using default configuration"));
       }
       // serializeJson(pinJsonCfgIn, Serial);
-      pinsConfigured = pinsJsonCfg["isConfigured"];
+      pinsConfigured = pinJsonCfgIn["isConfigured"];
+      
+      serializeJson(pinJsonCfgIn, Serial);
 
       for (byte i = 0; i < N_PINS; i++)
       {
         String key = String(_managedPins[i].id);
-        JsonObject pin = pinsJsonCfg[key];
-        //        _managedPins[i].isActive = pin["isActive"];
-        //        _managedPins[i].type = pin["type"];
-        //        _managedPins[i].behavior = pin["behavior"];
-        //        _managedPins[i].dataType = pin["dataType"];
-        //        _managedPins[i].processing = pin["processing"];
-        /*    strlcpy(_managedPins[i].UID, //Destination
-                    pin["UID"], //source
-                    sizeof(_managedPins[i].UID)); //destination capacity;*/
+        JsonObject pin = pinJsonCfgIn[key];
+        Serial.println("---------------------------------------- THE KEY------>");
+        Serial.print(key);
+        _managedPins[i].isActive = pin["isActive"];
+        //_managedPins[i].id = pin["id"];
+        _managedPins[i].type = pin["type"];
+        _managedPins[i].dataType = pin["dataType"];
+        _managedPins[i].behavior = pin["behavior"];
+        _managedPins[i].processing = pin["processing"];
 
+        JsonArray behaviorParams = pin["behaviorParams"];
+        for (int j = 0; j < SIZEOF_ARRAY(_managedPins[i].behaviorParams); j++)
+        {
+          _managedPins[i].behaviorParams[j] = behaviorParams[j] ;
+        }
+
+        JsonArray dataTypeParams = pin["dataTypeParams"];
+        for (int j = 0; j < SIZEOF_ARRAY(_managedPins[i].dataTypeParams); j++)
+        {
+          _managedPins[i].dataTypeParams[j] = dataTypeParams[j];
+        }
       }
       pinsCfgFile.close();
     }
@@ -251,6 +293,10 @@ void readPinsConfig()
     Serial.println("/pins_cfg.json");
   }
 }
+
+
+
+
 
 void dataCallback(char* topic, byte* payload, unsigned int length)
 {
@@ -280,30 +326,6 @@ void processPin(pinConfig* pin)
       //process analog red
       analogRead(pin->id); //TODO set the data bufer to read
       break;
-    case I2C_PINS:
-      switch (pin->dataType)
-      {
-        case INPUT_DATA:
-          pin->behaviorCallback(4, pin->type, pin->behaviorParams, readI2C, pin->dataTypeParams, pin->dataBufferRX);
-          break;
-        case OUTPUT_DATA:
-          pin->behaviorCallback(4, pin->type, pin->behaviorParams, writeI2C, pin->dataTypeParams, pin->dataBufferTX);
-          break;
-      }
-      //process i2c io
-      break;
-    case SPI_PINS:
-      switch (pin->behavior)
-      {
-        case INPUT_DATA:
-          pin->behaviorCallback(4, pin->type, pin->behaviorParams, readSPI, pin->dataTypeParams, pin->dataBufferRX);
-          break;
-        case OUTPUT_DATA:
-          pin->behaviorCallback(4, pin->type, pin->behaviorParams, writeSPI, pin->dataTypeParams, pin->dataBufferTX);
-          break;
-      }
-      //proces spi io
-      break;
 
   }
 
@@ -318,7 +340,7 @@ void readDigitalPin(int argCount, ...) //TODO
   va_start(argList, argCount);
   byte* pinId = va_arg(argList, byte*);
   char* inData = va_arg(argList, char*);
-  if(digitalRead(*pinId) == HIGH)
+  if (digitalRead(*pinId) == HIGH)
   {
     inData[0] = (char)1;
     Serial.print("------------------------------------------>HIGH");
@@ -356,143 +378,6 @@ void writeDigitalPin(int argCount, ...)
   va_end(argList);
 
 }
-void readI2C(int argCount, ...)
-{
-
-}
-void readI2C1(char* inData, uint8_t addr, int reqRegister, uint8_t bytesToRead) //register must be byte type?
-{
-  Wire.beginTransmission(addr);
-
-  Wire.write(reqRegister);
-
-  Wire.endTransmission();
-  Wire.requestFrom(addr, bytesToRead);
-
-  uint16_t millisStart = millis();
-  while (Wire.available() < bytesToRead) {
-    if (ioTimeout > 0 && ((uint16_t)millis() - millisStart) > ioTimeout)
-    {
-      return ;
-    }
-    if (SIZEOF_ARRAY(inData) == bytesToRead) //TODO TEST NEEDED
-    {
-      for (byte i = 0; i < (byte)bytesToRead; i++)
-      {
-        inData[i] = Wire.read();
-      }
-    }
-    else
-    {
-      return;
-    }
-
-  }
-
-
-}
-
-
-void writeI2C(int argCount, ...) //TODO need to be called in setup function
-{
-  //void* params, void* data
-  //TODO out data need to be char*
-  Wire.onReceive(_receiveEvent);
-  Wire.onRequest(_requestEvent);
-
-}
-
-void _receiveEvent(int numBytes)
-{
-  slaveReceived = Wire.read(); //TODO: need to parse the recieved bytes
-}
-
-void _requestEvent()
-{
-  Wire.write(onI2CWrite());
-}
-
-byte onI2CWrite()
-{
-  return 1; //TODO need to implement
-}
-//SPI master IO need to be implemented
-void setupMasterSPI()
-{
-  SPI.begin();
-  SPI.setClockDivider(SPI_CLOCK_DIV8); //need to be parametrical now is 8 (16/8=2Mhz)
-  digitalWrite(SS, HIGH);
-}
-void readSPI(int argCount, ...) //TODO need to call master setup function
-{
-  //void* params, void* data
-  //char* inData
-  byte masterSend, masterReceive; //TODO need to be parametrical
-  digitalWrite(SS, LOW);
-
-  masterSend = 1; //value to send from master device
-  masterReceive = SPI.transfer(masterSend);
-
-
-}
-//SPI slave IO
-
-void _spiOnData(uint8_t* data, size_t len)
-{
-  //String msg = String((char*) data);
-  strncpy(spiRxBuffer, (char*)data, sizeof(data));
-  // (void) len;
-  Serial.println(spiRxBuffer);
-
-}
-
-void _spiOnDataSent()
-{
-  Serial.println("SPI Data is sent by slave");
-}
-
-void _spiOnStatus(uint32_t statusData)
-{
-  Serial.printf("Status: %u\n", statusData);
-  SPISlave.setStatus(millis()); //set next status
-}
-
-void _spiOnStatusSent()
-{
-  Serial.println("Status Sent");
-
-}
-void setupSlaveSPI()
-{
-  memset(spiTxBuffer, 0, sizeof(spiTxBuffer));
-  memset(spiRxBuffer, 0, sizeof(spiRxBuffer));
-
-  SPISlave.onData(_spiOnData);
-
-  SPISlave.onDataSent(_spiOnDataSent);
-  SPISlave.onStatus(_spiOnStatus);
-  SPISlave.onStatusSent(_spiOnStatusSent);
-
-  SPISlave.begin();
-  SPISlave.setStatus(millis());
-
-  //SPISlave.setData();//send initial data
-
-
-}
-
-/*ISR (SPI_STC_vect)//Inerrrput routine function
-  {
-  Slavereceived = SPDR;// Value received from master if store in variable slavereceived
-  received = true;//Sets received as True
-  }*/
-
-void writeSPI(int argCount, ...) //TODO need to call slave setup function
-{
-  //void* params, void* data
-  //char* outData
-
-}
 
 void timeSeriesCaller(int argCount, byte type, ...)
 {
@@ -510,18 +395,11 @@ void timeSeriesCaller(int argCount, byte type, ...)
   {
     params[1] = millis();
     //callback(2, va_arg(argList, byte*), va_arg(argList, char*));
-    if (type == DIGITAL_PIN || type == ANALOG_PIN)
+    if (type == DIGITAL_PIN || type == ANALOG_PIN) //TODO only IO pins
     {
       callback(2, va_arg(argList, byte*), va_arg(argList, char*)); // callback(2, pinID, ioBuff)
     }
-    else if (type == I2C_PINS)
-    {
-      callback(2, va_arg(argList, byte*)); //TODO place rigtht parameters for i3c iter
-    }
-    else if (type == SPI_PINS)
-    {
-      Serial.println("SPITRIGERED");
-    }
+
 
   }
   va_end(argList);
@@ -539,18 +417,11 @@ void trigerCaller(int argCount, byte type, ...)
   void (*callback)(int, ...) = va_arg(argList, void(*)(int, ...));
   if (params[1] == params[0])
   {
-    if (type == DIGITAL_PIN || type == ANALOG_PIN)
+    if (type == DIGITAL_PIN || type == ANALOG_PIN)//TODO only IO PINS
     {
       callback(2, va_arg(argList, byte*), va_arg(argList, char*)); // callback(2, pinID, ioBuff)
     }
-    else if (type == I2C_PINS)
-    {
-      callback(2, va_arg(argList, byte*)); //TODO place rigtht parameters for i3c iter
-    }
-    else if (type == SPI_PINS)
-    {
-      Serial.println("SPITRIGERED");
-    }
+
 
   }
 

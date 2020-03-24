@@ -1,56 +1,28 @@
+
 void initPinsArr()
 {
   Serial.println("Initializing Structs");
   for (byte i = 0; i < N_PINS; i++)
   {
-    //
-    //    _managedPins[i].isActive = true;
-    //    _managedPins[i].id = _pinout[i];
-    //    _managedPins[i].type = DIGITAL_PIN;
-    //    _managedPins[i].behavior = TIME_SERIES_PIN;
-    //    _managedPins[i].dataType = INPUT_DATA;
-    //    _managedPins[i].processing = EMPTY_CFG;
-    //    memset(_managedPins[i].UID, 0, PIN_UID_SIZE);
-    //    _managedPins[i].processingCallback = NULL;
-    //    _managedPins[i].behaviorParams  = NULL;
-    //    _managedPins[i].dataTypeParams = NULL;
-    //    memset(_managedPins[i].dataBuffer, 0, sizeof(_managedPins[i].dataBuffer));
-    // _managedPins[i].dataBuffer = NULL;
+    
+        _managedPins[i].isActive = true;
+        _managedPins[i].id = _pinout[i];
+        _managedPins[i].type = DIGITAL_PIN;
+        _managedPins[i].behavior = TIME_SERIES_BEHAVIOR;
+        _managedPins[i].dataType = INPUT_DATA;
+        _managedPins[i].processing = EMPTY_CFG;
+        _managedPins[i].behaviorCallback = NULL;
+
+        memset(_managedPins[i].behaviorParams, 0, sizeof(_managedPins[i].behaviorParams));
+        memset(_managedPins[i].dataTypeParams, 0, sizeof(_managedPins[i].dataTypeParams));
+
+
+        memset(_managedPins[i].dataBufferTX, 0, sizeof(_managedPins[i].dataBufferTX));
+        memset(_managedPins[i].dataBufferRX, 0, sizeof(_managedPins[i].dataBufferRX));
 
 
   }
 }
-//void initPinsArr()
-//{
-//  Serial.println("Initializing Structs");
-//  for (byte i = 0; i < N_PINS; i++)
-//  {
-//
-//    _managedPins[i].id = _pinout[i];
-//    _managedPins[i].processingCallback = NULL;
-//    memset(_managedPins[i].dataBuffer, 0, sizeof(_managedPins[i].dataBuffer));
-//
-//
-//  }
-/*
-
-  bool isActive;
-  byte id;
-  byte type;
-  byte dataType;
-  int behavior[2];
-  byte processing;
-  char UID[PIN_UID_SIZE];
-  //void (*processingCallback)(void*);
-  void (*processingCallback)(void*, void(*)(void*), void*);
-  void* behaviorParams;
-  void* dataTypeParams;
-  char* dataBuffer;
-  };
-
-  }
-
-*/
 
 bool isValidPin(byte pinId)
 {
@@ -104,14 +76,7 @@ void activatePin(byte pinId)
   // _managedPins[getPinIndex(pinId)].isActive = true;
 }
 
-void setupI2C()
-{
-  Wire.begin(SDA_PIN, SCL_PIN);
-}
-void setupSPI()
-{
-  SPI.begin();
-}
+
 void setupPin(pinConfig* pinCfg, JsonObject piCfgObj)
 {
   //pinConfig tmpPinCfg;
@@ -126,8 +91,7 @@ void setupPin(pinConfig* pinCfg, JsonObject piCfgObj)
     Serial.println("ERROR: is already reserved");
     //return false;
   }
-  //  activatePin(pin->id);//TODO spi and i2c
-  //
+
   JsonArray dataTypeParamsArr = piCfgObj["dataTypeParams"];
   switch ((byte)piCfgObj["type"])
   {
@@ -137,14 +101,7 @@ void setupPin(pinConfig* pinCfg, JsonObject piCfgObj)
     case ANALOG_PIN :
       pinCfg->type = ANALOG_PIN;
       break;
-    case I2C_PINS:
-      pinCfg->type = I2C_PINS;
-      setI2CParams(pinCfg, dataTypeParamsArr);
-      break;
-    case SPI_PINS:
-      pinCfg->type = SPI_PINS;
-      setSPIParams(pinCfg, dataTypeParamsArr);
-      break;
+
 
   }//TODO call setup function after this;
 
@@ -177,19 +134,6 @@ void setupPin(pinConfig* pinCfg, JsonObject piCfgObj)
 
 }
 
-void setI2CParams(pinConfig* pinCfg, JsonArray paramsArr) //TODO need to finalize params asignmnent
-{
-  //  i2cParams tparams = {(uint8_t)paramsArr[0],
-  //                       (int)paramsArr[1], (uint8_t)paramsArr[2]
-  //                      };
-  //  pinCfg->dataTypeParams = &tparams;
-
-}
-void setSPIParams(pinConfig* pinCfg, JsonArray paramsArr)//TODO need to finalize params asignmnent
-{
-  //spiParams tparams = {(int)paramsArr[0]};
-  pinCfg->dataTypeParams[0] = (long)paramsArr[0];
-}
 
 void setTimeSeriesBehavior(pinConfig* pinCfg, JsonArray paramsArr) //TODO processing callback need to be behacior callback
 {

@@ -1,0 +1,275 @@
+
+// UNIFIED FIRMWARE
+
+{
+    "mcuType":"unified",
+    "title":"asdasd",
+    "isConfigured": true,
+    "16": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "5": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "4": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "0": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "2": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "14": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "12": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "13": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "15": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "3": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "1": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 0,
+        "dataType": 0,
+        "processing": 1,
+        "params": [
+            23,
+            255,
+            255,
+            255
+        ]
+    },
+    "9": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 0,
+        "dataType": 0,
+        "processing": 1,
+        "params": [
+            23,
+            255,
+            255,
+            255
+        ]
+    },
+    "10": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "17": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    }
+
+}
+
+
+    //SPECIALIZED FIRMWARE
+
+{
+    "mcuType":"unified",
+    "title":"asdasd",
+    "isConfigured": true,
+    "io":{
+        "configTitle":"value"
+    }
+}

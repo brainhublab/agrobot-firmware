@@ -1,16 +1,12 @@
 
 #define DIGITAL_PIN 1
 #define ANALOG_PIN 2
-#define I2C_PINS 3
-#define SPI_PINS 4
+
 
 //data type
 #define INPUT_DATA 1
 #define OUTPUT_DATA 2
-//#define INPUT_I2C 3 //TODO onlu IN OUT needed
-//#define OUTPUT_I2C 4
-//#define INPUT_SPI 5
-//#define OUTPUT_SPI 6
+
 
 //behavior
 #define TIME_SERIES_BEHAVIOR 1 //read periodical
@@ -27,6 +23,18 @@
     "UID":"21212112",
     "behaviorParams":[255, 255, 255, 255],
     "dataTypeParams":[255, 255, 255, 255]
+  },
+
+  "waterLevel": {
+    "isActive": "false",
+    "type": water level,
+    "inputs": [
+      "UID": ""
+    ]
+    "outputs": [
+      "UID":"",
+    ]
+    
   },
 ///NEW PINS CFG
 {

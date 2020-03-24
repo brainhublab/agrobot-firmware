@@ -1,0 +1,90 @@
+{
+    "mcuType":"unified",
+    "title":"asdasd",
+    "isConfigured": true,
+    "16": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "UID": "21212112",
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "5": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "UID": "21212112",
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    }
+}
+
+{
+    "mcuType":"gate",
+    "title":"asdasd",
+    "isConfigured": true,
+    "valve": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "UID": "21212112",
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
+    "level": {
+        "isActive": "false",
+        "type": 1,
+        "behavior": 1,
+        "dataType": 0,
+        "processing": 1,
+        "UID": "21212112",
+        "behaviorParams": [
+            255,
+            255,
+            255,
+            255
+        ],
+        "dataTypeParams": [
+            255,
+            255,
+            255,
+            255
+        ]
+    },
