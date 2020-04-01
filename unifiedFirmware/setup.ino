@@ -4,21 +4,27 @@ void initPinsArr()
   Serial.println("Initializing Structs");
   for (byte i = 0; i < N_PINS; i++)
   {
-    
-        _managedPins[i].isActive = true;
-        _managedPins[i].id = _pinout[i];
-        _managedPins[i].type = DIGITAL_PIN;
-        _managedPins[i].behavior = TIME_SERIES_BEHAVIOR;
-        _managedPins[i].dataType = INPUT_DATA;
-        _managedPins[i].processing = EMPTY_CFG;
-        _managedPins[i].behaviorCallback = NULL;
 
-        memset(_managedPins[i].behaviorParams, 0, sizeof(_managedPins[i].behaviorParams));
-        memset(_managedPins[i].dataTypeParams, 0, sizeof(_managedPins[i].dataTypeParams));
+    _managedPins[i].isActive = true;
+    _managedPins[i].id = _pinout[i];
+    _managedPins[i].type = DIGITAL_PIN;
+    _managedPins[i].behavior = TIME_SERIES_BEHAVIOR;
+    _managedPins[i].dataType = OUTPUT_DATA;
+    _managedPins[i].processing = EMPTY_CFG;
+    _managedPins[i].behaviorCallback = NULL;
+
+    for (int j = 0; j < SIZEOF_ARRAY(_managedPins[i].behaviorParams); j++)
+    {
+      _managedPins[i].behaviorParams[j] = 5;
+    }
+    for (int j = 0; j < SIZEOF_ARRAY(_managedPins[i].dataTypeParams); j++)
+    {
+      _managedPins[i].dataTypeParams[j] = 5;
+    }
 
 
-        memset(_managedPins[i].dataBufferTX, 0, sizeof(_managedPins[i].dataBufferTX));
-        memset(_managedPins[i].dataBufferRX, 0, sizeof(_managedPins[i].dataBufferRX));
+    memset(_managedPins[i].dataBufferTX, 1, sizeof(_managedPins[i].dataBufferTX));
+    memset(_managedPins[i].dataBufferRX, 1, sizeof(_managedPins[i].dataBufferRX));
 
 
   }
@@ -76,86 +82,74 @@ void activatePin(byte pinId)
   // _managedPins[getPinIndex(pinId)].isActive = true;
 }
 
-
-void setupPin(pinConfig* pinCfg, JsonObject piCfgObj)
+void setupPins()
 {
-  //pinConfig tmpPinCfg;
-  if (!isValidPin(piCfgObj["id"]))
+  for (int i = 0; i < N_PINS; i++)
   {
-    Serial.print("ERROR: is not a valid pin");
-    Serial.print((int)piCfgObj["id"]);
-    //return ; //need to exit
-  }
-  if (isActivedPin(piCfgObj["id"]))
-  {
-    Serial.println("ERROR: is already reserved");
-    //return false;
-  }
+    //setupPin(&(_managedPins[i]));
+    switch (_managedPins[i].behavior)
+    {
+      case TIME_SERIES_BEHAVIOR:
+        setTimeSeriesBehavior(i);
+        break;
+      case TRIGER_BEHAVIOR:
+        setTrigerBehavior(i);
+        break;
+      case PWM_BEHAVIOR:
+        setPwmBehavior(i);
+        break;
+    }
 
-  JsonArray dataTypeParamsArr = piCfgObj["dataTypeParams"];
-  switch ((byte)piCfgObj["type"])
-  {
-    case DIGITAL_PIN :
-      pinCfg->type = DIGITAL_PIN;
-      break;
-    case ANALOG_PIN :
-      pinCfg->type = ANALOG_PIN;
-      break;
+    switch (_managedPins[i].dataType)
+    {
+      case INPUT_DATA:
+        pinMode(_managedPins[i].id, INPUT);
+        break;
+      case OUTPUT_DATA:
+        pinMode(_managedPins[i].id, OUTPUT);
+        break;
 
-
-  }//TODO call setup function after this;
-
-  switch ((byte)piCfgObj["dataType"])
-  {
-    case INPUT_DATA:
-      pinCfg->dataType = INPUT_DATA;
-      break;
-    case OUTPUT_DATA:
-      pinCfg->dataType = OUTPUT_DATA;
-      break;
-  }
-
-  JsonArray paramsArr = piCfgObj["behaviorParams"];
-  switch ((byte)piCfgObj["behavior"])
-  {
-    case TIME_SERIES_BEHAVIOR:
-      pinCfg->behavior = TIME_SERIES_BEHAVIOR;
-      setTimeSeriesBehavior(pinCfg, paramsArr);
-      break;
-    case TRIGER_BEHAVIOR:
-      pinCfg->behavior = TRIGER_BEHAVIOR;
-      setTrigerBehavior(pinCfg, paramsArr);
-      break;
-    case PWM_BEHAVIOR:
-      pinCfg->behavior = PWM_BEHAVIOR;
-      setPwmBehavior(pinCfg, paramsArr);
-      break;
+    }
   }
 
 }
 
 
-void setTimeSeriesBehavior(pinConfig* pinCfg, JsonArray paramsArr) //TODO processing callback need to be behacior callback
+//void setupPin(pinConfig* pinCfg)
+//{
+//  switch (pinCfg->behavior)
+//  {
+//    case TIME_SERIES_BEHAVIOR:
+//
+//      setTimeSeriesBehavior(pinCfg);
+//      break;
+//    case TRIGER_BEHAVIOR:
+//      setTrigerBehavior(pinCfg);
+//      break;
+//    case PWM_BEHAVIOR:
+//      setPwmBehavior(pinCfg);
+//      break;
+//  }
+
+//}
+
+
+void setTimeSeriesBehavior(int pinId) //TODO processing callback need to be behacior callback pinConfig* pinCfg
 {
-  //timeSeriesParams tparams = {(unsigned long)paramsArr[0], 0};
-  pinCfg->behaviorCallback = timeSeriesCaller;
-  pinCfg->behaviorParams[0] = (unsigned long)paramsArr[0] ; //TODO check maybe unsecure ponter
+  // pinCfg->behaviorCallback = timeSeriesCaller;
+  _managedPins[pinId].behaviorCallback = timeSeriesCaller;
 }
 
 
 
-void setTrigerBehavior(pinConfig* pinCfg, JsonArray paramsArr)
+void setTrigerBehavior(int pinId)
 {
-  trigerParams tparams = {(int)paramsArr[0], 0};
-  pinCfg->behaviorCallback = trigerCaller;
-  pinCfg->behaviorParams[0] = (int)paramsArr[0];
+  _managedPins[pinId].behaviorCallback = trigerCaller;
 }
 
-void setPwmBehavior(pinConfig* pinCfg, JsonArray paramsArr)
+void setPwmBehavior(int pinId)
 {
- // pwmParams tparams = {(int)paramsArr[0]};
-  pinCfg->behaviorCallback = pwmCaller;
-  pinCfg->behaviorParams[0] = (int)paramsArr[0];
+  _managedPins[pinId].behaviorCallback = pwmCaller;
 }
 
 bool pinsCfgFileExists()
@@ -194,7 +188,8 @@ bool cfgFilesExists()
   return false;
 }
 
-void configModeCallback (WiFiManager * myWiFiManager) {
+void configModeCallback (WiFiManager * myWiFiManager)
+{
   Serial.println("Entered config mode");
   Serial.println(WiFi.softAPIP());
   //if you used auto generated SSID, print it
@@ -257,7 +252,8 @@ void setupWifiManager()
   if (!isSrvConfigured)
   {
     Serial.println("--------------------------------> ENTERING NON AUITOCONECT");
-    if (!wifiManager.startConfigPortal()) {
+    if (!wifiManager.startConfigPortal())
+    {
       Serial.println("failed to connect and hit timeout");
       delay(3000);
       //reset and try again, or maybe put it to deep sleep
@@ -268,7 +264,8 @@ void setupWifiManager()
   else
   {
     Serial.println("--------------------------------> ENTERING NON AUITOCONECT");
-    if (!wifiManager.autoConnect()) {
+    if (!wifiManager.autoConnect())
+    {
 
       Serial.println("failed to connect and hit timeout");
       delay(3000);
@@ -320,7 +317,10 @@ void setupWifiManager()
   Serial.println( httpTokenParam.getValueLength());
   Serial.println( strlen(httpTokenParam.getValue()));
 
-  WiFi.macAddress(macId);
+  byte mac[6];
+  WiFi.macAddress(mac);
+  byteArrToStr(mac, WL_MAC_ADDR_LENGTH, macId);
+  
 
 }
 

@@ -1,5 +1,8 @@
 #include<Arduino.h>
 #include <FS.h>                   //this needs to be first, or it all crashes and burns...
+
+#include "config.h"
+
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
@@ -11,12 +14,21 @@
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 
-
 #include <Wire.h>
 
-//ESPMaster esp(SS); //TODO need to be implemented master slave example
+#if UNIFIED_CONTROLLER
 
-#include "config.h"
+#elif WATER_LEVEL
+  #include <HX711.h>
+  #include <Servo.h>
+  #include <PID_v1.h>
+
+#elif LIGHT_CONTROL
+
+#elif NUTRITION_CONTROL
+
+
+#endif
 
 char _errMsg[60];
 
@@ -52,15 +64,28 @@ byte pin  = 12;
 
 
 //bool isConfigured = false;
-
-void setup(void) {
+int loopPinId = 0;
+void setup(void)
+{
 
   /* while (WiFi.status() != WL_CONNECTED)
-    {
-    delay(500);
+     {
+     delay(500);
     // Serial.print(".");
     }*/
 
+  #if UNIFIED_CONTROLLER
+  mcuType = 1;
+
+  #elif WATER_LEVEL
+  mcuType = 2;
+
+  #elif LIGHT_CONTROL
+  mcuType = 3;
+
+  #elif NUTRITION_CONTROL
+  mcuType = 4;
+  #endif
 
   Serial.begin(115200);
 
@@ -68,10 +93,10 @@ void setup(void) {
   {
     Serial.println("ERRPR: Failed to mount FS");
   }
-//  if (SPIFFS.format())
-//  {
-//    Serial.println("formated file system");
-//  }
+  //  if (SPIFFS.format())
+  //  {
+  //    Serial.println("formated file system");
+  //  }
   if (RESET_CONFIG)
   {
     resetConfig();
@@ -116,7 +141,10 @@ void setup(void) {
     initPinsArr();
     //initPinsCfgFile();
     readPinsConfig();
+    //initPinsArr();
+
   }
+  setupPins();
 
   // initCfgFiles();
   //  setupCfgFiles();
@@ -128,7 +156,7 @@ void setup(void) {
   //mqttPass
 
   Serial.println("-----------------------------------------------------------------------------------------////////-----------");
- // savePinsCfgFile(_managedPins, true);
+  // savePinsCfgFile(_managedPins, true);
   //
   //  //testPinCfg.behaviorCallback = timeSeriesCaller;
   //  testPinCfg.behaviorCallback = pwmCaller;
@@ -141,6 +169,17 @@ void setup(void) {
   //  pinMode(4, INPUT);
   //  pinMode(pin, INPUT);
   //  analogWrite(12, 512);
+  //  for (int i = 0; i < N_PINS; i++)
+  //  {
+  //    if (i != 11 && i != 12 && i!= 13)
+  //    {
+  //      pinMode(_managedPins[i].id, OUTPUT);
+  //    }
+  //    delay(200);
+  //  }
+  // byte _pinout[N_PINS] = {16, 5, 4, 0, 2, 14, 12, 13, 15, 3, 1, 9, 10, 17}; //note 16, 3, 1, 10, 9 is high on boot and 10/9 are not recomended
+
+
 
   for (byte i = 0; i < N_PINS; i++)
   {
@@ -159,17 +198,48 @@ void setup(void) {
     //
     //        memset(_managedPins[i].dataBufferTX, 0, sizeof(_managedPins[i].dataBufferTX));
     //        memset(_managedPins[i].dataBufferRX, 0, sizeof(_managedPins[i].dataBufferRX));
+    Serial.print("VALUES:    ");
+    for (int k = 0; k < 4; k++)
+    {
+      /// Serial.print("TICK");
+      //_managedPins[i].dataBufferTX[j] = (char)1;
 
+      Serial.print(_managedPins[i].behaviorParams[k]);
+
+    }
 
     Serial.println("--------------------------------------");
+    delay(50);
 
   }
+
+  reconnectMqtt();
+
+  Serial.println("-------------------END SETUP");
 }
 
-void loop(void) {
-  long p = 1;
+void loop(void)
+{
+  Serial.print(loopPinId);
 
+  Serial.println("------------------------------ ENTERING LOOP");
+  if (loopPinId < N_PINS)
+  {
+    if (1)
+    {
+      Serial.print(loopPinId);
 
-  delay(50000);
+      Serial.println("------------------------------ ПРОЦеССИНГ LOOP");
+      processPin(&(_managedPins[loopPinId]));
+
+    }
+    loopPinId ++;
+  }
+  else
+  {
+    loopPinId = 0;
+  }
+
+  // delay(5000);
   Serial.println("printed from CODE");
 }

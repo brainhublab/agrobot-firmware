@@ -273,3 +273,21 @@
         "configTitle":"value"
     }
 }
+
+//WATER LEVEL
+
+{
+    "mcuType":"2",
+    "title":"Water level ID:ESP1522490",
+    "isConfigured": true,
+    "in":{
+        "valve":100,
+        "levelPercents":100
+    },
+    "out":{
+        "valve":100,
+        "waterLevel":100,
+        "waterFlowIn":2000,
+        "waterFlowOut":2000
+    }
+}

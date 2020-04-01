@@ -26,32 +26,7 @@ void initIO()
 {
 
 }
-/*
-  void initMainCfgFile()
-  {
-  if (SPIFFS.exists("/main_cfg.json"))
-  {
-    Serial.println("WARNING: flags config exists You need to reset params firs");
-  }
-  else
-  {
-    //File flagsCfgFile = SPIFFS.open("/main_cfg.json", "w");
-    //flagsCfgFile.close();
-    Serial.println("Creating main configuration file");
-    setMainParams();
-  }
-  }
 
-  void setMainParams()
-  {
-  File mainCfgFile = SPIFFS.open("main_cfg.json", "w");
-  if(mainCfgFile)
-  {
-    Serial.println("Initializing main config file");
-    const.
-  }
-  }
-*/
 void initSrvCfgFile()
 {
   if (SPIFFS.exists("/srv_cfg.json"))
@@ -160,6 +135,7 @@ void readSrvCfgFile()
   }
 }
 
+
 void initPinsCfgFile()
 {
   if (SPIFFS.exists("/pins_cfg.json"))
@@ -170,13 +146,25 @@ void initPinsCfgFile()
   {
     Serial.println("Initializing pins");
     //setPinsCfgFile(_managedPins);
+    #if UNIFIED_CONTROLLER
     savePinsCfgFile(_managedPins, true);
+
+    #elif WATER_LEVEL
+    saveWaterLevelCfgFile();
+
+    #elif LIGHT_CONTROL
+    saveLightControlCfgFile();
+
+    #elif NUTRITION_CONTROL
+    saveNutritionControlCfgFile();
+    #endif
   }
 }
 void savePinsCfgFile(pinConfig* pinsArr, bool isConfigured)
 {
   File pinsCfgFile = SPIFFS.open("/pins_cfg.json", "w");
-  if (!pinsCfgFile) {
+  if (!pinsCfgFile)
+  {
     Serial.println("failed to open config file for writing");
   }
   if (pinsCfgFile)
@@ -210,6 +198,20 @@ void savePinsCfgFile(pinConfig* pinsArr, bool isConfigured)
         dataTypeParams[j] = pinsArr[i].dataTypeParams[j];
       }
 
+      //      JsonArray dataBufferTX = pin.createNestedArray("dataBufferTX");
+      //      for (int j = 0; j < SIZEOF_ARRAY(pinsArr[i].dataBufferTX); j++)
+      //      {
+      //        dataBufferTX[j] = pinsArr[i].dataBufferTX[j];
+      //      }
+      //
+      //      JsonArray dataBufferRX = pin.createNestedArray("dataBufferRX");
+      //      for (int j = 0; j < SIZEOF_ARRAY(pinsArr[i].dataBufferRX); j++)
+      //      {
+      //        dataBufferRX[j] = pinsArr[i].dataBufferRX[j];
+      //      }
+
+
+
     }
     Serial.println("-------------------------------------> JSON SIZE SAVE PINS _1");
     Serial.println(pinJsonCfgOut.memoryUsage());
@@ -242,7 +244,7 @@ void readPinsConfig()
     {
       Serial.println("-------------------- READING PINS CFG");
 
-      
+
       Serial.println("Reading pins config...");
       const size_t  pinsCfgCapacity = 26 * JSON_ARRAY_SIZE(4) + 2 * JSON_OBJECT_SIZE(6) + 12 * JSON_OBJECT_SIZE(7) + JSON_OBJECT_SIZE(17) + 1270;
       DynamicJsonDocument pinJsonCfgIn(pinsCfgCapacity);
@@ -254,7 +256,7 @@ void readPinsConfig()
       }
       // serializeJson(pinJsonCfgIn, Serial);
       pinsConfigured = pinJsonCfgIn["isConfigured"];
-      
+
       serializeJson(pinJsonCfgIn, Serial);
 
       for (byte i = 0; i < N_PINS; i++)
@@ -281,6 +283,18 @@ void readPinsConfig()
         {
           _managedPins[i].dataTypeParams[j] = dataTypeParams[j];
         }
+
+        //        JsonArray dataBufferTX = pin["dataBufferTX"];
+        //        for (int j = 0; j < SIZEOF_ARRAY(_managedPins[i].dataBufferTX); j++)
+        //        {
+        //           _managedPins[i].dataBufferTX[j] = dataBufferTX[j];
+        //        }
+        //
+        //        JsonArray dataBufferRX = pin["dataBufferRX"];
+        //        for (int j = 0; j < SIZEOF_ARRAY(_managedPins[i].dataBufferRX); j++)
+        //        {
+        //           _managedPins[i].dataBufferRX[j] = dataBufferRX[j];
+        //        }
       }
       pinsCfgFile.close();
     }
@@ -295,7 +309,74 @@ void readPinsConfig()
 }
 
 
+void saveWaterLevelCfgFile(waterLevelCfg* wlCfg, bool isConfigured)
+{
+  File waterLevelCfgFile = SPIFFS.open("/water_level_cfg.json", "w");
+  if (!waterLevelCfgFile)
+  {
+    Serial.println("failed to open config file for writing");
+  }
+  if (waterLevelCfgFile)
+  {
+    Serial.println("Initializing water level config...");
+    const size_t waterLevelCfgCapacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(4);
+    DynamicJsonDocument waterLevelJsonCfgOut(waterLevelCfgCapacity);
 
+    waterLevelJsonCfgOut["mcyType"] = mcuType;
+    waterLevelJsonCfgOut["title"] = "water level ID:" +  (String)macId;
+    waterLevelJsonCfgOut["isConfigured"] = isConfigured;
+
+    JsonObject in = waterLevelJsonCfgOut.createNestedObject("in");
+    in["valveTarget"] = wlCfg->vlaveTarget;
+    in["levelTarget"] = wlCfg->levelTarget;
+
+
+    if (serializeJson(waterLevelJsonCfgOut, waterLevelCfgFile)
+  {
+    Serial.println("ERROR: failed to write water level config");
+    }
+    waterLevelCfgFile.close();
+  }
+  else
+  {
+    Serial.println("ERROR: Something goes wrong with water level config file");
+  }
+}
+
+void redWaterLevelCfgFile()
+{
+  if (SPIFFS.exists("/water_level_cfg.json"))
+  {
+    File waterLevelCfgFile = SPIFFS.open("/water_level_cfg.json");
+    if (waterLevelCfgFile)
+    {
+      Serial.println("Reading water level configs ...");
+
+      const size_t waterLevelCfgCapacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(4) + 110;
+      DynamicJsonDocument waterLevelJsonCfgIn(waterLevelCfgCapacity);
+
+      DeserializationError err = deserializeJson(waterLevelJsonCfgIn, waterLevelCfgFile);
+
+      if(err)
+      {
+        Serial.println(F("ERROR: failed to read file, using default configuration"));
+      }
+
+      waterLevelConfigured = waterLevelJsonCfgIn["isConfigured"];
+      _waterLevel.valveTarget = waterLevelJsonCfgIn["in"]["valveTarget"];
+      _waterLevel.levelTarget = waterLevelJsonCfgIn["in"]["levelTarget"];
+
+      
+    }
+    waterLevelCfgFile.close()
+
+  }
+  else
+  {
+    Serial.print("ERROR: no such sonfig file with name:");
+    Serial.println("/water_level_cfg.json");
+  }
+}
 
 
 void dataCallback(char* topic, byte* payload, unsigned int length)
@@ -305,8 +386,7 @@ void dataCallback(char* topic, byte* payload, unsigned int length)
 
 void processPin(pinConfig* pin)
 {
-
-
+  Serial.println("-------------------------- ENTERING IN PROCESS PIN");
   switch (pin->type)
   {
     case DIGITAL_PIN:
@@ -315,10 +395,15 @@ void processPin(pinConfig* pin)
       {
         case INPUT_DATA:
           // digitalRead(pin->id);//Store value to buffer and set BEHAVIOR;
-          pin->behaviorCallback(4, pin->type, pin->behaviorParams, readDigitalPin, &pin->id, pin->dataBufferRX);
+          Serial.println("-------------------------- INTPUT DATA  IN PROCESS PIN");
+
+          pin->behaviorCallback(4, pin->behaviorParams, readDigitalPin, &pin->id, pin->dataBufferRX);
           break;
         case OUTPUT_DATA:
-          pin->behaviorCallback(4, pin->type, pin->behaviorParams, writeDigitalPin, &pin->id, pin->dataBufferTX);
+          Serial.println("-------------------------- OUTPUT DATA  IN PROCESS PIN");
+
+          pin->behaviorCallback(4, pin->behaviorParams, writeDigitalPin, &(pin->id), pin->dataBufferTX);
+          Serial.println("-------------------------- OUTPUT DATA  IN PROCESS PIN");
           break;
       }
       break;
@@ -328,6 +413,7 @@ void processPin(pinConfig* pin)
       break;
 
   }
+  Serial.println("-------------------------- EXIT IN PROCESS PIN");
 
 
 }
@@ -365,7 +451,10 @@ void writeDigitalPin(int argCount, ...)
   va_start(argList, argCount);
   byte* pinId = va_arg(argList, byte*);
   char* data = va_arg(argList, char*);
-
+  Serial.print("DIGITAL WRITE CALLED    ");
+  Serial.print(*pinId);
+  Serial.print("         ");
+  Serial.print((int)data[0]);
   if ((int)data[0] == 1)
   {
     data[0] = (char)0;
@@ -379,8 +468,9 @@ void writeDigitalPin(int argCount, ...)
 
 }
 
-void timeSeriesCaller(int argCount, byte type, ...)
+void timeSeriesCaller(int argCount, ...) //callback is digital write or red (param caount, paramsarr, cb, cb params
 {
+  Serial.println("----------------ENTERING IN TIME SERIES CALLER");
   //  if ( == NULL)
   //  {
   //    Serial.println("ERROR: Cannot call timeseriesCaller with empty params");
@@ -395,18 +485,19 @@ void timeSeriesCaller(int argCount, byte type, ...)
   {
     params[1] = millis();
     //callback(2, va_arg(argList, byte*), va_arg(argList, char*));
-    if (type == DIGITAL_PIN || type == ANALOG_PIN) //TODO only IO pins
-    {
-      callback(2, va_arg(argList, byte*), va_arg(argList, char*)); // callback(2, pinID, ioBuff)
-    }
+    //    if (type == DIGITAL_PIN || type == ANALOG_PIN) //TODO only IO pins
+    //    {
+    callback(2, va_arg(argList, byte*), va_arg(argList, char*)); // callback(2, pinID, ioBuff)
+    //    }
 
 
   }
   va_end(argList);
+  Serial.println("----------------EXITING IN TIME SERIES CALLER");
 }
 
 
-void trigerCaller(int argCount, byte type, ...)
+void trigerCaller(int argCount, ...)  //callback is digital write or red
 {
   va_list argList;
   va_start(argList, argCount);
@@ -415,49 +506,41 @@ void trigerCaller(int argCount, byte type, ...)
   //  long* triger = va_arg(argList, long*);
   long* params = va_arg(argList, long*);
   void (*callback)(int, ...) = va_arg(argList, void(*)(int, ...));
-  if (params[1] == params[0])
-  {
-    if (type == DIGITAL_PIN || type == ANALOG_PIN)//TODO only IO PINS
-    {
-      callback(2, va_arg(argList, byte*), va_arg(argList, char*)); // callback(2, pinID, ioBuff)
-    }
-
-
-  }
 
   if (params[1] == params[0])
   {
     Serial.println("TRIGERED");
+    callback(2, va_arg(argList, byte*), va_arg(argList, char*)); // callback(2, pinID, ioBuff)
   }
   else
   {
     Serial.println("NOT TRIGERED");
   }
-
-  //long* params, void (*callback)(void*, void*), void* dtParams, void* data
-
-  //  if (tParams == NULL)
-  //  {
-  //    Serial.println("ERROR: Triger params are NULL");
-  //    return;
-  //  }
-  //    if (((trigerParams*)tParams)->triger == ((trigerParams*)tParams)->value)
-  //    {
-  //      callback(2, );
-  //    }
   va_end(argList);
 }
 
 
 
 
-void pwmCaller(int argCount, byte type, ...)
+void pwmCaller(int argCount, ...) //callback is digital write or red
 {
   va_list argList;
   va_start(argList, argCount);
   long* params = va_arg(argList, long*);
   byte* pinId = va_arg(argList, byte*);
-  analogWrite(*pinId, params[0] );
+
+  if (*pinId == 16 || *pinId == 3 || *pinId == 1)
+  {
+    Serial.println("ERROR: selected pin not support PWM " );
+  }
+  else
+  {
+    if (params[0] > 1023)
+    {
+      params[0] = 1023;
+    }
+    analogWrite(*pinId, params[0] );
+  }
   //void (*callback)(int, ...) = va_arg(argList, void (*)(int, ...);
   //long* params, void (*callback)(void*, void*), void* dtParams, void* data
 
