@@ -1,10 +1,10 @@
 
 //Modules configs
 
-#define UNIFIED_CONTROLLER 1
+#define UNIFIED_CONTROLLER 0
 #define WATER_LEVEL 0
 #define LIGHT_CONTROL 0
-#define NUTRITION_CONTROL 0
+#define NUTRITION_CONTROL 1
 
 //Helping macroses
 //#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
@@ -71,10 +71,11 @@ uint16_t ioTimeout = 100;
 
 
 //Water level module configs
+
 #elif WATER_LEVEL
-mcuType = 2;
+
 bool waterLevelConfigured = false;
-typedef struct 
+typedef struct
 {
   byte valveCurrent;
   byte valveTarget;
@@ -82,20 +83,60 @@ typedef struct
   byte levelTarget;
   int waterFlowIn;
   int waterFlowOut;
-}waterLevelCfg;
+} waterLevelCfg;
 
 
-waterLevelCfg _waterLevel
+waterLevelCfg _waterLevel;
 
 //Light control module config
 #elif LIGHT_CONTROL
-mcuType = 3;
+
+bool lightControlConfigured = false;
+
+//Light modes 
+#define OFF 0
+#define SOLAR_MODE 1
+#define TIMER 2
+#define CONTINUOUS 3
+
+
+typedef struct 
+{
+  byte currentLightLevel;
+  byte targetLightLevel;
+  byte currentDateTime;
+  byte lightMode;
+}lightControlCfg;
+
+lightControlCfg _lightControlCfg;
 
 
 //Nutrition controll module config
 #elif NUTRITION_CONTROL
-mcuType = 4;
 
+bool nutritionControlConfigured = false;
+
+#define PERIODIC 1
+#define RELATIVE 2
+
+#define DISPENSER_JSON_SIZE 40
+
+#define N_DISPENSERS 2 //need to be lower thant the MAX_N_PUMPS
+#define MAX_N_DISPENSERS 8
+#define MIN_N_DISPENSERS 1
+byte pwmPins[] = {5, 4, 0, 2, 14, 12, 13, 15} ;
+
+
+byte nutritionPumpsPins[N_DISPENSERS];
+typedef struct 
+{
+  byte nutritionMode;
+  byte targetConcentration;
+  byte currentConcentration;
+  byte controlPin;
+}nutritionControlCfg;
+
+nutritionControlCfg _nutritionControlCfg[N_DISPENSERS];
 #endif
 
 

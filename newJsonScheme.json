@@ -1,9 +1,7 @@
-
 // UNIFIED FIRMWARE
-
 {
-    "mcuType":"unified",
-    "title":"asdasd",
+    "mcuType": "unified",
+    "title": "asdasd",
     "isConfigured": true,
     "16": {
         "isActive": "false",
@@ -259,35 +257,201 @@
             255
         ]
     }
-
 }
-
-
-    //SPECIALIZED FIRMWARE
-
+//SPECIALIZED FIRMWARE
 {
-    "mcuType":"unified",
-    "title":"asdasd",
+    "mcuType": "unified",
+    "title": "asdasd",
     "isConfigured": true,
-    "io":{
-        "configTitle":"value"
+    "io": {
+        "configTitle": "value"
     }
 }
-
 //WATER LEVEL
+{
+    "mcuType": "water_level",
+    "title": "Water level ID:ESP1522490",
+    "isConfigured": true,
+    "in": {
+        "valve": 100,
+        "levelPercents": 100
+    },
+    "out": {
+        "valve": 100,
+        "waterLevel": 100,
+        "waterFlowIn": 2000,
+        "waterFlowOut": 2000
+    }
+}
 
 {
-    "mcuType":"2",
-    "title":"Water level ID:ESP1522490",
+    "mcuType": "water_level",
+    "title": "Water level ID:ESP1522490",
     "isConfigured": true,
-    "in":{
-        "valve":100,
-        "levelPercents":100
-    },
-    "out":{
-        "valve":100,
-        "waterLevel":100,
-        "waterFlowIn":2000,
-        "waterFlowOut":2000
+    "in": {
+        "valveTarget": 100,
+        "levelTarget": 100
     }
+}
+//Light control 
+{
+    "mcuType": "light_control",
+    "title": "Light control ID:ESP1522490",
+    "isConfigured": true,
+    "in": {
+        "lightMode": 100,
+        "targetLigstLevel": 100,
+        "currentDateTime": "01:10:20.000013",
+    },
+    "out": {
+        "lightMode": 100,
+        "currentLightLevel": 100,
+        "targetLightLevel": 100,
+        "currentDateTime": "01:10:20.000013"
+    }
+}
+
+{
+    "mcuType": "light_control",
+    "title": "Light control ID:ESP1522490",
+    "isConfigured": true,
+    "lightMode": 100,
+    "targetLigtLevel": 100,
+    "currentDateTime": "01:10:20.000013"
+}
+//Nutrition control 
+{
+    "mcuType": "nutrition_control",
+    "title": "Nutrition control ID:ESP1522490",
+    "isConfigured": true,
+    "dispensers": [
+        {
+            "in": {
+                "nutritionMode": 100,
+                "targetConcentration": 100,
+            },
+            "out": {
+                "nutritionMode": 100,
+                "currentConcentration": 100,
+                "targetConcentration": 2000
+            }
+        },
+        {
+            "in": {
+                "nutritionMode": 100,
+                "targetConcentration": 100,
+            },
+            "out": {
+                "nutritionMode": 100,
+                "currentConcentration": 100,
+                "targetConcentration": 2000
+            }
+        },
+        {
+            "in": {
+                "nutritionMode": 100,
+                "targetConcentration": 100,
+            },
+            "out": {
+                "nutritionMode": 100,
+                "currentConcentration": 100,
+                "targetConcentration": 2000
+            }
+        },
+        {
+            "in": {
+                "nutritionMode": 100,
+                "targetConcentration": 100,
+            },
+            "out": {
+                "nutritionMode": 100,
+                "currentConcentration": 100,
+                "targetConcentration": 2000
+            }
+        },
+        {
+            "in": {
+                "nutritionMode": 100,
+                "targetConcentration": 100,
+            },
+            "out": {
+                "nutritionMode": 100,
+                "currentConcentration": 100,
+                "targetConcentration": 2000
+            }
+        },
+        {
+            "in": {
+                "nutritionMode": 100,
+                "targetConcentration": 100,
+            },
+            "out": {
+                "nutritionMode": 100,
+                "currentConcentration": 100,
+                "targetConcentration": 2000
+            }
+        },
+        {
+            "in": {
+                "nutritionMode": 100,
+                "targetConcentration": 100,
+            },
+            "out": {
+                "nutritionMode": 100,
+                "currentConcentration": 100,
+                "targetConcentration": 2000
+            }
+        },
+        {
+            "in": {
+                "nutritionMode": 100,
+                "targetConcentration": 100,
+            },
+            "out": {
+                "nutritionMode": 100,
+                "currentConcentration": 100,
+                "targetConcentration": 2000
+            }
+        }
+    ]
+}
+
+{
+    "mcuType": "nutrition_control",
+    "title": "Nutrition control ID:ESP1522490",
+    "isConfigured": true,
+    "dispensers": [
+        {
+            "nutritionMode": 100,
+            "targetConcentration": 100
+        },
+        {
+            "nutritionMode": 100,
+            "targetConcentration": 100
+        },
+        {
+            "nutritionMode": 100,
+            "targetConcentration": 100
+        },
+        {
+            "nutritionMode": 100,
+            "targetConcentration": 100
+        },
+        {
+            "nutritionMode": 100,
+            "targetConcentration": 100
+        },
+        {
+            "nutritionMode": 100,
+            "targetConcentration": 100
+        },
+        {
+            "nutritionMode": 100,
+            "targetConcentration": 100
+        },
+        {
+            "nutritionMode": 100,
+            "targetConcentration": 100
+        }
+    ]
 }

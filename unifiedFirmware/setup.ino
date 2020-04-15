@@ -1,4 +1,4 @@
-
+#if UNIFIED_CONTROLLER
 void initPinsArr()
 {
   Serial.println("Initializing Structs");
@@ -162,7 +162,7 @@ bool pinsCfgFileExists()
 
 }
 
-
+#endif
 bool srvCfgFileExists()
 {
   if (SPIFFS.exists("/srv_cfg.json"))
@@ -174,13 +174,12 @@ bool srvCfgFileExists()
 
   return false;
 }
-
-
-
 bool cfgFilesExists()
 {
-  if (srvCfgFileExists() && pinsCfgFileExists())
+  
+  if (srvCfgFileExists()) //TODO need to add for rest of cfg
   {
+    
     Serial.println("---------------------------ALL  FILE  EXISTS");
 
     return true;

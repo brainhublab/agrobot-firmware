@@ -18,7 +18,7 @@ void resetConfig()
 }
 void loadCfgFiles()
 {
-  readPinsConfig();
+  //  readPinsConfig(); //TODO rewrite with defines
   readSrvCfgFile();
 }
 
@@ -136,7 +136,7 @@ void readSrvCfgFile()
 }
 
 
-void initPinsCfgFile()
+void initCfgFile()
 {
   if (SPIFFS.exists("/pins_cfg.json"))
   {
@@ -150,16 +150,18 @@ void initPinsCfgFile()
     savePinsCfgFile(_managedPins, true);
 
     #elif WATER_LEVEL
-    saveWaterLevelCfgFile();
+    saveWaterLevelCfgFile(&_waterLevel, false);
 
     #elif LIGHT_CONTROL
-    saveLightControlCfgFile();
+    //saveLightControlCfgFile();
 
     #elif NUTRITION_CONTROL
-    saveNutritionControlCfgFile();
+//    saveNutritionControlCfgFile();
     #endif
   }
 }
+
+#if UNIFIED_CONTROLLER
 void savePinsCfgFile(pinConfig* pinsArr, bool isConfigured)
 {
   File pinsCfgFile = SPIFFS.open("/pins_cfg.json", "w");
@@ -308,81 +310,6 @@ void readPinsConfig()
   }
 }
 
-
-void saveWaterLevelCfgFile(waterLevelCfg* wlCfg, bool isConfigured)
-{
-  File waterLevelCfgFile = SPIFFS.open("/water_level_cfg.json", "w");
-  if (!waterLevelCfgFile)
-  {
-    Serial.println("failed to open config file for writing");
-  }
-  if (waterLevelCfgFile)
-  {
-    Serial.println("Initializing water level config...");
-    const size_t waterLevelCfgCapacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(4);
-    DynamicJsonDocument waterLevelJsonCfgOut(waterLevelCfgCapacity);
-
-    waterLevelJsonCfgOut["mcyType"] = mcuType;
-    waterLevelJsonCfgOut["title"] = "water level ID:" +  (String)macId;
-    waterLevelJsonCfgOut["isConfigured"] = isConfigured;
-
-    JsonObject in = waterLevelJsonCfgOut.createNestedObject("in");
-    in["valveTarget"] = wlCfg->vlaveTarget;
-    in["levelTarget"] = wlCfg->levelTarget;
-
-
-    if (serializeJson(waterLevelJsonCfgOut, waterLevelCfgFile)
-  {
-    Serial.println("ERROR: failed to write water level config");
-    }
-    waterLevelCfgFile.close();
-  }
-  else
-  {
-    Serial.println("ERROR: Something goes wrong with water level config file");
-  }
-}
-
-void redWaterLevelCfgFile()
-{
-  if (SPIFFS.exists("/water_level_cfg.json"))
-  {
-    File waterLevelCfgFile = SPIFFS.open("/water_level_cfg.json");
-    if (waterLevelCfgFile)
-    {
-      Serial.println("Reading water level configs ...");
-
-      const size_t waterLevelCfgCapacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(4) + 110;
-      DynamicJsonDocument waterLevelJsonCfgIn(waterLevelCfgCapacity);
-
-      DeserializationError err = deserializeJson(waterLevelJsonCfgIn, waterLevelCfgFile);
-
-      if(err)
-      {
-        Serial.println(F("ERROR: failed to read file, using default configuration"));
-      }
-
-      waterLevelConfigured = waterLevelJsonCfgIn["isConfigured"];
-      _waterLevel.valveTarget = waterLevelJsonCfgIn["in"]["valveTarget"];
-      _waterLevel.levelTarget = waterLevelJsonCfgIn["in"]["levelTarget"];
-
-      
-    }
-    waterLevelCfgFile.close()
-
-  }
-  else
-  {
-    Serial.print("ERROR: no such sonfig file with name:");
-    Serial.println("/water_level_cfg.json");
-  }
-}
-
-
-void dataCallback(char* topic, byte* payload, unsigned int length)
-{
-
-}
 
 void processPin(pinConfig* pin)
 {
@@ -549,4 +476,252 @@ void pwmCaller(int argCount, ...) //callback is digital write or red
   //    Serial.println("ERROR: pwm params are NULL");
   //    return;
   //  }
+}
+#endif
+
+#if WATER_LEVEL
+void saveWaterLevelCfgFile(waterLevelCfg* wlCfg, bool isConfigured)
+{
+  File waterLevelCfgFile = SPIFFS.open("/water_level_cfg.json", "w");
+  if (!waterLevelCfgFile)
+  {
+    Serial.println("failed to open config file for writing");
+  }
+  if (waterLevelCfgFile)
+  {
+    Serial.println("Initializing water level config...");
+    const size_t waterLevelCfgCapacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(4);
+    DynamicJsonDocument waterLevelJsonCfgOut(waterLevelCfgCapacity);
+
+    waterLevelJsonCfgOut["mcuType"] = mcuType;
+    waterLevelJsonCfgOut["title"] = "water level ID:" +  (String)macId;
+    waterLevelJsonCfgOut["isConfigured"] = isConfigured;
+
+    JsonObject in = waterLevelJsonCfgOut.createNestedObject("in");
+    in["valveTarget"] = wlCfg->valveTarget;
+    in["levelTarget"] = wlCfg->levelTarget;
+
+
+    if (serializeJson(waterLevelJsonCfgOut, waterLevelCfgFile))
+    {
+      Serial.println("ERROR: failed to write water level config");
+    }
+    waterLevelCfgFile.close();
+  }
+  else
+  {
+    Serial.println("ERROR: Something goes wrong with water level config file");
+  }
+}
+
+void redWaterLevelCfgFile()
+{
+  if (SPIFFS.exists("/water_level_cfg.json"))
+  {
+    File waterLevelCfgFile = SPIFFS.open("/water_level_cfg.json", "r");
+    if (waterLevelCfgFile)
+    {
+      Serial.println("Reading water level configs ...");
+
+      const size_t waterLevelCfgCapacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(4) + 110;
+      DynamicJsonDocument waterLevelJsonCfgIn(waterLevelCfgCapacity);
+
+      DeserializationError err = deserializeJson(waterLevelJsonCfgIn, waterLevelCfgFile);
+
+      if (err)
+      {
+        Serial.println(F("ERROR: failed to read file, using default configuration"));
+      }
+
+      waterLevelConfigured = waterLevelJsonCfgIn["isConfigured"];
+      _waterLevel.valveTarget = waterLevelJsonCfgIn["in"]["valveTarget"];
+      _waterLevel.levelTarget = waterLevelJsonCfgIn["in"]["levelTarget"];
+
+
+    }
+    waterLevelCfgFile.close();
+
+  }
+  else
+  {
+    Serial.print("ERROR: no such sonfig file with name:");
+    Serial.println("/water_level_cfg.json");
+  }
+}
+#endif
+
+#if LIGHT_CONTROL
+void saveLightControlCfgFile(lightControlCfg* lcCfg, bool isConfigured)
+{
+  File lightControlCfgFile = SPIFFS.open("/light_control_cfg.json", "w");
+
+  if (lightControlCfgFile)
+  {
+    Serial.println("Initializing light control config file for writing ...");
+
+    const size_t lightControlCfgCapacity = JSON_OBJECT_SIZE(6);
+    DynamicJsonDocument  lightControlJsonCfgOut(lightControlCfgCapacity);
+
+    lightControlJsonCfgOut["mcuType"] = mcuType; // TODO refactor
+    lightControlJsonCfgOut["title"] = "light control ID:" + (String)macId;
+    lightControlJsonCfgOut["isConfigured"] = isConfigured;
+
+    lightControlJsonCfgOut["lightMode"] = lcCfg->lightMode;
+    lightControlJsonCfgOut["targetLightLevel"] = lcCfg->targetLightLevel;
+    lightControlJsonCfgOut["currentDateTime"] = lcCfg->currentDateTime;
+
+    
+
+    if (serializeJson(lightControlJsonCfgOut, lightControlCfgFile) == 0) // TODO write it for each
+    {
+      Serial.println("ERROR: failed to write light control config");
+    }
+    lightControlCfgFile.close();
+  }
+  else
+  {
+    Serial.println("ERROR: Failed to open light control config for writing");
+
+  }
+
+
+
+}
+
+void readLightControlCfgFile()
+{
+  if (SPIFFS.exists("/light_control_cfg.json"))
+  {
+    File lightControlCfgFile = SPIFFS.open("/light_control_cfg.json" , "r");
+
+    if (lightControlCfgFile)
+    {
+      Serial.println("Reading light control config file ...");
+
+      const size_t lightControlCfgCapacity = JSON_OBJECT_SIZE(6) + 150;
+      DynamicJsonDocument lightControlJsonCfgIn(lightControlCfgCapacity);
+
+      DeserializationError err =  deserializeJson(lightControlJsonCfgIn, lightControlCfgFile);
+
+      if (err)
+      {
+        Serial.println("ERROR: failed to read file, using default configuration");
+      }
+
+      lightControlConfigured = lightControlJsonCfgIn["isConfigured"];
+      _lightControlCfg.lightMode = lightControlJsonCfgIn["lightMode"];
+      _lightControlCfg.targetLightLevel = lightControlJsonCfgIn["targetLightLevel"];
+      _lightControlCfg.currentDateTime = lightControlJsonCfgIn["currentDateTime"];
+    }
+    lightControlCfgFile.close();
+
+  }
+  else
+  {
+    Serial.print("ERROR: no such sonfig file with name:");
+    Serial.println("/light_control_cfg.json");
+  }
+
+}
+#endif
+
+#if NUTRITION_CONTROL
+
+void saveNutritionControlCfgFile(nutritionControlCfg* ncCfg, bool isConfigured)
+{
+  File nutritionControlCfgFile = SPIFFS.open("/nutrition_control_cfg.json", "w");
+
+  if (nutritionControlCfgFile)
+  {
+    Serial.println("Initializing nutrition control config file for writing ...");
+
+    //    const size_t nutritionControlCfgCapacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(4);
+    const size_t nutritionControlCfgCapacity = JSON_ARRAY_SIZE(N_DISPENSERS)  +
+        N_DISPENSERS * JSON_OBJECT_SIZE(2)  + JSON_OBJECT_SIZE(4); //+ 100 + DISPENSER_JSON_SIZE * N_DISPENSERS;
+
+        DynamicJsonDocument  nutritionControlJsonCfgOut(nutritionControlCfgCapacity);
+
+    nutritionControlJsonCfgOut["mcuType"] = mcuType; // TODO refactor
+    nutritionControlJsonCfgOut["title"] = "nutrition control ID:" + (String)macId;
+    nutritionControlJsonCfgOut["isConfigured"] = isConfigured;
+
+    JsonArray dispensers = nutritionControlJsonCfgOut.createNestedArray("dispensers");
+
+    for (int i = 0; i < N_DISPENSERS; i++)
+    {
+
+      JsonObject dispenser = dispensers.createNestedObject();
+
+      dispenser["nutritionMode"] = ncCfg->nutritionMode;
+      dispenser["targetConcentration"] = ncCfg->targetConcentration;
+
+    }
+
+    //    JsonObject in = lightControlJsonCfgOu.createNestedObject("in");
+    //    in["nutritionMode"] = ncCfg->nutritionMode;
+    //    in["targetConcentration"] = lcCfg->targetConcentration;
+
+
+    if (serializeJson(nutritionControlJsonCfgOut, nutritionControlCfgFile) == 0) // TODO write it for each
+    {
+      Serial.println("ERROR: failed to write nutrition control config");
+    }
+    nutritionControlCfgFile.close();
+  }
+  else
+  {
+    Serial.println("ERROR: Failed to open nutrition control config for writing");
+
+  }
+
+
+
+}
+
+void readNutritionControlCfgFile()
+{
+  if (SPIFFS.exists("/nutrition_control_cfg.json"))
+{
+  File nutritionControlCfgFile = SPIFFS.open("/nutrition_control_cfg.json" , "r");
+
+    if (nutritionControlCfgFile)
+    {
+      Serial.println("Reading nutrition control config file ...");
+
+      const size_t nutritionControlCfgCapacity = JSON_ARRAY_SIZE(N_DISPENSERS)  +
+          N_DISPENSERS * JSON_OBJECT_SIZE(2)  + JSON_OBJECT_SIZE(4) + 100 + DISPENSER_JSON_SIZE * N_DISPENSERS;
+      DynamicJsonDocument nutritionControlJsonCfgIn(nutritionControlCfgCapacity);
+
+      DeserializationError err =  deserializeJson(nutritionControlJsonCfgIn, nutritionControlCfgFile);
+
+      if (err)
+      {
+        Serial.println("ERROR: failed to read file, using default configuration");
+      }
+
+
+
+      nutritionControlConfigured = nutritionControlJsonCfgIn["isConfigured"];
+
+      for (byte i = 0; i < N_DISPENSERS; i++)
+      {
+        _nutritionControlCfg[i].nutritionMode = nutritionControlJsonCfgIn[i]["nutritionMode"];
+        _nutritionControlCfg[i].targetConcentration = nutritionControlJsonCfgIn[i]["targetConcentration"];
+      }
+
+    }
+    nutritionControlCfgFile.close();
+  }
+  else
+  {
+    Serial.print("ERROR: no such sonfig file with name:");
+    Serial.println("/nutrition_control_cfg.json");
+  }
+
+}
+#endif
+
+void dataCallback(char* topic, byte* payload, unsigned int length)
+{
+
 }

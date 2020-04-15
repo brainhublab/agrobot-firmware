@@ -58,7 +58,6 @@ void theCb(void* p)
   Serial.println("THE CALLBACK IS CALLED------------------_>");
   delay(500);
 }
-pinConfig testPinCfg;
 //byte
 byte pin  = 12;
 
@@ -89,62 +88,62 @@ void setup(void)
 
   Serial.begin(115200);
 
-  if (!SPIFFS.begin())
-  {
-    Serial.println("ERRPR: Failed to mount FS");
-  }
-  //  if (SPIFFS.format())
-  //  {
-  //    Serial.println("formated file system");
-  //  }
-  if (RESET_CONFIG)
-  {
-    resetConfig();
-    if (FORMAT_FLASH)
-    {
-      if (SPIFFS.format())
-      {
-        Serial.println("formated file system");
-      }
-    }
-
-  }
-  if (!srvCfgFileExists())
-  {
-    initSrvCfgFile();
-  }
-  else
-  {
-    readSrvCfgFile();
-  }
-  if (!isSrvConfigured)
-  {
-    setupWifiManager();
-  }
-  else
-  {
-    // setupAutoConnection();
-    readSrvCfgFile();
-  }
-  if (shouldSaveSrvCfg)
-  {
-    saveSrvParams(&mqttParams, &httpParams, true);
-
-  }
-  if (!pinsCfgFileExists())
-  {
-    initPinsArr();
-    initPinsCfgFile();
-  }
-  else
-  {
-    initPinsArr();
-    //initPinsCfgFile();
-    readPinsConfig();
-    //initPinsArr();
-
-  }
-  setupPins();
+//  if (!SPIFFS.begin())
+//  {
+//    Serial.println("ERRPR: Failed to mount FS");
+//  }
+//  //  if (SPIFFS.format())
+//  //  {
+//  //    Serial.println("formated file system");
+//  //  }
+//  if (RESET_CONFIG)
+//  {
+//    resetConfig();
+//    if (FORMAT_FLASH)
+//    {
+//      if (SPIFFS.format())
+//      {
+//        Serial.println("formated file system");
+//      }
+//    }
+//
+//  }
+//  if (!srvCfgFileExists())
+//  {
+//    initSrvCfgFile();
+//  }
+//  else
+//  {
+//    readSrvCfgFile();
+//  }
+//  if (!isSrvConfigured)
+//  {
+//    setupWifiManager();
+//  }
+//  else
+//  {
+//    // setupAutoConnection();
+//    readSrvCfgFile();
+//  }
+//  if (shouldSaveSrvCfg)
+//  {
+//    saveSrvParams(&mqttParams, &httpParams, true);
+//
+//  }
+//  if (!pinsCfgFileExists())
+//  {
+//    initPinsArr();
+//    initPinsCfgFile();
+//  }
+//  else
+//  {
+//    initPinsArr();
+//    //initPinsCfgFile();
+//    readPinsConfig();
+//    //initPinsArr();
+//
+//  }
+//  setupPins();
 
   // initCfgFiles();
   //  setupCfgFiles();
@@ -181,37 +180,37 @@ void setup(void)
 
 
 
-  for (byte i = 0; i < N_PINS; i++)
-  {
-
-    Serial.println(_managedPins[i].isActive);
-    Serial.println(_managedPins[i].id );
-    Serial.println(_managedPins[i].type );
-    Serial.println(_managedPins[i].behavior);
-    Serial.println(_managedPins[i].dataType);
-    Serial.println(_managedPins[i].processing);
-
-    //
-    //        memset(_managedPins[i].behaviorParams, 0, sizeof(_managedPins[i].behaviorParams));
-    //        memset(_managedPins[i].dataTypeParams, 0, sizeof(_managedPins[i].dataTypeParams));
-    //
-    //
-    //        memset(_managedPins[i].dataBufferTX, 0, sizeof(_managedPins[i].dataBufferTX));
-    //        memset(_managedPins[i].dataBufferRX, 0, sizeof(_managedPins[i].dataBufferRX));
-    Serial.print("VALUES:    ");
-    for (int k = 0; k < 4; k++)
-    {
-      /// Serial.print("TICK");
-      //_managedPins[i].dataBufferTX[j] = (char)1;
-
-      Serial.print(_managedPins[i].behaviorParams[k]);
-
-    }
-
-    Serial.println("--------------------------------------");
-    delay(50);
-
-  }
+//  for (byte i = 0; i < N_PINS; i++)
+//  {
+//
+//    Serial.println(_managedPins[i].isActive);
+//    Serial.println(_managedPins[i].id );
+//    Serial.println(_managedPins[i].type );
+//    Serial.println(_managedPins[i].behavior);
+//    Serial.println(_managedPins[i].dataType);
+//    Serial.println(_managedPins[i].processing);
+//
+//    //
+//    //        memset(_managedPins[i].behaviorParams, 0, sizeof(_managedPins[i].behaviorParams));
+//    //        memset(_managedPins[i].dataTypeParams, 0, sizeof(_managedPins[i].dataTypeParams));
+//    //
+//    //
+//    //        memset(_managedPins[i].dataBufferTX, 0, sizeof(_managedPins[i].dataBufferTX));
+//    //        memset(_managedPins[i].dataBufferRX, 0, sizeof(_managedPins[i].dataBufferRX));
+//    Serial.print("VALUES:    ");
+//    for (int k = 0; k < 4; k++)
+//    {
+//      /// Serial.print("TICK");
+//      //_managedPins[i].dataBufferTX[j] = (char)1;
+//
+//      Serial.print(_managedPins[i].behaviorParams[k]);
+//
+//    }
+//
+//    Serial.println("--------------------------------------");
+//    delay(50);
+//
+//  }
 
   reconnectMqtt();
 
@@ -222,23 +221,23 @@ void loop(void)
 {
   Serial.print(loopPinId);
 
-  Serial.println("------------------------------ ENTERING LOOP");
-  if (loopPinId < N_PINS)
-  {
-    if (1)
-    {
-      Serial.print(loopPinId);
-
-      Serial.println("------------------------------ ПРОЦеССИНГ LOOP");
-      processPin(&(_managedPins[loopPinId]));
-
-    }
-    loopPinId ++;
-  }
-  else
-  {
-    loopPinId = 0;
-  }
+//  Serial.println("------------------------------ ENTERING LOOP");
+//  if (loopPinId < N_PINS)
+//  {
+//    if (1)
+//    {
+//      Serial.print(loopPinId);
+//
+//      Serial.println("------------------------------ ПРОЦеССИНГ LOOP");
+//      processPin(&(_managedPins[loopPinId]));
+//
+//    }
+//    loopPinId ++;
+//  }
+//  else
+//  {
+//    loopPinId = 0;
+//  }
 
   // delay(5000);
   Serial.println("printed from CODE");

@@ -18,15 +18,15 @@ void reconnectMqtt()
     if (mqttClient.connect(macId, mqttParams.mqttUser, mqttParams.mqttPass))
     {
       Serial.println("Mqtt connected");
-      if (!pinsCfgFileExists()) //TODO rewrite
-      {
-        mqttClient.publish(cfgTopicOut, 0);
-        mqttClient.subscribe(cfgTopicIn);
-      }
-      else
-      {
-
-      }
+//      if (!pinsCfgFileExists()) //TODO rewrite
+//      {
+//        mqttClient.publish(cfgTopicOut, 0);
+//        mqttClient.subscribe(cfgTopicIn);
+//      }
+//      else
+//      {
+//
+//      }
 
     }
     else
