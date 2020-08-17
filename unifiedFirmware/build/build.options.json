@@ -1,0 +1,11 @@
+{
+  "additionalFiles": "..",
+  "builtInLibrariesFolders": "/home/h3lgi/bin/arduino-1.8.12/libraries",
+  "builtInToolsFolders": "/home/h3lgi/bin/arduino-1.8.12/tools-builder,/home/h3lgi/bin/arduino-1.8.12/hardware/tools/avr,/home/h3lgi/.arduino15/packages",
+  "customBuildProperties": "programmer=arduino:usbtinyisp,build.path=/home/h3lgi/code/agroBotFirmware/unifiedFirmware/build,build.warn_data_percentage=75,runtime.tools.mkspiffs.path=/home/h3lgi/.arduino15/packages/esp8266/tools/mkspiffs/2.5.0-4-b40a506,runtime.tools.mkspiffs-2.5.0-4-b40a506.path=/home/h3lgi/.arduino15/packages/esp8266/tools/mkspiffs/2.5.0-4-b40a506,runtime.tools.python3.path=/home/h3lgi/.arduino15/packages/esp8266/tools/python3/3.7.2-post1,runtime.tools.python3-3.7.2-post1.path=/home/h3lgi/.arduino15/packages/esp8266/tools/python3/3.7.2-post1,runtime.tools.xtensa-lx106-elf-gcc.path=/home/h3lgi/.arduino15/packages/esp8266/tools/xtensa-lx106-elf-gcc/2.5.0-4-b40a506,runtime.tools.xtensa-lx106-elf-gcc-2.5.0-4-b40a506.path=/home/h3lgi/.arduino15/packages/esp8266/tools/xtensa-lx106-elf-gcc/2.5.0-4-b40a506,runtime.tools.mklittlefs.path=/home/h3lgi/.arduino15/packages/esp8266/tools/mklittlefs/2.5.0-4-fe5bb56,runtime.tools.mklittlefs-2.5.0-4-fe5bb56.path=/home/h3lgi/.arduino15/packages/esp8266/tools/mklittlefs/2.5.0-4-fe5bb56",
+  "fqbn": "esp8266:esp8266:nodemcuv2:xtal=80,vt=flash,exception=legacy,ssl=all,eesz=4M2M,led=16,ip=lm2f,dbg=Disabled,lvl=None____,wipe=none,baud=115200",
+  "hardwareFolders": "/home/h3lgi/bin/arduino-1.8.12/hardware,/home/h3lgi/.arduino15/packages",
+  "otherLibrariesFolders": "/home/h3lgi/Arduino/libraries",
+  "runtime.ide.version": "10812",
+  "sketchLocation": "/home/h3lgi/code/agroBotFirmware/unifiedFirmware/unifiedFirmware.ino"
+}

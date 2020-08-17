@@ -1,4 +1,4 @@
-#include<Arduino.h>
+//#include<Arduino.h>
 #include <FS.h>                   //this needs to be first, or it all crashes and burns...
 
 #include "config.h"
@@ -7,7 +7,7 @@
 #include <WiFiClient.h>
 
 //ESP Web Server Library to host a web page
-#include <DNSServer.h>
+#include <DNSServer.h> 
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
 
@@ -17,11 +17,23 @@
 #include <Wire.h>
 
 #if UNIFIED_CONTROLLER
-
+arduino
 #elif WATER_LEVEL
   #include <HX711.h>
   #include <Servo.h>
   #include <PID_v1.h>
+
+  HX711 waterLevelSensor;
+
+
+
+
+  PID waterLevelPid(&wlPidInput, &wlPidOutput, &wlPidSetpoint, wlConsKp, wlConsKi, wlConsKd, DIRECT);
+
+  Servo waterGateServo;
+
+
+
 
 #elif LIGHT_CONTROL
 
@@ -52,18 +64,14 @@ long lastMsg = 0;
 char msg[50];
 int value = 0;
 
-void theCb(void* p)
-{
-
-  Serial.println("THE CALLBACK IS CALLED------------------_>");
-  delay(500);
-}
-//byte
-byte pin  = 12;
 
 
 //bool isConfigured = false;
 int loopPinId = 0;
+bool loopSetup = true;
+
+
+
 void setup(void)
 {
 
@@ -73,29 +81,13 @@ void setup(void)
     // Serial.print(".");
     }*/
 
-  #if UNIFIED_CONTROLLER
-  mcuType = 1;
-
-  #elif WATER_LEVEL
-  mcuType = 2;
-
-  #elif LIGHT_CONTROL
-  mcuType = 3;
-
-  #elif NUTRITION_CONTROL
-  mcuType = 4;
-  #endif
-
   Serial.begin(115200);
 
 //  if (!SPIFFS.begin())
 //  {
 //    Serial.println("ERRPR: Failed to mount FS");
 //  }
-//  //  if (SPIFFS.format())
-//  //  {
-//  //    Serial.println("formated file system");
-//  //  }
+//
 //  if (RESET_CONFIG)
 //  {
 //    resetConfig();
@@ -108,6 +100,7 @@ void setup(void)
 //    }
 //
 //  }
+//
 //  if (!srvCfgFileExists())
 //  {
 //    initSrvCfgFile();
@@ -130,20 +123,37 @@ void setup(void)
 //    saveSrvParams(&mqttParams, &httpParams, true);
 //
 //  }
-//  if (!pinsCfgFileExists())
-//  {
-//    initPinsArr();
-//    initPinsCfgFile();
-//  }
-//  else
-//  {
-//    initPinsArr();
-//    //initPinsCfgFile();
-//    readPinsConfig();
-//    //initPinsArr();
-//
-//  }
-//  setupPins();
+
+  #if UNIFIED_CONTROLLER
+  mcuType = 1;
+  if (!pinsCfgFileExists())
+  {
+    initPinsArr();
+    initPinsCfgFile();
+  }
+  else
+  {
+    initPinsArr();
+    //initPinsCfgFile();
+    readPinsConfig();
+    //initPinsArr();
+
+  }
+  setupPins();
+
+  #elif WATER_LEVEL
+  mcuType = 2;
+  setupWaterLevel();
+
+  #elif LIGHT_CONTROL
+  mcuType = 3;
+
+  #elif NUTRITION_CONTROL
+  mcuType = 4;
+  #endif
+
+
+
 
   // initCfgFiles();
   //  setupCfgFiles();
@@ -153,92 +163,44 @@ void setup(void)
 
 
   //mqttPass
-
-  Serial.println("-----------------------------------------------------------------------------------------////////-----------");
-  // savePinsCfgFile(_managedPins, true);
-  //
-  //  //testPinCfg.behaviorCallback = timeSeriesCaller;
-  //  testPinCfg.behaviorCallback = pwmCaller;
-  //  testPinCfg.behaviorParams[0] = 512;
-  //  testPinCfg.behaviorParams[1] = 0;
-  //  testPinCfg.dataBufferTX[0] = (char)1;
-  //  testPinCfg.dataBufferRX[0] = (char)1;
-  //  testPinCfg.id = 12;
-  //  testPinCfg.type = DIGITAL_PIN;
-  //  pinMode(4, INPUT);
-  //  pinMode(pin, INPUT);
-  //  analogWrite(12, 512);
-  //  for (int i = 0; i < N_PINS; i++)
-  //  {
-  //    if (i != 11 && i != 12 && i!= 13)
-  //    {
-  //      pinMode(_managedPins[i].id, OUTPUT);
-  //    }
-  //    delay(200);
-  //  }
-  // byte _pinout[N_PINS] = {16, 5, 4, 0, 2, 14, 12, 13, 15, 3, 1, 9, 10, 17}; //note 16, 3, 1, 10, 9 is high on boot and 10/9 are not recomended
-
-
-
-//  for (byte i = 0; i < N_PINS; i++)
-//  {
-//
-//    Serial.println(_managedPins[i].isActive);
-//    Serial.println(_managedPins[i].id );
-//    Serial.println(_managedPins[i].type );
-//    Serial.println(_managedPins[i].behavior);
-//    Serial.println(_managedPins[i].dataType);
-//    Serial.println(_managedPins[i].processing);
-//
-//    //
-//    //        memset(_managedPins[i].behaviorParams, 0, sizeof(_managedPins[i].behaviorParams));
-//    //        memset(_managedPins[i].dataTypeParams, 0, sizeof(_managedPins[i].dataTypeParams));
-//    //
-//    //
-//    //        memset(_managedPins[i].dataBufferTX, 0, sizeof(_managedPins[i].dataBufferTX));
-//    //        memset(_managedPins[i].dataBufferRX, 0, sizeof(_managedPins[i].dataBufferRX));
-//    Serial.print("VALUES:    ");
-//    for (int k = 0; k < 4; k++)
-//    {
-//      /// Serial.print("TICK");
-//      //_managedPins[i].dataBufferTX[j] = (char)1;
-//
-//      Serial.print(_managedPins[i].behaviorParams[k]);
-//
-//    }
-//
-//    Serial.println("--------------------------------------");
-//    delay(50);
-//
-//  }
-
-  reconnectMqtt();
+  //reconnectMqtt();
 
   Serial.println("-------------------END SETUP");
 }
 
 void loop(void)
 {
+    Serial.println("------------------------------>");
+    delay(20);
   Serial.print(loopPinId);
+  if(loopSetup)
+  {
+//      callibrateMinMaxLevel();
+      loopSetup = false;
 
-//  Serial.println("------------------------------ ENTERING LOOP");
-//  if (loopPinId < N_PINS)
-//  {
-//    if (1)
-//    {
-//      Serial.print(loopPinId);
-//
-//      Serial.println("------------------------------ ПРОЦеССИНГ LOOP");
-//      processPin(&(_managedPins[loopPinId]));
-//
-//    }
-//    loopPinId ++;
-//  }
-//  else
-//  {
-//    loopPinId = 0;
-//  }
+  }
+//  proccesWaterLevel();
+
+  //  Serial.println("------------------------------ ENTERING LOOP");
+  //  if (loopPinId < N_PINS)
+  //  {
+  //    if (1)
+  //    {
+  //      Serial.print(loopPinId);
+  //
+  //      Serial.println("------------------------------ ПРОЦеССИНГ LOOP");
+  //      processPin(&(_managedPins[loopPinId]));
+  //
+  //    }
+  //    loopPinId ++;
+  //  }
+  //  else
+  //  {
+  //    loopPinId = 0;
+  //  }
 
   // delay(5000);
+
+  
   Serial.println("printed from CODE");
 }

@@ -163,6 +163,56 @@ bool pinsCfgFileExists()
 }
 
 #endif
+
+#if WATER_LEVEL
+
+void setupWaterLevel()
+{
+  waterLevelSensor.begin(loadCellDoutPin, loadCellSckPin);
+
+  waterLevelSensor.set_scale();
+  waterLevelSensor.tare();
+
+  #if HAS_WATER_FLOW_IN
+  pinMode(waterFlowInPin, INPUT);
+  digitalWrite(waterFlowInPin, HIGH); //TODO check if its needed;
+
+  attachInterrupt(digitalPinToInterrupt(waterFlowInPin), wlFlowInPulseCounter, FALLING);
+
+  #endif
+
+  #if HAS_WATER_FLOW_OUT
+  pinMode(waterFlowOutPin, INPUT);
+  digitalWrite(waterFlowOutPin, HIGH);
+
+  attachInterrupt(digitalPinToInterrupt(waterFlowOutPin), wlFlowOutPulseCounter, FALLING);
+  #endif
+
+  while (!waterLevelSensor.is_ready())
+  {
+    delay(100);
+  }
+
+  //TODO need to choose right variables for PID
+  if (_waterLevel.gateTarget != EMPTY_CFG)
+  {
+    wlPidInput = _waterLevel.levelCurrent;
+    wlPidSetpoint = _waterLevel.levelTarget;
+
+  }
+  else
+  {//TODO chack for optimal initial params
+    wlPidInput = 0.0f;
+    wlPidSetpoint = 100.0f;
+  }
+wlPidSetpoint = 100.0f;
+  waterLevelPid.SetMode(AUTOMATIC);
+  waterGateServo.attach(waterGateServoPin); //todo need to be attached with value from memmory
+
+}
+
+
+#endif
 bool srvCfgFileExists()
 {
   if (SPIFFS.exists("/srv_cfg.json"))
@@ -176,10 +226,10 @@ bool srvCfgFileExists()
 }
 bool cfgFilesExists()
 {
-  
+
   if (srvCfgFileExists()) //TODO need to add for rest of cfg
   {
-    
+
     Serial.println("---------------------------ALL  FILE  EXISTS");
 
     return true;
@@ -319,7 +369,7 @@ void setupWifiManager()
   byte mac[6];
   WiFi.macAddress(mac);
   byteArrToStr(mac, WL_MAC_ADDR_LENGTH, macId);
-  
+
 
 }
 

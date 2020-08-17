@@ -1,0 +1,162 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/cores/esp8266"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/variants/nodemcu"
+  },
+  {
+    "Sourcefile": "/home/h3lgi/code/agroBotFirmware/unifiedFirmware/build/sketch/unifiedFirmware.ino.cpp",
+    "Include": "ESP8266WiFi.h",
+    "Includepath": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src"
+  },
+  {
+    "Sourcefile": "/home/h3lgi/code/agroBotFirmware/unifiedFirmware/build/sketch/unifiedFirmware.ino.cpp",
+    "Include": "DNSServer.h",
+    "Includepath": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/DNSServer/src"
+  },
+  {
+    "Sourcefile": "/home/h3lgi/code/agroBotFirmware/unifiedFirmware/build/sketch/unifiedFirmware.ino.cpp",
+    "Include": "ESP8266WebServer.h",
+    "Includepath": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WebServer/src"
+  },
+  {
+    "Sourcefile": "/home/h3lgi/code/agroBotFirmware/unifiedFirmware/build/sketch/unifiedFirmware.ino.cpp",
+    "Include": "WiFiManager.h",
+    "Includepath": "/home/h3lgi/Arduino/libraries/WiFiManager"
+  },
+  {
+    "Sourcefile": "/home/h3lgi/code/agroBotFirmware/unifiedFirmware/build/sketch/unifiedFirmware.ino.cpp",
+    "Include": "PubSubClient.h",
+    "Includepath": "/home/h3lgi/Arduino/libraries/PubSubClient/src"
+  },
+  {
+    "Sourcefile": "/home/h3lgi/code/agroBotFirmware/unifiedFirmware/build/sketch/unifiedFirmware.ino.cpp",
+    "Include": "ArduinoJson.h",
+    "Includepath": "/home/h3lgi/Arduino/libraries/ArduinoJson/src"
+  },
+  {
+    "Sourcefile": "/home/h3lgi/code/agroBotFirmware/unifiedFirmware/build/sketch/unifiedFirmware.ino.cpp",
+    "Include": "Wire.h",
+    "Includepath": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/Wire"
+  },
+  {
+    "Sourcefile": "/home/h3lgi/code/agroBotFirmware/unifiedFirmware/build/sketch/unifiedFirmware.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/BearSSLHelpers.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/CertStoreBearSSL.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFi.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiAP.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiGeneric.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiGratuitous.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiMulti.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiSTA-WPS.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiSTA.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/ESP8266WiFiScan.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiClient.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiClientSecureAxTLS.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiClientSecureBearSSL.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiServer.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiServerSecureAxTLS.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiServerSecureBearSSL.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src/WiFiUdp.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/DNSServer/src/DNSServer.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WebServer/src/detail/mimetable.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/Arduino/libraries/WiFiManager/WiFiManager.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/Arduino/libraries/PubSubClient/src/PubSubClient.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/h3lgi/.arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/Wire/Wire.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]
