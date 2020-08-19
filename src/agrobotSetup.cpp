@@ -1,8 +1,10 @@
+#include "agrobotSetup.h"
+
 #if UNIFIED_CONTROLLER
 void initPinsArr()
 {
   Serial.println("Initializing Structs");
-  for (byte i = 0; i < N_PINS; i++)
+  for (int8_t i = 0; i < N_PINS; i++)
   {
 
     _managedPins[i].isActive = true;
@@ -30,9 +32,9 @@ void initPinsArr()
   }
 }
 
-bool isValidPin(byte pinId)
+bool isValidPin(int8_t pinId)
 {
-  //  for (byte i = 0; i < N_PINS; i++)
+  //  for (int8_t i = 0; i < N_PINS; i++)
   //  {
   //    if (_managedPins[i].id == pinId)
   //    {
@@ -42,9 +44,9 @@ bool isValidPin(byte pinId)
   //  return false;
 }
 
-bool isActivedPin(byte pinId)
+bool isActivedPin(int8_t pinId)
 {
-  //  for (byte i = 0; i < N_PINS; i++)
+  //  for (int8_t i = 0; i < N_PINS; i++)
   //  {
   //    if (_managedPins[i].id == pinId && _managedPins[i].isActive)
   //    {
@@ -55,10 +57,10 @@ bool isActivedPin(byte pinId)
   //  return false;
 }
 
-byte getPinIndex(byte pinId)
+int8_t getPinIndex(int8_t pinId)
 {
-  //  byte index = -1;
-  //  for (byte i = 0; i < N_PINS; i++)
+  //  int8_t index = -1;
+  //  for (int8_t i = 0; i < N_PINS; i++)
   //  {
   //    index  = _managedPins[i].id == pinId ?  i :  -1;
   //  }
@@ -66,18 +68,18 @@ byte getPinIndex(byte pinId)
 }
 
 
-void setPinType(byte pinId, byte pinType)
+void setPinType(int8_t pinId, int8_t pinType)
 {
   // _managedPins[getPinIndex(pinId)].type = pinType;
 
 }
 
-void setPinBehavior(byte pinId, byte pinBehavior)
+void setPinBehavior(int8_t pinId, int8_t pinBehavior)
 {
   //  _managedPins[getPinIndex(pinId)].behavior[0] = pinBehavior;
 }
 
-void activatePin(byte pinId)
+void activatePin(int8_t pinId)
 {
   // _managedPins[getPinIndex(pinId)].isActive = true;
 }
@@ -366,7 +368,7 @@ void setupWifiManager()
   Serial.println( httpTokenParam.getValueLength());
   Serial.println( strlen(httpTokenParam.getValue()));
 
-  byte mac[6];
+  uint8_t mac[6]; //changed from byte 
   WiFi.macAddress(mac);
   byteArrToStr(mac, WL_MAC_ADDR_LENGTH, macId);
 
@@ -374,11 +376,11 @@ void setupWifiManager()
 }
 
 
-void setupMqtt()
+void setupMqtt(PubSubClient* mqttClient) //TODO refact
 {
   // mqttClient.set
-  mqttClient.setServer(WiFi.gatewayIP(), 1883); //TODO move to another function
-  mqttClient.setCallback(dataCallback);
+  mqttClient->setServer(WiFi.gatewayIP(), 1883); //TODO move to another function
+  mqttClient->setCallback(dataCallback);
 }
 
 void saveSrvCfgCallback()
@@ -393,6 +395,8 @@ void resetParamFlags()
 
 }
 
-void setCfgFlag(byte addr, byte flag)
+void setCfgFlag(int8_t addr, int8_t flag) //changed from byte 
 {
 }
+
+

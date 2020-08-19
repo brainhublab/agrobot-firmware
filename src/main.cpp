@@ -1,5 +1,6 @@
-//#include<Arduino.h>
+#include<Arduino.h>
 #include <FS.h>                   //this needs to be first, or it all crashes and burns...
+#include <limits.h>
 
 #include "config.h"
 
@@ -17,7 +18,7 @@
 #include <Wire.h>
 
 #if UNIFIED_CONTROLLER
-arduino
+
 #elif WATER_LEVEL
   #include <HX711.h>
   #include <Servo.h>
@@ -58,7 +59,6 @@ char _errMsg[60];
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
-bool shouldSaveSrvCfg = false;
 
 long lastMsg = 0;
 char msg[50];
@@ -124,6 +124,7 @@ void setup(void)
 //
 //  }
 
+/*//TODO
   #if UNIFIED_CONTROLLER
   mcuType = 1;
   if (!pinsCfgFileExists())
@@ -166,10 +167,12 @@ void setup(void)
   //reconnectMqtt();
 
   Serial.println("-------------------END SETUP");
+  */
 }
 
 void loop(void)
 {
+  /*//TODOOOOO
     Serial.println("------------------------------>");
     delay(20);
   Serial.print(loopPinId);
@@ -179,6 +182,9 @@ void loop(void)
       loopSetup = false;
 
   }
+
+*/
+
 //  proccesWaterLevel();
 
   //  Serial.println("------------------------------ ENTERING LOOP");

@@ -1,15 +1,18 @@
+#include <agroboyMethods.h>
+
+
 #if UNIFIED_CONTROLleR
 #endif
 
 #if WATER_LEVEL
-void proccesWaterLevel()
+void AgroBotMethods::proccesWaterLevel()
 {
 
   correctWaterLevel();
 
 }
 
-void correctWaterLevel()
+void AgroBotMethods::correctWaterLevel()
 {
   Serial.println("------------------Correction of waterLevel");
   wlPidInput = getWaterLevelPercents();
@@ -33,7 +36,7 @@ void correctWaterLevel()
   setWaterLevelGate(map((int)wlPidOutput, 0, 255, 0, 100));
 }
 
-void callibrateMinMaxLevel() //TODO add water flow sensors detection later 
+void AgroBotMethods::callibrateMinMaxLevel() //TODO add water flow sensors detection later 
 //TODO need to be finished in real installation 
 {
   Serial.println("-------------Entering in calibration");
@@ -101,12 +104,12 @@ void callibrateMinMaxLevel() //TODO add water flow sensors detection later
 
 }
 
-double getWaterLevelPercents()
+double AgroBotMethods::getWaterLevelPercents()
 {
   return valueToPercentsOf(getWaterLevelRawData(), waterLevelRawMax);
 }
 
-double getWaterLevelRawData()
+double AgroBotMethods::getWaterLevelRawData()
 {
   while (!waterLevelSensor.is_ready())
   {
@@ -116,7 +119,7 @@ double getWaterLevelRawData()
 
 }
 
-void setWaterLevelGate(double percents)
+void AgroBotMethods::setWaterLevelGate(double percents)
 {
   waterGateServo.write(map((int)percents, 0, 100, 0, 180));
 }
@@ -124,12 +127,12 @@ void setWaterLevelGate(double percents)
 
 #if LIGHT_CONTROL
 
-void proecessLightControl()
+void AgroBotMethods::proecessLightControl()
 {
 
 }
 
-void correctLightLevel()
+void AgroBotMethods::correctLightLevel()
 {
 
 }
@@ -139,12 +142,12 @@ void correctLightLevel()
 
 #if NUTRITION_CONTROL
 
-void processNutritionControl
+void AgroBotMethods::processNutritionControl
 {
 
 }
 
-void correctNutritionConcentration()
+void AgroBotMethods::correctNutritionConcentration()
 {
 
 }

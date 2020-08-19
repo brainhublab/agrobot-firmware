@@ -1,21 +1,24 @@
 
-void publishErrorMessage()
+#include <agrobotConnection.h>
+
+#include <config.h>
+void AgrobotConnection::publishErrorMessage()
 {
 
 }
 
-void publishSuccessMessage(char* sucMsg)
+void AgrobotConnection::publishSuccessMessage(char* sucMsg)
 {
 
 }
 
-void reconnectMqtt()
+void AgrobotConnection::reconnectMqtt(PubSubClient* mqttClient)
 {
-  while (!mqttClient.connected())
+  while (!mqttClient->connected())
   {
     Serial.println("Attempting MQTT connection ...");
 
-    if (mqttClient.connect(macId, mqttParams.mqttUser, mqttParams.mqttPass))
+    if (mqttClient->connect(macId, mqttParams.mqttUser, mqttParams.mqttPass))
     {
       Serial.println("Mqtt connected");
 //      if (!pinsCfgFileExists()) //TODO rewrite
@@ -32,7 +35,7 @@ void reconnectMqtt()
     else
     {
       Serial.print("failed, rc=");
-      Serial.print(mqttClient.state());
+      Serial.print(mqttClient->state());
       Serial.println(" try again in 5 seconds");
       // Wait 5 seconds before retrying
       delay(5000);
