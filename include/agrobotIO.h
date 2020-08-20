@@ -1,5 +1,9 @@
 #ifndef AGROBOT_IO
 #define AGROBOT_IO
+
+#pragma once //TODO ??
+
+
 #include <FS.h> //this needs to be first, or it all crashes and burns...
 
 #include <stdio.h>
@@ -7,6 +11,8 @@
 #include <ArduinoJson.h>
 
 #include "config.h"
+#include "agrobotShared.h"
+
 
 // class AgrobotIO
 // {

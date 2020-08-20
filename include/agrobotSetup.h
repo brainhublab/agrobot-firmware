@@ -1,6 +1,9 @@
 #ifndef AGROBOT_SETUP
 #define AGROBOT_SETUP
 
+#pragma once //TODO ??
+
+
 #include <stdint.h>
 
 #include <WiFiManager.h> //https://github.com/tzapu/WiFiManager
@@ -8,6 +11,8 @@
 
 
 #include "config.h"
+#include "agrobotShared.h"
+
 #include "agrobotIO.h"
 #include "agrobotHelpers.h"
 

@@ -370,7 +370,7 @@ void setupWifiManager()
 
   uint8_t mac[6]; //changed from byte 
   WiFi.macAddress(mac);
-  byteArrToStr(mac, WL_MAC_ADDR_LENGTH, macId);
+  byteArrToStr(mac, WL_MAC_ADDR_LENGTH, macId); 
 
 
 }
@@ -385,7 +385,7 @@ void setupMqtt(PubSubClient* mqttClient) //TODO refact
 
 void saveSrvCfgCallback()
 {
-  shouldSaveSrvCfg = true;
+  shouldSaveSrvCfg = true; 
 }
 
 

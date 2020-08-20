@@ -1,7 +1,10 @@
 #ifndef AGROBOT_METHODS
 #define AGROBOT_METHODS
+#pragma once //TODO ??
+
 
 #include <config.h>
+#include "agrobotShared.h"
 
 class AgroBotMethods
 {
