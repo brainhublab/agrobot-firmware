@@ -5,8 +5,16 @@
 #include <Servo.h>
 #include <stdint.h>
 
+
+#include <FS.h> //this needs to be first, or it all crashes and burns...
+
+#include <stdio.h>
+
+#include <ArduinoJson.h>
+
 #include "agrobotHelpers.h"
 #include "config.h"
+#include "agrobotShared.h"
 //TODO migrate some of vars in config header
 static void ICACHE_RAM_ATTR wlFlowInPulseCounter();
 static void ICACHE_RAM_ATTR wlFlowOutPulseCounter();
@@ -32,6 +40,9 @@ public:
     double getWaterLevelPercents();
     double getWaterLevelRawData();
     void setWaterLevelGate(double);
+
+    void saveWaterLevelCfgFile();
+    void readWaterLevelCfgFile();
 
     double waterLevelRawMax;
     double waterLevelRawMin;

@@ -1,11 +1,19 @@
 #ifndef AGROBOT_SHARED
 #define AGROBOT_SHARED
+#include <Arduino.h>
+#include <stdarg.h>
+
+
 #include <stdint.h>
 #include "config.h"
 
 
 #if UNIFIED_CONTROLLER //TODO not good idea
-
+    static void readDigitalPin(int, ...);
+    static void writeDigitalPin(int, ...);
+    static void timeSeriesCaller(int, ...);
+    static void trigerCaller(int, ...);
+    static void pwmCaller(int, ...);
 #elif WATER_LEVEL
 
 #elif LIGHT_CONTROL
@@ -25,33 +33,7 @@ extern bool shouldSaveSrvCfg;
 
 //functionaly specific vars
 #if UNIFIED_CONTROLLER
-extern bool pinsConfigured; //=false
 
-typedef struct
-{
-    bool isActive;
-    uint8_t id;
-    uint8_t type;
-    uint8_t dataType;
-    uint8_t behavior;
-    uint8_t processing;
-    void (*behaviorCallback)(int, ...);
-    long behaviorParams[4];
-    long dataTypeParams[4];
-    uint8_t dataBufferTX[64];
-    uint8_t dataBufferRX[64];
-    //  char dataBufferTX[4];
-    //  char dataBufferRX[4];
-} pinConfig;
-
-//byte _pinout[N_PINS] = {17, 16, 14, 12, 13, 15, 2, 0, 4, 5, 3, 1}; //note 16, 3, 1, 10, 9 is high on boot
-extern uint8_t _pinout[N_PINS]; //= {16, 5, 4, 0, 2, 14, 12, 13, 15, 3, 1, 9, 10, 17}; //note 16, 3, 1, 10, 9 is high on boot and 10/9 are not recomended
-
-//byte _spiPinsIds[4] = {5, 6, 7, 8};
-extern pinConfig _managedPins[N_PINS];
-
-//ioTimeOut for transmissions
-extern unsigned int ioTimeout; //= 100; //uint16_t
 #endif
 
 #if WATER_LEVEL

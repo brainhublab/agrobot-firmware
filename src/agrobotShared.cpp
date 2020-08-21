@@ -11,109 +11,131 @@ extern bool shouldSaveSrvCfg = false;
 
 //functionaly specific vars
 #if UNIFIED_CONTROLLER
-extern bool pinsConfigured = false;
 
-// typedef struct
-// {
-//     bool isActive;
-//     uint8_t id;
-//     uint8_t type;
-//     uint8_t dataType;
-//     uint8_t behavior;
-//     uint8_t processing;
-//     void (*behaviorCallback)(int, ...);
-//     long behaviorParams[4];
-//     long dataTypeParams[4];
-//     uint8_t dataBufferTX[64];
-//     uint8_t dataBufferRX[64];
-//     //  char dataBufferTX[4];
-//     //  char dataBufferRX[4];
-// } pinConfig;
+static void readDigitalPin(int argCount, ...) //TODO
+{
+    va_list argList;
+    va_start(argList, argCount);
+    byte *pinId = va_arg(argList, byte *);
+    char *inData = va_arg(argList, char *);
+    if (digitalRead(*pinId) == HIGH)
+    {
+        inData[0] = (char)1;
+        Serial.print("------------------------------------------>HIGH");
+    }
+    else
+    {
+        Serial.print("------------------------------------------>LOW");
+        inData[0] = (char)0;
+    }
+    Serial.print("------------------------------------------>");
+    Serial.println(inData[0]);
 
-//byte _pinout[N_PINS] = {17, 16, 14, 12, 13, 15, 2, 0, 4, 5, 3, 1}; //note 16, 3, 1, 10, 9 is high on boot
-extern uint8_t _pinout[N_PINS] = {16, 5, 4, 0, 2, 14, 12, 13, 15, 3, 1, 9, 10, 17}; //note 16, 3, 1, 10, 9 is high on boot and 10/9 are not recomended
+    va_end(argList);
+}
 
-//byte _spiPinsIds[4] = {5, 6, 7, 8};
-extern pinConfig _managedPins[N_PINS];
+static void writeDigitalPin(int argCount, ...)
+{
+    va_list argList;
+    va_start(argList, argCount);
+    byte *pinId = va_arg(argList, byte *);
+    char *data = va_arg(argList, char *);
+    Serial.print("DIGITAL WRITE CALLED    ");
+    Serial.print(*pinId);
+    Serial.print("         ");
+    Serial.print((int)data[0]);
+    if ((int)data[0] == 1)
+    {
+        data[0] = (char)0;
+    }
+    else
+    {
+        data[0] = (char)1;
+    }
+    digitalWrite(*pinId, (int)data[0]);
+    va_end(argList);
+}
 
-//ioTimeOut for transmissions
-extern unsigned int ioTimeout = 100; //uint16_t
+static void timeSeriesCaller(int argCount, ...) //callback is digital write or red (param caount, paramsarr, cb, cb params
+{
+    Serial.println("----------------ENTERING IN TIME SERIES CALLER");
+    //  if ( == NULL)
+    //  {
+    //    Serial.println("ERROR: Cannot call timeseriesCaller with empty params");
+    //    return;
+    //  }
+    va_list argList;
+    va_start(argList, argCount);
+    long *params = va_arg(argList, long *);
+    void (*callback)(int, ...) = va_arg(argList, void (*)(int, ...));
+
+    if (millis() - (params[1]) >= (params[0] * 1000)) //TODO convert it in setup to milliseconds
+    {
+        params[1] = millis();
+        //callback(2, va_arg(argList, byte*), va_arg(argList, char*));
+        //    if (type == DIGITAL_PIN || type == ANALOG_PIN) //TODO only IO pins
+        //    {
+        callback(2, va_arg(argList, byte *), va_arg(argList, char *)); // callback(2, pinID, ioBuff)
+                                                                       //    }
+    }
+    va_end(argList);
+    Serial.println("----------------EXITING IN TIME SERIES CALLER");
+}
+
+static void trigerCaller(int argCount, ...) //callback is digital write or red
+{
+    va_list argList;
+    va_start(argList, argCount);
+
+    //  long* val = va_arg(argList, long*);
+    //  long* triger = va_arg(argList, long*);
+    long *params = va_arg(argList, long *);
+    void (*callback)(int, ...) = va_arg(argList, void (*)(int, ...));
+
+    if (params[1] == params[0])
+    {
+        Serial.println("TRIGERED");
+        callback(2, va_arg(argList, byte *), va_arg(argList, char *)); // callback(2, pinID, ioBuff)
+    }
+    else
+    {
+        Serial.println("NOT TRIGERED");
+    }
+    va_end(argList);
+}
+
+static void pwmCaller(int argCount, ...) //callback is digital write or red
+{
+    va_list argList;
+    va_start(argList, argCount);
+    long *params = va_arg(argList, long *);
+    byte *pinId = va_arg(argList, byte *);
+
+    if (*pinId == 16 || *pinId == 3 || *pinId == 1)
+    {
+        Serial.println("ERROR: selected pin not support PWM ");
+    }
+    else
+    {
+        if (params[0] > 1023)
+        {
+            params[0] = 1023;
+        }
+        analogWrite(*pinId, params[0]);
+    }
+    //void (*callback)(int, ...) = va_arg(argList, void (*)(int, ...);
+    //long* params, void (*callback)(void*, void*), void* dtParams, void* data
+
+    //  if (pParams == NULL)
+    //  {
+    //    Serial.println("ERROR: pwm params are NULL");
+    //    return;
+    //  }
+}
 #endif
 
 #if WATER_LEVEL
-/*
-extern double waterLevelRawMax = 0;
-extern double waterLevelRawMin = 0;
-extern bool waterLevelConfigured = false;
-// typedef struct
-// {
-//     uint8_t gateCurrent;
-//     uint8_t gateTarget;
-//     uint8_t levelCurrent;
-//     uint8_t levelTarget;
-//     int waterFlowIn;
-//     int waterFlowOut;
-// } waterLevelCfg;
 
-extern waterLevelCfg _waterLevel;
-
-extern const uint8_t loadCellDoutPin = 16; //TODO PIN IDS
-extern const uint8_t loadCellSckPin = 5;
-extern const uint8_t waterGateServoPin = 0;
-//
-extern const int waterTankThreshold = 5; //TODO make it more cleaner with proper threshold
-
-//PID configuration and variables
-
-extern double wlPidInput = 0.f;
-extern double wlPidOutput = 0.f;
-extern double wlPidSetpoint = 0.f;
-
-//double Kp = 2, Ki = 5, Kd = 1;
-
-extern double wlAgKp = 4.0, wlAgKi = 0.2, wlAgKd = 1.0;       //= 4.0, = 0.2, = 1.0;
-extern double wlConsKp = 1, wlConsKi = 0.05, wlConsKd = 0.25; // = 1,  = 0.05,  extern = 0.25
-
-#if HAS_WATER_FLOW_IN
-extern const uint8_t waterFlowInPin = 4;
-
-extern float wlFlowInCalibrationFactor = 4.5;
-
-extern volatile uint8_t wlFlowInPulseCount = 0;
-
-extern float wlFlowInFlowRate = 0.0f;
-extern unsigned int wlFlowInFlowMilliLitres = 0;
-extern unsigned long wlFlowInFTotalMilliLitres = 0;
-
-extern unsigned int wlFlowInOldTimer = 0;
-
-void ICACHE_RAM_ATTR wlFlowInPulseCounter()
-{
-    // Increment the pulse counter
-    wlFlowInPulseCount++;
-}
-#endif
-
-#if HAS_WATER_FLOW_OUT
-extern const uint8_t waterFlowOutPin = 0;
-
-extern float wlFlowOutCalibrationFactor = 4.5;
-
-extern volatile uint8_t wlFlowOutPulseCount = 0;
-
-extern float wlFlowOutFlowRate = 0.0f;
-extern unsigned int wlFlowOutFlowMilliLitres = 0;
-extern unsigned long wlFlowOutFTotalMilliLitres = 0;
-
-extern unsigned int wlFlowOutOldTimer = 0;
-
-void ICACHE_RAM_ATTR wlFlowOutPulseCounter();
-{
-    // Increment the pulse counter
-    wlFlowOutPulseCount++;
-}
-#endif
-*/
 #endif
 
 #if LIGHT_CONTROL

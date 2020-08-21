@@ -1,6 +1,13 @@
 #ifndef LIGHT_CONTROL_H
 #define LIGHT_CONTROL_H
 
+#include <FS.h> //this needs to be first, or it all crashes and burns...
+
+#include <stdio.h>
+
+#include <ArduinoJson.h>
+#include "agrobotShared.h"
+
 #include <stdint.h>
 #include "config.h"
 
@@ -22,10 +29,13 @@ typedef struct
 
 class LightControl
 {
-    public:
+public:
     LightControl();
     void proecessLightControl();
     void correctLightLevel();
+
+    void saveLightControlCfgFile();
+    void readLightControlCfgFile();
 
     bool lightControlConfigured; // = false;
     lightControlCfg _lightControlCfg;

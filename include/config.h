@@ -8,10 +8,11 @@
 
 //Modules configs
 
-#define UNIFIED_CONTROLLER 0
-#define WATER_LEVEL 1
+#define MCU_TYPE 1 //TODO change to shared
+#define UNIFIED_CONTROLLER 1
+#define WATER_LEVEL 0
 #define LIGHT_CONTROL 0
-#define NUTRITION_CONTROL 0
+#define NUTRITION_CONTROL 1
 
 //Helping macroses
 //#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))

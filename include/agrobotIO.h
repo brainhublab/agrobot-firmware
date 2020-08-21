@@ -35,30 +35,19 @@ void readSrvCfgFile();
 void initCfgFile();
 
 #if UNIFIED_CONTROLLER
-void savePinsCfgFile(pinConfig *, bool);
-void readPinsConfig();
-void processPin(pinConfig *);
-void readDigitalPin(int, ...);
-void writeDigitalPin(int, ...);
-void timeSeriesCaller(int, ...);
-void trigerCaller(int, ...);
-void pwmCaller(int, ...);
+
 #endif
 
 #if WATER_LEVEL
-void saveWaterLevelCfgFile(waterLevelCfg *, bool);
-void redWaterLevelCfgFile();
+
 #endif
 
 #if LIGHT_CONTROL
-void saveLightControlCfgFile(lightControlCfg *, bool);
-void readLightControlCfgFile();
+
 #endif
 
 #if NUTRITION_CONTROL
-void saveNutritionControlCfgFile(nutritionControlCfg *, bool);
-//void saveNutritionControlCfgFile(int *, bool);
-void readNutritionControlCfgFile();
+
 #endif
 
 void dataCallback(char *, byte *, unsigned int); //TODO check static
