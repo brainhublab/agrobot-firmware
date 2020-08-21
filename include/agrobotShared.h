@@ -93,21 +93,7 @@ extern unsigned int ioTimeout; //= 100; //uint16_t
 
 #if NUTRITION_CONTROL
 
-extern bool nutritionControlConfigured;// = false;
 
-extern uint8_t pwmPins[];// = {5, 4, 0, 2, 14, 12, 13, 15} ;
-
-
-extern uint8_t nutritionPumpsPins[N_DISPENSERS];
-typedef struct
-{
-    uint8_t nutritionMode;
-    uint8_t targetConcentration;
-    uint8_t currentConcentration;
-    uint8_t controlPin;
-} nutritionControlCfg;
-
-nutritionControlCfg _nutritionControlCfg[N_DISPENSERS];
 #endif
 
 //conn type

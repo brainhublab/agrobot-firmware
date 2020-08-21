@@ -1,6 +1,6 @@
  #ifndef AGROBOT_CONFIG
  #define AGROBOT CONFIG
-#pragma once //TODO ??
+//#pragma once //TODO ??
 
  
  #include <stdint.h>
@@ -8,8 +8,8 @@
 
 //Modules configs
 
-#define UNIFIED_CONTROLLER 1
-#define WATER_LEVEL 0
+#define UNIFIED_CONTROLLER 0
+#define WATER_LEVEL 1
 #define LIGHT_CONTROL 0
 #define NUTRITION_CONTROL 0
 
@@ -30,7 +30,7 @@
 
 
 
-#if UNIFIED_CONTROLLER
+//#if UNIFIED_CONTROLLER
 
 
 #define DIGITAL_PIN 1
@@ -53,7 +53,7 @@
 
 //Water level module configs
 
-#elif WATER_LEVEL
+//#elif WATER_LEVEL
 
 #define HAS_WATER_FLOW_IN 1
 #define HAS_WATER_FLOW_OUT 1
@@ -87,7 +87,7 @@
 
 
 //Light control module config
-#elif LIGHT_CONTROL
+//#elif LIGHT_CONTROL
 
 
 //Light modes
@@ -97,8 +97,7 @@
 #define CONTINUOUS 3
 
 
-#elif NUTRITION_CONTROL
-
+//#elif NUTRITION_CONTROL
 
 #define PERIODIC 1
 #define RELATIVE 2
@@ -109,7 +108,7 @@
 #define MAX_N_DISPENSERS 8
 #define MIN_N_DISPENSERS 1
 
-#endif
+//#endif
 
 
 

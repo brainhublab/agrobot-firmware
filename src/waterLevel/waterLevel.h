@@ -1,15 +1,15 @@
-#ifndef WATER_LEVEL
-#define WATER_LEVEL
+#ifndef WATER_LEVEL_H
+#define WATER_LEVEL_H
 #include <HX711.h>
 #include <PID_v1.h>
 #include <Servo.h>
 #include <stdint.h>
 
-
 #include "agrobotHelpers.h"
 #include "config.h"
 //TODO migrate some of vars in config header
-
+static void ICACHE_RAM_ATTR wlFlowInPulseCounter();
+static void ICACHE_RAM_ATTR wlFlowOutPulseCounter();
 typedef struct
 {
     uint8_t gateCurrent;
@@ -23,6 +23,7 @@ typedef struct
 //methods
 class WaterLevel
 {
+public:
     WaterLevel();
 
     void proccesWaterLevel();
@@ -55,7 +56,7 @@ class WaterLevel
     //Aggresive PID values //TODO PID params to conf header
     double wlAgKp;
     double wlAgKi;
-    double  wlAgKd;
+    double wlAgKd;
 
     //conservative PID values
     double wlConsKp;
@@ -65,12 +66,11 @@ class WaterLevel
     HX711 waterLevelSensor;
     //PID waterLevelPid(&wlPidInput, &wlPidOutput, &wlPidSetpoint, wlConsKp, wlConsKi, wlConsKd, DIRECT);
 
-    PID waterLevelPid;//(double *, double *, double *, double, double, double, int);
+    PID waterLevelPid; //(double *, double *, double *, double, double, double, int);
 
     Servo waterGateServo;
 
 #if HAS_WATER_FLOW_IN
-
 
     float wlFlowInCalibrationFactor; // = 4.5;
 
@@ -82,7 +82,7 @@ class WaterLevel
 
     unsigned int wlFlowInOldTimer; // = 0;
 
-    void ICACHE_RAM_ATTR wlFlowInPulseCounter();
+    //static void ICACHE_RAM_ATTR wlFlowInPulseCounter();
 // {
 //     // Increment the pulse counter
 //     wlFlowInPulseCount++;
@@ -101,7 +101,7 @@ class WaterLevel
 
     unsigned int wlFlowOutOldTimer; // = 0;
 
-    void ICACHE_RAM_ATTR wlFlowOutPulseCounter();
+    // void ICACHE_RAM_ATTR wlFlowOutPulseCounter();
 // {
 //     // Increment the pulse counter
 //     wlFlowOutPulseCount++;

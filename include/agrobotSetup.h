@@ -1,7 +1,7 @@
 #ifndef AGROBOT_SETUP
 #define AGROBOT_SETUP
 
-#pragma once //TODO ??
+//#pragma once //TODO ??
 
 
 #include <stdint.h>

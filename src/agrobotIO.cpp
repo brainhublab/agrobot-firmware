@@ -136,7 +136,7 @@ void initCfgFile()
     savePinsCfgFile(_managedPins, true);
 
 #elif WATER_LEVEL
-    saveWaterLevelCfgFile(&_waterLevel, false);
+    //saveWaterLevelCfgFile(&_waterLevel, false);
 
 #elif LIGHT_CONTROL
     //saveLightControlCfgFile();
@@ -442,7 +442,7 @@ void pwmCaller(int argCount, ...) //callback is digital write or red
 
 #if WATER_LEVEL
 
-void saveWaterLevelCfgFile(waterLevelCfg *wlCfg, bool isConfigured)
+void saveWaterLevelCfgFile(WaterLevel *waterLevel, bool isConfigured)
 {
   File waterLevelCfgFile = SPIFFS.open("/water_level_cfg.json", "w");
   if (!waterLevelCfgFile)
@@ -460,17 +460,17 @@ void saveWaterLevelCfgFile(waterLevelCfg *wlCfg, bool isConfigured)
     waterLevelJsonCfgOut["isConfigured"] = isConfigured;
 
     JsonObject in = waterLevelJsonCfgOut.createNestedObject("in");
-    in["gateTarget"] = wlCfg->gateTarget;
-    in["levelTarget"] = wlCfg->levelTarget;
+    in["gateTarget"] = waterLevel->_waterLevel.gateTarget;
+    in["levelTarget"] = waterLevel->_waterLevel.levelTarget;
 
     JsonObject inPID = in.createNestedObject("PID");
 
-    inPID["agKp"] = wlAgKp;
-    inPID["agKi"] = wlAgKi;
-    inPID["agKd"] = wlAgKd;
-    inPID["consKp"] = wlConsKp;
-    inPID["consKi"] = wlConsKi;
-    inPID["consKd"] = wlConsKd;
+    inPID["agKp"] = waterLevel->wlAgKp;
+    inPID["agKi"] = waterLevel->wlAgKi;
+    inPID["agKd"] = waterLevel->wlAgKd;
+    inPID["consKp"] = waterLevel->wlConsKp;
+    inPID["consKi"] = waterLevel->wlConsKi;
+    inPID["consKd"] = waterLevel->wlConsKd;
 
     if (serializeJson(waterLevelJsonCfgOut, waterLevelCfgFile))
     {
@@ -484,7 +484,7 @@ void saveWaterLevelCfgFile(waterLevelCfg *wlCfg, bool isConfigured)
   }
 }
 
-void redWaterLevelCfgFile()
+void redWaterLevelCfgFile(WaterLevel *waterLevel)
 {
   if (SPIFFS.exists("/water_level_cfg.json"))
   {
@@ -503,18 +503,18 @@ void redWaterLevelCfgFile()
         Serial.println(F("ERROR: failed to read file, using default configuration"));
       }
 
-      waterLevelConfigured = waterLevelJsonCfgIn["isConfigured"];
-      _waterLevel.gateTarget = waterLevelJsonCfgIn["in"]["gateTarget"];
-      _waterLevel.levelTarget = waterLevelJsonCfgIn["in"]["levelTarget"];
+      waterLevel->waterLevelConfigured = waterLevelJsonCfgIn["isConfigured"];
+      waterLevel->_waterLevel.gateTarget = waterLevelJsonCfgIn["in"]["gateTarget"];
+      waterLevel->_waterLevel.levelTarget = waterLevelJsonCfgIn["in"]["levelTarget"];
 
       JsonObject inPID = waterLevelJsonCfgIn["PID"];
 
-      wlAgKp = inPID["agKp"];
-      wlAgKi = inPID["agKi"];
-      wlAgKd = inPID["agKd"];
-      wlConsKp = inPID["consKp"];
-      wlConsKi = inPID["consKi"];
-      wlConsKd = inPID["consKd"];
+      waterLevel->wlAgKp = inPID["agKp"];
+      waterLevel->wlAgKi = inPID["agKi"];
+      waterLevel->wlAgKd = inPID["agKd"];
+      waterLevel->wlConsKp = inPID["consKp"];
+      waterLevel->wlConsKi = inPID["consKi"];
+      waterLevel->wlConsKd = inPID["consKd"];
     }
     waterLevelCfgFile.close();
   }
@@ -570,7 +570,7 @@ void saveLightControlCfgFile(lightControlCfg *lcCfg, bool isConfigured)
   }
 }
 
-void readLightControlCfgFile()
+void readLightControlCfgFile(LightControl *lightControl)
 {
   if (SPIFFS.exists("/light_control_cfg.json"))
   {
@@ -590,21 +590,21 @@ void readLightControlCfgFile()
         Serial.println("ERROR: failed to read file, using default configuration");
       }
 
-      lightControlConfigured = lightControlJsonCfgIn["isConfigured"];
-      _lightControlCfg.lightMode = lightControlJsonCfgIn["lightMode"];
-      _lightControlCfg.targetLightLevel = lightControlJsonCfgIn["targetLightLevel"];
+      lightControl->lightControlConfigured = lightControlJsonCfgIn["isConfigured"];
+      lightControl->_lightControlCfg.lightMode = lightControlJsonCfgIn["lightMode"];
+      lightControl->_lightControlCfg.targetLightLevel = lightControlJsonCfgIn["targetLightLevel"];
       //      _lightControlCfg.currentDateTime = lightControlJsonCfgIn["currentDateTime"];
       if (2 != sscanf(lightControlJsonCfgIn["currentDateTime"],
                       "%hhu%*[^0123456789]%hhu",
-                      &_lightControlCfg.currentTime.hours,
-                      &_lightControlCfg.currentTime.minutes))
+                      &lightControl->_lightControlCfg.currentTime.hours,
+                      &lightControl->_lightControlCfg.currentTime.minutes))
       {
         Serial.println("ERROR: Cannot extract current time please check formating");
       }
       JsonArray lightIntensityMap = lightControlJsonCfgIn["lightIntensityMap"];
-      for (byte i = 0; i < SIZEOF_ARRAY(_lightControlCfg.lightIntensityMap); i++)
+      for (byte i = 0; i < SIZEOF_ARRAY(lightControl->_lightControlCfg.lightIntensityMap); i++)
       {
-        _lightControlCfg.lightIntensityMap[i] = lightIntensityMap[i];
+        lightControl->_lightControlCfg.lightIntensityMap[i] = lightIntensityMap[i];
       }
     }
     lightControlCfgFile.close();
@@ -619,8 +619,9 @@ void readLightControlCfgFile()
 
 #if NUTRITION_CONTROL
 
-void saveNutritionControlCfgFile(nutritionControlCfg *ncCfg, bool isConfigured)
+void saveNutritionControlCfgFile(int *ncCfg, bool isConfigured)
 {
+  /*
   File nutritionControlCfgFile = SPIFFS.open("/nutrition_control_cfg.json", "w");
 
   if (nutritionControlCfgFile)
@@ -662,10 +663,12 @@ void saveNutritionControlCfgFile(nutritionControlCfg *ncCfg, bool isConfigured)
   {
     Serial.println("ERROR: Failed to open nutrition control config for writing");
   }
+  */
 }
 
-void readNutritionControlCfgFile()
+void readNutritionControlCfgFile(NutritionControl *nutritionControl)
 {
+
   if (SPIFFS.exists("/nutrition_control_cfg.json"))
   {
     File nutritionControlCfgFile = SPIFFS.open("/nutrition_control_cfg.json", "r");
@@ -685,12 +688,12 @@ void readNutritionControlCfgFile()
         Serial.println("ERROR: failed to read file, using default configuration");
       }
 
-      nutritionControlConfigured = nutritionControlJsonCfgIn["isConfigured"];
+      nutritionControl->nutritionControlConfigured = nutritionControlJsonCfgIn["isConfigured"];
 
       for (byte i = 0; i < N_DISPENSERS; i++)
       {
-        _nutritionControlCfg[i].nutritionMode = nutritionControlJsonCfgIn[i]["nutritionMode"];
-        _nutritionControlCfg[i].targetConcentration = nutritionControlJsonCfgIn[i]["targetConcentration"];
+        nutritionControl->_nutritionControlCfg[i].nutritionMode = nutritionControlJsonCfgIn[i]["nutritionMode"];
+        nutritionControl->_nutritionControlCfg[i].targetConcentration = nutritionControlJsonCfgIn[i]["targetConcentration"];
       }
     }
     nutritionControlCfgFile.close();

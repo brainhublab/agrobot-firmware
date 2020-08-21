@@ -1,9 +1,6 @@
 #ifndef AGROBOT_IO
 #define AGROBOT_IO
 
-#pragma once //TODO ??
-
-
 #include <FS.h> //this needs to be first, or it all crashes and burns...
 
 #include <stdio.h>
@@ -13,10 +10,20 @@
 #include "config.h"
 #include "agrobotShared.h"
 
+#if UNIFIED_CONTROLLER //TODO not good idea
+#include "unifiedController/unifiedController.h"
+#elif WATER_LEVEL
+#include "waterLevel/waterLevel.h"
 
-// class AgrobotIO
-// {
-// public:
+#elif LIGHT_CONTROL
+#include "lightControl/ligthControl.h"
+#elif NUTRITION_CONTROL
+//#include "nutritionControl/nutritionControl.h"
+#endif
+#include "nutritionControl/nutritionControl.h"
+
+
+
 char *getPinUID(byte);
 void writeParam(byte addr, byte param);
 void resetConfig();
@@ -50,6 +57,7 @@ void readLightControlCfgFile();
 
 #if NUTRITION_CONTROL
 void saveNutritionControlCfgFile(nutritionControlCfg *, bool);
+//void saveNutritionControlCfgFile(int *, bool);
 void readNutritionControlCfgFile();
 #endif
 

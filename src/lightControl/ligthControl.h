@@ -1,5 +1,5 @@
-#ifndef LIGHT_CONTROL
-#define LIGHT_CONTROL
+#ifndef LIGHT_CONTROL_H
+#define LIGHT_CONTROL_H
 
 #include <stdint.h>
 #include "config.h"
@@ -22,6 +22,7 @@ typedef struct
 
 class LightControl
 {
+    public:
     LightControl();
     void proecessLightControl();
     void correctLightLevel();

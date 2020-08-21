@@ -24,11 +24,8 @@ void initPinsArr()
       _managedPins[i].dataTypeParams[j] = 5;
     }
 
-
     memset(_managedPins[i].dataBufferTX, 1, sizeof(_managedPins[i].dataBufferTX));
     memset(_managedPins[i].dataBufferRX, 1, sizeof(_managedPins[i].dataBufferRX));
-
-
   }
 }
 
@@ -67,11 +64,9 @@ int8_t getPinIndex(int8_t pinId)
   //  return index;
 }
 
-
 void setPinType(int8_t pinId, int8_t pinType)
 {
   // _managedPins[getPinIndex(pinId)].type = pinType;
-
 }
 
 void setPinBehavior(int8_t pinId, int8_t pinBehavior)
@@ -91,31 +86,28 @@ void setupPins()
     //setupPin(&(_managedPins[i]));
     switch (_managedPins[i].behavior)
     {
-      case TIME_SERIES_BEHAVIOR:
-        setTimeSeriesBehavior(i);
-        break;
-      case TRIGER_BEHAVIOR:
-        setTrigerBehavior(i);
-        break;
-      case PWM_BEHAVIOR:
-        setPwmBehavior(i);
-        break;
+    case TIME_SERIES_BEHAVIOR:
+      setTimeSeriesBehavior(i);
+      break;
+    case TRIGER_BEHAVIOR:
+      setTrigerBehavior(i);
+      break;
+    case PWM_BEHAVIOR:
+      setPwmBehavior(i);
+      break;
     }
 
     switch (_managedPins[i].dataType)
     {
-      case INPUT_DATA:
-        pinMode(_managedPins[i].id, INPUT);
-        break;
-      case OUTPUT_DATA:
-        pinMode(_managedPins[i].id, OUTPUT);
-        break;
-
+    case INPUT_DATA:
+      pinMode(_managedPins[i].id, INPUT);
+      break;
+    case OUTPUT_DATA:
+      pinMode(_managedPins[i].id, OUTPUT);
+      break;
     }
   }
-
 }
-
 
 //void setupPin(pinConfig* pinCfg)
 //{
@@ -135,14 +127,11 @@ void setupPins()
 
 //}
 
-
 void setTimeSeriesBehavior(int pinId) //TODO processing callback need to be behacior callback pinConfig* pinCfg
 {
   // pinCfg->behaviorCallback = timeSeriesCaller;
   _managedPins[pinId].behaviorCallback = timeSeriesCaller;
 }
-
-
 
 void setTrigerBehavior(int pinId)
 {
@@ -161,58 +150,55 @@ bool pinsCfgFileExists()
     return true;
   }
   return false;
-
 }
 
 #endif
 
 #if WATER_LEVEL
 
-void setupWaterLevel(PID* wlPid, Servo* wlServo)
+void setupWaterLevel(WaterLevel *waterLevel)
 {
-  waterLevelSensor.begin(loadCellDoutPin, loadCellSckPin);
+  //PID* wlPid, Servo* wlServo
+  waterLevel->waterLevelSensor.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
 
-  waterLevelSensor.set_scale();
-  waterLevelSensor.tare();
+  waterLevel->waterLevelSensor.set_scale();
+  waterLevel->waterLevelSensor.tare();
 
-  #if HAS_WATER_FLOW_IN
-  pinMode(waterFlowInPin, INPUT);
-  digitalWrite(waterFlowInPin, HIGH); //TODO check if its needed;
+#if HAS_WATER_FLOW_IN
+  pinMode(WATER_FLOW_IN_PIN, INPUT);
+  digitalWrite(WATER_FLOW_IN_PIN, HIGH); //TODO check if its needed;
 
-  attachInterrupt(digitalPinToInterrupt(waterFlowInPin), wlFlowInPulseCounter, FALLING);
+  attachInterrupt(digitalPinToInterrupt(WATER_FLOW_IN_PIN), wlFlowInPulseCounter, FALLING);
 
-  #endif
+#endif
 
-  #if HAS_WATER_FLOW_OUT
-  pinMode(waterFlowOutPin, INPUT);
-  digitalWrite(waterFlowOutPin, HIGH);
+#if HAS_WATER_FLOW_OUT
+  pinMode(WATER_FLOW_OUT_PIN, INPUT);
+  digitalWrite(WATER_FLOW_OUT_PIN, HIGH);
 
-  attachInterrupt(digitalPinToInterrupt(waterFlowOutPin), wlFlowOutPulseCounter, FALLING);
-  #endif
+  attachInterrupt(digitalPinToInterrupt(WATER_FLOW_OUT_PIN), wlFlowOutPulseCounter, FALLING);
+#endif
 
-  while (!waterLevelSensor.is_ready())
+  while (!waterLevel->waterLevelSensor.is_ready())
   {
     delay(100);
   }
 
   //TODO need to choose right variables for PID
-  if (_waterLevel.gateTarget != EMPTY_CFG)
+  if (waterLevel->_waterLevel.gateTarget != EMPTY_CFG)
   {
-    wlPidInput = _waterLevel.levelCurrent;
-    wlPidSetpoint = _waterLevel.levelTarget;
-
+    waterLevel->wlPidInput = waterLevel->_waterLevel.levelCurrent;
+    waterLevel->wlPidSetpoint = waterLevel->_waterLevel.levelTarget;
   }
   else
-  {//TODO chack for optimal initial params
-    wlPidInput = 0.0f;
-    wlPidSetpoint = 100.0f;
+  { //TODO chack for optimal initial params
+    waterLevel->wlPidInput = 0.0f;
+    waterLevel->wlPidSetpoint = 100.0f;
   }
-wlPidSetpoint = 100.0f;
-  wlPid->SetMode(AUTOMATIC);
-  wlServo->attach(waterGateServoPin); //todo need to be attached with value from memmory
-
+  waterLevel->wlPidSetpoint = 100.0f;
+  waterLevel->waterLevelPid.SetMode(AUTOMATIC);
+  waterLevel->waterGateServo.attach(WATER_GATE_SERVO_PIN); //todo need to be attached with value from memmory
 }
-
 
 #endif
 bool srvCfgFileExists()
@@ -239,7 +225,7 @@ bool cfgFilesExists()
   return false;
 }
 
-void configModeCallback (WiFiManager * myWiFiManager)
+void configModeCallback(WiFiManager *myWiFiManager)
 {
   Serial.println("Entered config mode");
   Serial.println(WiFi.softAPIP());
@@ -254,7 +240,6 @@ void configModeCallback (WiFiManager * myWiFiManager)
 
 void runAutoConnect()
 {
-
 }
 void setupWifiManager()
 {
@@ -270,17 +255,14 @@ void setupWifiManager()
     wifiManager.resetSettings();
   }
 
-
   WiFiManagerParameter mqttUserParam("mqtt_user", "mqtt user", mqttParams.mqttUser, 32);
   WiFiManagerParameter mqttPassParam("mqtt_pass", "mqtt pass", mqttParams.mqttPass, 32);
   WiFiManagerParameter mqttSrvParam("mqtt_srv", "mqtt srv", mqttParams.mqttSrv, 64); //for now is 64 length
   WiFiManagerParameter mqttPortParam("mqtt_port", "mqtt port", mqttParams.mqttPort, 6);
 
-
   WiFiManagerParameter httpSrvParam("http_srv", "http srv", httpParams.httpSrv, 64);
   WiFiManagerParameter httpPortParam("http_port", "http port", httpParams.httpPort, 6);
-  WiFiManagerParameter httpTokenParam("http_token", "http token", httpParams.httpToken, 128);//for now is placed 128 token length
-
+  WiFiManagerParameter httpTokenParam("http_token", "http token", httpParams.httpToken, 128); //for now is placed 128 token length
 
   wifiManager.addParameter(&mqttUserParam);
   wifiManager.addParameter(&mqttPassParam);
@@ -290,7 +272,6 @@ void setupWifiManager()
   wifiManager.addParameter(&httpSrvParam);
   wifiManager.addParameter(&httpPortParam);
   wifiManager.addParameter(&httpTokenParam);
-
 
   wifiManager.setMinimumSignalQuality();
 
@@ -326,8 +307,6 @@ void setupWifiManager()
     }
   }
 
-
-
   Serial.println("connected...yeey :)");
 
   strlcpy(mqttParams.mqttUser,
@@ -346,7 +325,6 @@ void setupWifiManager()
           mqttPortParam.getValue(),
           mqttPortParam.getValueLength());
 
-
   strlcpy(httpParams.httpSrv,
           httpSrvParam.getValue(),
           httpSrvParam.getValueLength());
@@ -359,24 +337,18 @@ void setupWifiManager()
           httpTokenParam.getValue(),
           httpTokenParam.getValueLength());
 
-
-
-
   Serial.println("----------------------------------------------------------------------------SIZE");
   //Serial.println(httpTokenParam.getValueLength());
 
-  Serial.println( httpTokenParam.getValueLength());
-  Serial.println( strlen(httpTokenParam.getValue()));
+  Serial.println(httpTokenParam.getValueLength());
+  Serial.println(strlen(httpTokenParam.getValue()));
 
-  uint8_t mac[6]; //changed from byte 
+  uint8_t mac[6]; //changed from byte
   WiFi.macAddress(mac);
-  byteArrToStr(mac, WL_MAC_ADDR_LENGTH, macId); 
-
-
+  byteArrToStr(mac, WL_MAC_ADDR_LENGTH, macId);
 }
 
-
-void setupMqtt(PubSubClient* mqttClient) //TODO refact
+void setupMqtt(PubSubClient *mqttClient) //TODO refact
 {
   // mqttClient.set
   mqttClient->setServer(WiFi.gatewayIP(), 1883); //TODO move to another function
@@ -385,18 +357,13 @@ void setupMqtt(PubSubClient* mqttClient) //TODO refact
 
 void saveSrvCfgCallback()
 {
-  shouldSaveSrvCfg = true; 
+  shouldSaveSrvCfg = true;
 }
-
-
 
 void resetParamFlags()
 {
-
 }
 
-void setCfgFlag(int8_t addr, int8_t flag) //changed from byte 
+void setCfgFlag(int8_t addr, int8_t flag) //changed from byte
 {
 }
-
-

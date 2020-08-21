@@ -1,5 +1,5 @@
-#ifndef UNIFIED_CONTROLLER
-#define UNIFIED_CONTROLLER 
+#ifndef UNIFIED_CONTROLLER_H
+#define UNIFIED_CONTROLLER_H
 
 
 class UnifiedController

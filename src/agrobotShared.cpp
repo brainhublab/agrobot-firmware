@@ -41,7 +41,7 @@ extern unsigned int ioTimeout = 100; //uint16_t
 #endif
 
 #if WATER_LEVEL
-
+/*
 extern double waterLevelRawMax = 0;
 extern double waterLevelRawMin = 0;
 extern bool waterLevelConfigured = false;
@@ -113,7 +113,7 @@ void ICACHE_RAM_ATTR wlFlowOutPulseCounter();
     wlFlowOutPulseCount++;
 }
 #endif
-
+*/
 #endif
 
 #if LIGHT_CONTROL
@@ -162,7 +162,7 @@ typedef struct
 
 // } lightControlCfg;
 
-extern lightControlCfg _lightControlCfg;
+// extern lightControlCfg _lightControlCfg;
 
 //split the day to 10 mins intervals and parse the light intensity map
 //uint8_t lightIntensityMap[96] = {
@@ -209,7 +209,7 @@ extern uint8_t nutritionPumpsPins[N_DISPENSERS];
 //     uint8_t controlPin;
 // } nutritionControlCfg;
 
-extern nutritionControlCfg _nutritionControlCfg[N_DISPENSERS];
+//extern nutritionControlCfg _nutritionControlCfg[N_DISPENSERS];
 #endif
 
 //conn type

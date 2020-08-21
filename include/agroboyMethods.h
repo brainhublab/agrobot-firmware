@@ -1,6 +1,6 @@
 #ifndef AGROBOT_METHODS
 #define AGROBOT_METHODS
-#pragma once //TODO ??
+//#pragma once //TODO ??
 
 
 #include <config.h>
@@ -26,8 +26,8 @@ class AgroBotMethods
 #endif
 
 #if NUTRITION_CONTROL
-    void processNutritionControl();
-    void correctNutritionConcentration();
+    // void processNutritionControl();
+    // void correctNutritionConcentration();
 #endif
 };
 
