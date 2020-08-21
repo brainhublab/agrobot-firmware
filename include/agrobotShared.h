@@ -3,6 +3,17 @@
 #include <stdint.h>
 #include "config.h"
 
+
+#if UNIFIED_CONTROLLER //TODO not good idea
+
+#elif WATER_LEVEL
+
+#elif LIGHT_CONTROL
+
+#elif NUTRITION_CONTROL
+
+#endif
+
 //MCU type related vars
 extern uint8_t mcuType; //=0
 
@@ -44,78 +55,8 @@ extern unsigned int ioTimeout; //= 100; //uint16_t
 #endif
 
 #if WATER_LEVEL
-extern double waterLevelRawMax;
-extern double waterLevelRawMin;
-extern bool waterLevelConfigured;
-typedef struct
-{
-    uint8_t gateCurrent;
-    uint8_t gateTarget;
-    uint8_t levelCurrent;
-    uint8_t levelTarget;
-    int waterFlowIn;
-    int waterFlowOut;
-} waterLevelCfg;
-
-extern waterLevelCfg _waterLevel;
-
-extern const uint8_t loadCellDoutPin;   // = 16; //TODO PIN IDS
-extern const uint8_t loadCellSckPin;    // = 5;
-extern const uint8_t waterGateServoPin; // = 0;
-//
-extern const int waterTankThreshold; // = 5; //TODO make it more cleaner with proper threshold
-
-//PID configuration and variables
-
-extern dmouble wlPidInput;   // = 0.f;
-extern double wlPidOutput;   // = 0.f;
-extern double wlPidSetpoint; // = 0.f;
-
-//double Kp = 2, Ki = 5, Kd = 1;
-
-extern double wlAgKp, wlAgKi, wlAgKd;       //= 4.0, = 0.2, = 1.0;
-extern double wlConsKp, wlConsKi, wlConsKd; // = 1,  = 0.05,  = 0.25
-
-#if HAS_WATER_FLOW_IN
-extern const uint8_t waterFlowInPin;// = 4;
-
-extern float wlFlowInCalibrationFactor;// = 4.5;
-
-extern volatile uint8_t wlFlowInPulseCount;// = 0;
-
-extern float wlFlowInFlowRate;// = 0.0f;
-extern unsigned int wlFlowInFlowMilliLitres;// = 0;
-extern unsigned long wlFlowInFTotalMilliLitres;// = 0;
-
-extern unsigned int wlFlowInOldTimer;// = 0;
-
-void ICACHE_RAM_ATTR wlFlowInPulseCounter();
-// {
-//     // Increment the pulse counter
-//     wlFlowInPulseCount++;
-// }
-#endif
-
-#if HAS_WATER_FLOW_OUT
-extern const uint8_t waterFlowOutPin;// = 0;
-
-extern float wlFlowOutCalibrationFactor;// = 4.5;
-
-extern volatile uint8_t wlFlowOutPulseCount;// = 0;
-
-extern float wlFlowOutFlowRate;// = 0.0f;
-extern unsigned int wlFlowOutFlowMilliLitres;// = 0;
-extern unsigned long wlFlowOutFTotalMilliLitres;// = 0;
-
-extern unsigned int wlFlowOutOldTimer;// = 0;
 
 
-void ICACHE_RAM_ATTR wlFlowOutPulseCounter();
-// {
-//     // Increment the pulse counter
-//     wlFlowOutPulseCount++;
-// }
-#endif
 
 #endif
 

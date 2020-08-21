@@ -1,16 +1,17 @@
-#include<Arduino.h>
-#include <FS.h>                   //this needs to be first, or it all crashes and burns...
+#include <Arduino.h>
+#include <FS.h> //this needs to be first, or it all crashes and burns...
 #include <limits.h>
 
 #include "config.h"
+#include "agrobotShared.h"
 
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
 //ESP Web Server Library to host a web page
-#include <DNSServer.h> 
+#include <DNSServer.h>
 #include <ESP8266WebServer.h>
-#include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
+#include <WiFiManager.h> //https://github.com/tzapu/WiFiManager
 
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
@@ -20,19 +21,9 @@
 #if UNIFIED_CONTROLLER
 
 #elif WATER_LEVEL
-  #include <HX711.h>
-  #include <Servo.h>
-  #include <PID_v1.h>
-
-  HX711 waterLevelSensor;
-
-
-
-
-  PID waterLevelPid(&wlPidInput, &wlPidOutput, &wlPidSetpoint, wlConsKp, wlConsKi, wlConsKd, DIRECT);
-
-  Servo waterGateServo;
-
+#include <HX711.h>
+#include <Servo.h>
+#include <PID_v1.h>
 
 
 
@@ -40,11 +31,9 @@
 
 #elif NUTRITION_CONTROL
 
-
 #endif
 
 char _errMsg[60];
-
 
 //const size_t flagsCfgCapacity = JSON_OBJECT_SIZE(2) + 50;
 //DynamicJsonDocument flagsJsonCfg(flagsCfgCapacity);
@@ -59,18 +48,13 @@ char _errMsg[60];
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
-
 long lastMsg = 0;
 char msg[50];
 int value = 0;
 
-
-
 //bool isConfigured = false;
 int loopPinId = 0;
 bool loopSetup = true;
-
-
 
 void setup(void)
 {
@@ -83,48 +67,48 @@ void setup(void)
 
   Serial.begin(115200);
 
-//  if (!SPIFFS.begin())
-//  {
-//    Serial.println("ERRPR: Failed to mount FS");
-//  }
-//
-//  if (RESET_CONFIG)
-//  {
-//    resetConfig();
-//    if (FORMAT_FLASH)
-//    {
-//      if (SPIFFS.format())
-//      {
-//        Serial.println("formated file system");
-//      }
-//    }
-//
-//  }
-//
-//  if (!srvCfgFileExists())
-//  {
-//    initSrvCfgFile();
-//  }
-//  else
-//  {
-//    readSrvCfgFile();
-//  }
-//  if (!isSrvConfigured)
-//  {
-//    setupWifiManager();
-//  }
-//  else
-//  {
-//    // setupAutoConnection();
-//    readSrvCfgFile();
-//  }
-//  if (shouldSaveSrvCfg)
-//  {
-//    saveSrvParams(&mqttParams, &httpParams, true);
-//
-//  }
+  //  if (!SPIFFS.begin())
+  //  {
+  //    Serial.println("ERRPR: Failed to mount FS");
+  //  }
+  //
+  //  if (RESET_CONFIG)
+  //  {
+  //    resetConfig();
+  //    if (FORMAT_FLASH)
+  //    {
+  //      if (SPIFFS.format())
+  //      {
+  //        Serial.println("formated file system");
+  //      }
+  //    }
+  //
+  //  }
+  //
+  //  if (!srvCfgFileExists())
+  //  {
+  //    initSrvCfgFile();
+  //  }
+  //  else
+  //  {
+  //    readSrvCfgFile();
+  //  }
+  //  if (!isSrvConfigured)
+  //  {
+  //    setupWifiManager();
+  //  }
+  //  else
+  //  {
+  //    // setupAutoConnection();
+  //    readSrvCfgFile();
+  //  }
+  //  if (shouldSaveSrvCfg)
+  //  {
+  //    saveSrvParams(&mqttParams, &httpParams, true);
+  //
+  //  }
 
-/*//TODO
+  /*//TODO
   #if UNIFIED_CONTROLLER
   mcuType = 1;
   if (!pinsCfgFileExists())
@@ -185,7 +169,7 @@ void loop(void)
 
 */
 
-//  proccesWaterLevel();
+  //  proccesWaterLevel();
 
   //  Serial.println("------------------------------ ENTERING LOOP");
   //  if (loopPinId < N_PINS)
@@ -207,6 +191,5 @@ void loop(void)
 
   // delay(5000);
 
-  
   Serial.println("printed from CODE");
 }

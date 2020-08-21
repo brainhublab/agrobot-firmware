@@ -168,7 +168,7 @@ bool pinsCfgFileExists()
 
 #if WATER_LEVEL
 
-void setupWaterLevel()
+void setupWaterLevel(PID* wlPid, Servo* wlServo)
 {
   waterLevelSensor.begin(loadCellDoutPin, loadCellSckPin);
 
@@ -208,8 +208,8 @@ void setupWaterLevel()
     wlPidSetpoint = 100.0f;
   }
 wlPidSetpoint = 100.0f;
-  waterLevelPid.SetMode(AUTOMATIC);
-  waterGateServo.attach(waterGateServoPin); //todo need to be attached with value from memmory
+  wlPid->SetMode(AUTOMATIC);
+  wlServo->attach(waterGateServoPin); //todo need to be attached with value from memmory
 
 }
 

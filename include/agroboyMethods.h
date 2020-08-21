@@ -12,12 +12,12 @@ class AgroBotMethods
 #endif
 
 #if WATER_LEVEL
-    void proccesWaterLevel();
-    void correctWaterLevel();
-    callibrateMinMaxLevel();
-    double getWaterLevelPercents();
-    double getWaterLevelRawData();
-    void setWaterLevelGate(double);
+    // void proccesWaterLevel();
+    // void correctWaterLevel();
+    // int callibrateMinMaxLevel();
+    // double getWaterLevelPercents();
+    // double getWaterLevelRawData();
+    // void setWaterLevelGate(double);
 #endif
 
 #if LIGHT_CONTROL

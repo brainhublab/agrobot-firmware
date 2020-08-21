@@ -31,16 +31,17 @@ extern bool pinsConfigured = false;
 // } pinConfig;
 
 //byte _pinout[N_PINS] = {17, 16, 14, 12, 13, 15, 2, 0, 4, 5, 3, 1}; //note 16, 3, 1, 10, 9 is high on boot
-extern uint8_t _pinout[N_PINS]= {16, 5, 4, 0, 2, 14, 12, 13, 15, 3, 1, 9, 10, 17}; //note 16, 3, 1, 10, 9 is high on boot and 10/9 are not recomended
+extern uint8_t _pinout[N_PINS] = {16, 5, 4, 0, 2, 14, 12, 13, 15, 3, 1, 9, 10, 17}; //note 16, 3, 1, 10, 9 is high on boot and 10/9 are not recomended
 
 //byte _spiPinsIds[4] = {5, 6, 7, 8};
 extern pinConfig _managedPins[N_PINS];
 
 //ioTimeOut for transmissions
-extern unsigned int ioTimeout= 100; //uint16_t
+extern unsigned int ioTimeout = 100; //uint16_t
 #endif
 
 #if WATER_LEVEL
+
 extern double waterLevelRawMax = 0;
 extern double waterLevelRawMin = 0;
 extern bool waterLevelConfigured = false;
@@ -56,7 +57,7 @@ extern bool waterLevelConfigured = false;
 
 extern waterLevelCfg _waterLevel;
 
-extern const uint8_t loadCellDoutPin= 16; //TODO PIN IDS
+extern const uint8_t loadCellDoutPin = 16; //TODO PIN IDS
 extern const uint8_t loadCellSckPin = 5;
 extern const uint8_t waterGateServoPin = 0;
 //
@@ -70,11 +71,11 @@ extern double wlPidSetpoint = 0.f;
 
 //double Kp = 2, Ki = 5, Kd = 1;
 
-extern double wlAgKp= 4.0, wlAgKi = 0.2, wlAgKd = 1.0;       //= 4.0, = 0.2, = 1.0;
-extern double wlConsKp= 1, wlConsKi  = 0.05, wlConsKd  = 0.25; // = 1,  = 0.05,  extern = 0.25
+extern double wlAgKp = 4.0, wlAgKi = 0.2, wlAgKd = 1.0;       //= 4.0, = 0.2, = 1.0;
+extern double wlConsKp = 1, wlConsKi = 0.05, wlConsKd = 0.25; // = 1,  = 0.05,  extern = 0.25
 
 #if HAS_WATER_FLOW_IN
-extern const uint8_t waterFlowInPin= 4;
+extern const uint8_t waterFlowInPin = 4;
 
 extern float wlFlowInCalibrationFactor = 4.5;
 
@@ -84,7 +85,7 @@ extern float wlFlowInFlowRate = 0.0f;
 extern unsigned int wlFlowInFlowMilliLitres = 0;
 extern unsigned long wlFlowInFTotalMilliLitres = 0;
 
-extern unsigned int wlFlowInOldTimer= 0;
+extern unsigned int wlFlowInOldTimer = 0;
 
 void ICACHE_RAM_ATTR wlFlowInPulseCounter()
 {
@@ -94,7 +95,7 @@ void ICACHE_RAM_ATTR wlFlowInPulseCounter()
 #endif
 
 #if HAS_WATER_FLOW_OUT
-extern const uint8_t waterFlowOutPin= 0;
+extern const uint8_t waterFlowOutPin = 0;
 
 extern float wlFlowOutCalibrationFactor = 4.5;
 
@@ -197,7 +198,7 @@ extern lightControlCfg _lightControlCfg;
 
 extern bool nutritionControlConfigured = false;
 
-extern uint8_t pwmPins[] = {5, 4, 0, 2, 14, 12, 13, 15} ;
+extern uint8_t pwmPins[] = {5, 4, 0, 2, 14, 12, 13, 15};
 
 extern uint8_t nutritionPumpsPins[N_DISPENSERS];
 // typedef struct
@@ -247,4 +248,3 @@ extern char macId[12];
 
 extern char cfgTopicOut[12];
 extern char cfgTopicIn[12];
-

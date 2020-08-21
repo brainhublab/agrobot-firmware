@@ -56,7 +56,7 @@
 #elif WATER_LEVEL
 
 #define HAS_WATER_FLOW_IN 1
-#define HAS_WATER_FLOW_OUT 0
+#define HAS_WATER_FLOW_OUT 1
 
 #define OPEN_WATER_GATE 100
 #define HALF_OPEN_WATER_GATE  50
@@ -66,12 +66,21 @@
 //#define WATER_LEVEL_DRIFT_RAW 24000
 #define WATER_LEVEL_DRIFT_RAW 12000
 
+//class vars
+#define LOADCELL_DOUT_PIN 16
+#define LOADCELL_SCK_PIN 5
+#define WATER_GATE_SERVO_PIN 0
+
+
+#define WATER_TANK_THRESHOLD 5 //TODO make it more cleaner with proper threshold
 
 #if HAS_WATER_FLOW_IN
+#define WATER_FLOW_IN_PIN 4
 
 #endif
 
 #if HAS_WATER_FLOW_OUT
+#define WATER_FLOW_OUT_PIN 0
 
 #endif
 
