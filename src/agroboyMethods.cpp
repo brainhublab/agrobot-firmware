@@ -127,15 +127,6 @@ void AgroBotMethods::setWaterLevelGate(double percents)
 
 #if LIGHT_CONTROL
 
-void AgroBotMethods::proecessLightControl()
-{
-
-}
-
-void AgroBotMethods::correctLightLevel()
-{
-
-}
 
 
 #endif

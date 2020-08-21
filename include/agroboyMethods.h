@@ -21,8 +21,8 @@ class AgroBotMethods
 #endif
 
 #if LIGHT_CONTROL
-    void proecessLightControl();
-    void correctLightLevel();
+    // void proecessLightControl();
+    // void correctLightLevel();
 #endif
 
 #if NUTRITION_CONTROL

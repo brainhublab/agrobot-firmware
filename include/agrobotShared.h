@@ -61,53 +61,6 @@ extern unsigned int ioTimeout; //= 100; //uint16_t
 #endif
 
 #if LIGHT_CONTROL
-
-extern bool lightControlConfigured;// = false;
-
-typedef struct
-{
-    uint8_t hours;
-    uint8_t minutes;
-} timeOfTheDay;
-
-typedef struct
-{
-    uint8_t currentLightLevel;
-    uint8_t targetLightLevel;
-    timeOfTheDay currentTime;
-    uint8_t lightMode;
-    uint8_t lightIntensityMap[96];
-    //  = {
-    //     0, 0, 0, 0,
-    //     0, 0, 0, 0,
-    //     0, 0, 0, 0,
-    //     0, 0, 0, 0,
-    //     0, 1, 2, 3,
-    //     4, 5, 9, 13,
-    //     14, 15, 15, 16,
-    //     18, 20, 22, 24,
-    //     28, 32, 36, 40,
-    //     44, 46, 50, 56,
-    //     62, 68, 74, 80,
-    //     86, 92, 98, 100,
-    //     100, 100, 100, 100,
-    //     100, 100, 100, 100,
-    //     100, 94, 88, 82,
-    //     76, 70, 64, 58,
-    //     52, 46, 40, 36,
-    //     32, 28, 24, 20,
-    //     18, 17, 16, 15,
-    //     14, 13, 12, 11,
-    //     10, 10, 5, 5,
-    //     5, 4, 3, 2,
-    //     1, 0, 0, 0,
-    //     0, 0, 0, 0
-    // };
-
-} lightControlCfg;
-
-extern lightControlCfg _lightControlCfg;
-
 //split the day to 10 mins intervals and parse the light intensity map
 //uint8_t lightIntensityMap[96] = {
 //  0, 0, 0, 0,
