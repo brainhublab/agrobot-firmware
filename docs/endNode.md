@@ -48,11 +48,40 @@ All end nodes in this version are based on ESP8266 in the future releases the fu
 2) After succsessfuly connection to the `MQTT` broker the end node publish it's own **behavior**, **configuration satatus** and **identification data** to the **Identification topic**. The data published to Identification topic is `JSON` formated telemetry info of the end node. 
 
 ```JSON 
-asdasdasdasdasda:asdasd
+{
+    "mcuType": "<behavior>",
+    "title": "<custom title>",
+    "macAddr": "<mac address>",
+    "isConfigured": false,
+    "signalStreigth": "-35dbm",
+    "batteryLevel": -1,
+    "selfCheck":false,
 
+}
 ```
 3) If everything is OK the `MQTT` broker creates an unique topic paths for the connected end node `/<topic name>/<end node MAC address>/etc..` Each behavior has its own themes except the default ones 
 
 4) If the previous step is succsessful the **end node** automatically subscribes to default and behavior specific topics for income or outcome configs and data. 
 
-5) 
+5) After the end node is connected and is configured the `MQTT` broker sends the new configuration to the `/config/<mac address>/`. If two end nodes need to comunicate to each other the topics to publish and subscribing need to be providet in config `JSON`.
+
+```
++---------------------+                                  +---------------------+
+|                     |     endNode 1 MAC/out topic/     |                     |
+| +-----------------+ |                                  | +-----------------+ |
+| |   Output topic  | | +------------------------------> | |   Input topic   | |
+| |                 | |                                  | |                 | |
+| +-----------------+ |                                  | +-----------------+ |
+|                     |                                  |                     |
+| +-----------------+ |     endNode 2 MAC/out topic/     | +-----------------+ |
+| |   Input topic   | | <------------------------------+ | |   Output topic  | |
+| |                 | |                                  | |                 | |
+| +-----------------+ |                                  | +-----------------+ |
+|                     |                                  |                     |
+|                     |                                  |                     |
+|     EndNode 1       |                                  |      EndNode 2      |
+|                     |                                  |                     |
+|                     |                                  |                     |
++---------------------+                                  +---------------------+
+
+```

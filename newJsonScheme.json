@@ -532,4 +532,28 @@
             "targetConcentration": 100
         }
     ]
+};
+
+
+
+///After refactor and migrate to PIO
+{
+    "mcuType": "unified",
+    "title": "asdasd",
+    "isConfigured": true,
+    "io": {
+        "configTitle": "value"
+    }
+}
+//telemetry message
+
+{
+    "mcuType": "<behavior>",
+    "title": "<custom title>",
+    "macAddr": "<mac address>",
+    "isConfigured": false,
+    "signalStreigth": "-35dbm",
+    "batteryLevel": -1,
+    "selfCheck":false,
+
 }
