@@ -81,7 +81,7 @@
 #endif
 
 #if HAS_WATER_FLOW_OUT
-#define WATER_FLOW_OUT_PIN 5 //TODO
+#define WATER_FLOW_OUT_PIN 0 //TODO
 
 #endif
 

@@ -15,7 +15,7 @@
 #include "config.h"
 #include "agrobotShared.h"
 
-#include "waterFlow.h"
+#include "waterFlow/waterFlow.h"
 //TODO migrate some of vars in config header
 // static void ICACHE_RAM_ATTR wlFlowInPulseCounter();
 // static void ICACHE_RAM_ATTR wlFlowOutPulseCounter();
