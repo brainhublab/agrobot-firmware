@@ -1,5 +1,5 @@
-#ifndef AGROBOT_SHARED
-#define AGROBOT_SHARED
+#ifndef AGROBOT_SHARED_H
+#define AGROBOT_SHARED_H
 #include <Arduino.h>
 #include <stdarg.h>
 
@@ -8,19 +8,19 @@
 #include "config.h"
 
 
-#if UNIFIED_CONTROLLER //TODO not good idea
+//#if UNIFIED_CONTROLLER //TODO not good idea
     static void readDigitalPin(int, ...);
     static void writeDigitalPin(int, ...);
     static void timeSeriesCaller(int, ...);
     static void trigerCaller(int, ...);
     static void pwmCaller(int, ...);
-#elif WATER_LEVEL
+//#elif WATER_LEVEL
 
-#elif LIGHT_CONTROL
+//#elif LIGHT_CONTROL
 
-#elif NUTRITION_CONTROL
+//#elif NUTRITION_CONTROL
 
-#endif
+//#endif
 
 //MCU type related vars
 extern uint8_t mcuType; //=0

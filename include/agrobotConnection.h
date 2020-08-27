@@ -1,5 +1,5 @@
-#ifndef AGROBOT_CONNECTION
-#define AGROBOT_CONNECTION
+#ifndef AGROBOT_CONNECTION_H
+#define AGROBOT_CONNECTION_H
 //#pragma once //TODO ??
 
 #include "agrobotShared.h"

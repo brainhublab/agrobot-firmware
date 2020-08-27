@@ -1,7 +1,20 @@
 #include "waterLevel.h"
 
-WaterLevel::WaterLevel() : waterLevelPid(&wlPidInput, &wlPidOutput, &wlPidSetpoint, wlConsKp, wlConsKi, wlConsKd, DIRECT) //TODO maybe not correct call
+WaterFlow *wfIn;
+WaterFlow *wfOut;
+
+static void ICACHE_RAM_ATTR flowPulseCounterIn()
 {
+  wfIn->flowPulseCount++;
+}
+static void ICACHE_RAM_ATTR flowPulseCounterOut()
+{
+  wfOut->flowPulseCount++;
+}
+
+WaterLevel::WaterLevel() : waterLevelPid(&wlPidInput, &wlPidOutput, &wlPidSetpoint, wlConsKp, wlConsKi, wlConsKd, DIRECT), waterFlowIn(WATER_FLOW_IN_PIN), waterFlowOut(WATER_FLOW_OUT_PIN) //TODO maybe not correct call
+{
+
   this->waterLevelRawMax = 0.f;
   this->waterLevelRawMin = 0.f;
   this->waterLevelConfigured = false;
@@ -20,26 +33,58 @@ WaterLevel::WaterLevel() : waterLevelPid(&wlPidInput, &wlPidOutput, &wlPidSetpoi
   this->wlConsKi = 0.05;
   this->wlConsKd = 0.25;
 
- // this->waterLevelPid(&wlPidInput, &wlPidOutput, &wlPidSetpoint, wlConsKp, wlConsKi, wlConsKd, DIRECT); //TODO maybe not correct call
+  // this->waterLevelPid(&wlPidInput, &wlPidOutput, &wlPidSetpoint, wlConsKp, wlConsKi, wlConsKd, DIRECT); //TODO maybe not correct call
 
 #if HAS_WATER_FLOW_IN
-  this->wlFlowInCalibrationFactor = 4.5;
-  this->wlFlowInPulseCount = 0;
-  this->wlFlowInFlowRate = 0.0f;
-  this->wlFlowInFlowMilliLitres = 0;
-  this->wlFlowInFTotalMilliLitres = 0;
-  this->wlFlowInOldTimer = 0;
 
 #endif
 
 #if HAS_WATER_FLOW_OUT
-  this->wlFlowOutCalibrationFactor = 4.5;
-  this->wlFlowOutPulseCount = 0;
-  this->wlFlowOutFlowRate = 0.0f;
-  this->wlFlowOutFlowMilliLitres = 0;
-  this->wlFlowOutFTotalMilliLitres = 0;
-  this->wlFlowOutOldTimer = 0;
+
 #endif
+}
+void WaterLevel::begin()
+{
+  //PID* wlPid, Servo* wlServo
+  this->waterLevelSensor.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
+
+  this->waterLevelSensor.set_scale();
+  this->waterLevelSensor.tare();
+
+#if HAS_WATER_FLOW_IN
+
+  this->waterFlowIn.begin();
+  wfIn = &(this->waterFlowIn);
+  attachInterrupt(digitalPinToInterrupt(WATER_FLOW_IN_PIN), flowPulseCounterIn, FALLING);
+
+#endif
+
+#if HAS_WATER_FLOW_OUT
+  this->waterFlowOut.begin();
+  wfOut = &(this->waterFlowOut);
+  attachInterrupt(digitalPinToInterrupt(WATER_FLOW_OUT_PIN), flowPulseCounterOut, FALLING);
+
+#endif
+
+  while (!this->waterLevelSensor.is_ready())
+  {
+    delay(100);
+  }
+
+  //TODO need to choose right variables for PID
+  if (this->_waterLevel.gateTarget != EMPTY_CFG)
+  {
+    this->wlPidInput = this->_waterLevel.levelCurrent;
+    this->wlPidSetpoint = this->_waterLevel.levelTarget;
+  }
+  else
+  { //TODO chack for optimal initial params
+    this->wlPidInput = 0.0f;
+    this->wlPidSetpoint = 100.0f;
+  }
+  this->wlPidSetpoint = 100.0f;
+  this->waterLevelPid.SetMode(AUTOMATIC);
+  this->waterGateServo.attach(WATER_GATE_SERVO_PIN); //todo need to be attached with value from memmory
 }
 
 void WaterLevel::proccesWaterLevel()
@@ -167,7 +212,7 @@ void WaterLevel::saveWaterLevelCfgFile()
     const size_t waterLevelCfgCapacity = JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(6);
     DynamicJsonDocument waterLevelJsonCfgOut(waterLevelCfgCapacity);
 
-    waterLevelJsonCfgOut["mcuType"] = MCU_TYPE; //TODO change to shared
+    waterLevelJsonCfgOut["mcuType"] = mcuType; // MCU_TYPE; //TODO change to shared
     waterLevelJsonCfgOut["title"] = "water level ID:" + (String)macId;
     waterLevelJsonCfgOut["isConfigured"] = waterLevelConfigured;
 

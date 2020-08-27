@@ -1,5 +1,5 @@
-#ifndef AGROBOT_SETUP
-#define AGROBOT_SETUP
+#ifndef AGROBOT_SETUP_H
+#define AGROBOT_SETUP_H
 
 //#pragma once //TODO ??
 

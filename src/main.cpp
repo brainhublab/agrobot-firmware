@@ -4,6 +4,7 @@
 
 #include "config.h"
 #include "agrobotShared.h"
+#include "agrobotSetup.h"
 
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
@@ -24,8 +25,9 @@
 #include <HX711.h>
 #include <Servo.h>
 #include <PID_v1.h>
+#include "waterLevel/waterLevel.h"
 
-
+WaterLevel waterLevel;
 
 #elif LIGHT_CONTROL
 
@@ -55,6 +57,7 @@ int value = 0;
 //bool isConfigured = false;
 int loopPinId = 0;
 bool loopSetup = true;
+
 
 void setup(void)
 {
@@ -108,7 +111,7 @@ void setup(void)
   //
   //  }
 
-  /*//TODO
+  //TODO
   #if UNIFIED_CONTROLLER
   mcuType = 1;
   if (!pinsCfgFileExists())
@@ -128,7 +131,9 @@ void setup(void)
 
   #elif WATER_LEVEL
   mcuType = 2;
-  setupWaterLevel();
+  waterLevel.begin();
+  //setupWaterLevel();
+
 
   #elif LIGHT_CONTROL
   mcuType = 3;
@@ -151,7 +156,7 @@ void setup(void)
   //reconnectMqtt();
 
   Serial.println("-------------------END SETUP");
-  */
+  
 }
 
 void loop(void)
@@ -191,5 +196,9 @@ void loop(void)
 
   // delay(5000);
 
-  Serial.println("printed from CODE");
+  Serial.print("printed from CODE: ");
+  Serial.print(waterLevel.waterFlowOut.flowPulseCount);
+  Serial.print("  ----  ");
+    Serial.println(waterLevel.waterFlowIn.flowPulseCount);
+
 }

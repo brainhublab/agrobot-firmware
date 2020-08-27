@@ -53,7 +53,7 @@ void LightControl::saveLightControlCfgFile()
     const size_t lightControlCfgCapacity = JSON_ARRAY_SIZE(96) + JSON_OBJECT_SIZE(7);
     DynamicJsonDocument lightControlJsonCfgOut(lightControlCfgCapacity);
 
-    lightControlJsonCfgOut["mcuType"] = MCU_TYPE; // TODO refactor
+    lightControlJsonCfgOut["mcuType"] = mcuType;//MCU_TYPE; // TODO refactor
     lightControlJsonCfgOut["title"] = "light control ID:" + (String)macId;
     lightControlJsonCfgOut["isConfigured"] = this->lightControlConfigured;
 

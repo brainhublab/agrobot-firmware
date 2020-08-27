@@ -1,5 +1,5 @@
-#ifndef AGROBOT_METHODS
-#define AGROBOT_METHODS
+#ifndef AGROBOT_METHODS_H
+#define AGROBOT_METHODS_H
 //#pragma once //TODO ??
 
 

@@ -8,9 +8,9 @@
 
 //Modules configs
 
-#define MCU_TYPE 1 //TODO change to shared
-#define UNIFIED_CONTROLLER 1
-#define WATER_LEVEL 0
+//#define MCU_TYPE 1 //TODO change to shared
+#define UNIFIED_CONTROLLER 0
+#define WATER_LEVEL 1
 #define LIGHT_CONTROL 0
 #define NUTRITION_CONTROL 1
 
@@ -69,8 +69,8 @@
 
 //class vars
 #define LOADCELL_DOUT_PIN 16
-#define LOADCELL_SCK_PIN 5
-#define WATER_GATE_SERVO_PIN 0
+#define LOADCELL_SCK_PIN 0
+#define WATER_GATE_SERVO_PIN 15 //ТОДО
 
 
 #define WATER_TANK_THRESHOLD 5 //TODO make it more cleaner with proper threshold
@@ -81,7 +81,7 @@
 #endif
 
 #if HAS_WATER_FLOW_OUT
-#define WATER_FLOW_OUT_PIN 0
+#define WATER_FLOW_OUT_PIN 5 //TODO
 
 #endif
 

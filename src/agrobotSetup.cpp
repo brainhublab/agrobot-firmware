@@ -6,49 +6,6 @@
 
 #if WATER_LEVEL
 
-void setupWaterLevel(WaterLevel *waterLevel)
-{
-  //PID* wlPid, Servo* wlServo
-  waterLevel->waterLevelSensor.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-
-  waterLevel->waterLevelSensor.set_scale();
-  waterLevel->waterLevelSensor.tare();
-
-#if HAS_WATER_FLOW_IN
-  pinMode(WATER_FLOW_IN_PIN, INPUT);
-  digitalWrite(WATER_FLOW_IN_PIN, HIGH); //TODO check if its needed;
-
-  attachInterrupt(digitalPinToInterrupt(WATER_FLOW_IN_PIN), wlFlowInPulseCounter, FALLING);
-
-#endif
-
-#if HAS_WATER_FLOW_OUT
-  pinMode(WATER_FLOW_OUT_PIN, INPUT);
-  digitalWrite(WATER_FLOW_OUT_PIN, HIGH);
-
-  attachInterrupt(digitalPinToInterrupt(WATER_FLOW_OUT_PIN), wlFlowOutPulseCounter, FALLING);
-#endif
-
-  while (!waterLevel->waterLevelSensor.is_ready())
-  {
-    delay(100);
-  }
-
-  //TODO need to choose right variables for PID
-  if (waterLevel->_waterLevel.gateTarget != EMPTY_CFG)
-  {
-    waterLevel->wlPidInput = waterLevel->_waterLevel.levelCurrent;
-    waterLevel->wlPidSetpoint = waterLevel->_waterLevel.levelTarget;
-  }
-  else
-  { //TODO chack for optimal initial params
-    waterLevel->wlPidInput = 0.0f;
-    waterLevel->wlPidSetpoint = 100.0f;
-  }
-  waterLevel->wlPidSetpoint = 100.0f;
-  waterLevel->waterLevelPid.SetMode(AUTOMATIC);
-  waterLevel->waterGateServo.attach(WATER_GATE_SERVO_PIN); //todo need to be attached with value from memmory
-}
 
 #endif
 bool srvCfgFileExists()

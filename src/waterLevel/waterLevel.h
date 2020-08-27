@@ -5,7 +5,6 @@
 #include <Servo.h>
 #include <stdint.h>
 
-
 #include <FS.h> //this needs to be first, or it all crashes and burns...
 
 #include <stdio.h>
@@ -15,9 +14,11 @@
 #include "agrobotHelpers.h"
 #include "config.h"
 #include "agrobotShared.h"
+
+#include "waterFlow.h"
 //TODO migrate some of vars in config header
-static void ICACHE_RAM_ATTR wlFlowInPulseCounter();
-static void ICACHE_RAM_ATTR wlFlowOutPulseCounter();
+// static void ICACHE_RAM_ATTR wlFlowInPulseCounter();
+// static void ICACHE_RAM_ATTR wlFlowOutPulseCounter();
 typedef struct
 {
     uint8_t gateCurrent;
@@ -33,6 +34,8 @@ class WaterLevel
 {
 public:
     WaterLevel();
+
+    void begin();
 
     void proccesWaterLevel();
     void correctWaterLevel();
@@ -82,41 +85,11 @@ public:
     Servo waterGateServo;
 
 #if HAS_WATER_FLOW_IN
-
-    float wlFlowInCalibrationFactor; // = 4.5;
-
-    volatile uint8_t wlFlowInPulseCount; // = 0;
-
-    float wlFlowInFlowRate;                  // = 0.0f;
-    unsigned int wlFlowInFlowMilliLitres;    // = 0;
-    unsigned long wlFlowInFTotalMilliLitres; // = 0;
-
-    unsigned int wlFlowInOldTimer; // = 0;
-
-    //static void ICACHE_RAM_ATTR wlFlowInPulseCounter();
-// {
-//     // Increment the pulse counter
-//     wlFlowInPulseCount++;
-// }
+    WaterFlow waterFlowIn;
 #endif
 
 #if HAS_WATER_FLOW_OUT
-
-    float wlFlowOutCalibrationFactor; // = 4.5;
-
-    volatile uint8_t wlFlowOutPulseCount; // = 0;
-
-    float wlFlowOutFlowRate;                  // = 0.0f;
-    unsigned int wlFlowOutFlowMilliLitres;    // = 0;
-    unsigned long wlFlowOutFTotalMilliLitres; // = 0;
-
-    unsigned int wlFlowOutOldTimer; // = 0;
-
-    // void ICACHE_RAM_ATTR wlFlowOutPulseCounter();
-// {
-//     // Increment the pulse counter
-//     wlFlowOutPulseCount++;
-// }
+    WaterFlow waterFlowOut;
 #endif
 };
 

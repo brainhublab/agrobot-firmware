@@ -28,6 +28,8 @@ All end nodes in this version are based on ESP8266 in the future releases the fu
   The topic names for one end node are:
   - **Config Topic** - `config`
   - **Identification Topic** - `whoami`
+  - **Error messaging** - `/err/<end node MAC>/<err topic name>`
+  - 
 
 ## Connection algorithm
 
@@ -67,8 +69,8 @@ All end nodes in this version are based on ESP8266 in the future releases the fu
 
 ```
 +---------------------+                                  +---------------------+
-|                     |     endNode 1 MAC/out topic/     |                     |
-| +-----------------+ |                                  | +-----------------+ |
+|                     |                                  |                     |
+| +-----------------+ |     endNode 1 MAC/out topic/     | +-----------------+ |
 | |   Output topic  | | +------------------------------> | |   Input topic   | |
 | |                 | |                                  | |                 | |
 | +-----------------+ |                                  | +-----------------+ |
@@ -85,3 +87,38 @@ All end nodes in this version are based on ESP8266 in the future releases the fu
 +---------------------+                                  +---------------------+
 
 ```
+
+## Standart messages 
+
+### Error message
+
+```JSON
+{
+  "status":200,
+  "errType": 1,
+  "details":"error message"
+
+}
+```
+as follows: 
+  - **status** - http like error status
+  - **errType** - type of error, the types are
+    - 1 config error
+    - 2 communication error
+    - 3 hardware error
+    - 4 internal error
+    - 5 data error
+  - **details**  -  error message (optional)
+
+### Data message
+
+```JSON
+{
+  "payload":23.55,
+}
+```
+
+the payload is always a digit as follows:
+  - 0/1 - boolean 
+  - 00.00f - float
+  - -1 - no data

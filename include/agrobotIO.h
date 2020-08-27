@@ -1,5 +1,5 @@
-#ifndef AGROBOT_IO
-#define AGROBOT_IO
+#ifndef AGROBOT_IO_H
+#define AGROBOT_IO_H
 
 #include <FS.h> //this needs to be first, or it all crashes and burns...
 

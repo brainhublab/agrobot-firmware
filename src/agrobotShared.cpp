@@ -10,9 +10,9 @@ extern bool reseteWifiSettings = 0;
 extern bool shouldSaveSrvCfg = false;
 
 //functionaly specific vars
-#if UNIFIED_CONTROLLER
+//#if UNIFIED_CONTROLLER
 
-static void readDigitalPin(int argCount, ...) //TODO
+ void readDigitalPin(int argCount, ...) //TODO
 {
     va_list argList;
     va_start(argList, argCount);
@@ -34,7 +34,7 @@ static void readDigitalPin(int argCount, ...) //TODO
     va_end(argList);
 }
 
-static void writeDigitalPin(int argCount, ...)
+ void writeDigitalPin(int argCount, ...)
 {
     va_list argList;
     va_start(argList, argCount);
@@ -56,7 +56,7 @@ static void writeDigitalPin(int argCount, ...)
     va_end(argList);
 }
 
-static void timeSeriesCaller(int argCount, ...) //callback is digital write or red (param caount, paramsarr, cb, cb params
+ void timeSeriesCaller(int argCount, ...) //callback is digital write or red (param caount, paramsarr, cb, cb params
 {
     Serial.println("----------------ENTERING IN TIME SERIES CALLER");
     //  if ( == NULL)
@@ -82,7 +82,7 @@ static void timeSeriesCaller(int argCount, ...) //callback is digital write or r
     Serial.println("----------------EXITING IN TIME SERIES CALLER");
 }
 
-static void trigerCaller(int argCount, ...) //callback is digital write or red
+ void trigerCaller(int argCount, ...) //callback is digital write or red
 {
     va_list argList;
     va_start(argList, argCount);
@@ -104,7 +104,7 @@ static void trigerCaller(int argCount, ...) //callback is digital write or red
     va_end(argList);
 }
 
-static void pwmCaller(int argCount, ...) //callback is digital write or red
+void pwmCaller(int argCount, ...) //callback is digital write or red
 {
     va_list argList;
     va_start(argList, argCount);
@@ -132,13 +132,13 @@ static void pwmCaller(int argCount, ...) //callback is digital write or red
     //    return;
     //  }
 }
-#endif
+//#endif
 
-#if WATER_LEVEL
+//#if WATER_LEVEL
 
-#endif
+//#endif
 
-#if LIGHT_CONTROL
+//#if LIGHT_CONTROL
 
 extern bool lightControlConfigured = false;
 
@@ -214,9 +214,9 @@ typedef struct
 //  0, 0, 0, 0
 //};
 //Nutrition controll module config
-#endif
+//#endif
 
-#if NUTRITION_CONTROL
+//#if NUTRITION_CONTROL
 
 extern bool nutritionControlConfigured = false;
 
@@ -232,7 +232,7 @@ extern uint8_t nutritionPumpsPins[N_DISPENSERS];
 // } nutritionControlCfg;
 
 //extern nutritionControlCfg _nutritionControlCfg[N_DISPENSERS];
-#endif
+//#endif
 
 //conn type
 extern bool mqttClientFlag = false;
