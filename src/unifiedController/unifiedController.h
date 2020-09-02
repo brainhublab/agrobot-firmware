@@ -31,6 +31,7 @@ typedef struct
 
 class UnifiedController
 {
+public:
     UnifiedController();
 
     void initPinsArr();
@@ -50,6 +51,11 @@ class UnifiedController
     void readPinsConfig();
     void processPin(pinConfig *);
 
+    static void readDigitalPin(int, ...);
+    static void writeDigitalPin(int, ...);
+    static void timeSeriesCaller(int, ...);
+    static void trigerCaller(int, ...);
+    static void pwmCaller(int, ...);
 
     bool unifiedControllerIsConfigured;
     bool pinsConfigured; //=false

@@ -32,6 +32,19 @@ LightControl::LightControl()
                                 1, 0, 0, 0,
                                 0, 0, 0, 0}
     };
+    uint8_t * ligtControlPinsPtr = ligtControlPins;
+    for(int8_t i: {13, 15}) //TODO more pins in re4al
+    {
+      *ligtControlPinsPtr++=i;
+    }
+}
+
+void LightControl::begin()
+{
+  for(int8_t i=0; i<LIGHT_CONTROL_N_PINS;i++)
+  {
+    pinMode(this->ligtControlPins[i], OUTPUT);
+  }
 }
 
 void LightControl::proecessLightControl()
@@ -53,8 +66,8 @@ void LightControl::saveLightControlCfgFile()
     const size_t lightControlCfgCapacity = JSON_ARRAY_SIZE(96) + JSON_OBJECT_SIZE(7);
     DynamicJsonDocument lightControlJsonCfgOut(lightControlCfgCapacity);
 
-    lightControlJsonCfgOut["mcuType"] = mcuType;//MCU_TYPE; // TODO refactor
-    lightControlJsonCfgOut["title"] = "light control ID:" + (String)macId;
+    lightControlJsonCfgOut["mcuType"] = whoami.mcuType;//MCU_TYPE; // TODO refactor
+    lightControlJsonCfgOut["title"] = whoami.title;
     lightControlJsonCfgOut["isConfigured"] = this->lightControlConfigured;
 
     lightControlJsonCfgOut["lightMode"] = this->_lightControlCfg.lightMode;
@@ -129,4 +142,9 @@ void LightControl::readLightControlCfgFile()
     Serial.print("ERROR: no such sonfig file with name:");
     Serial.println("/light_control_cfg.json");
   }
+}
+
+void LightControl::setBrightnessLevel(uint8_t nodeId, uint8_t nodeBrightnes)
+{
+  analogWrite(nodeId, mapVal<uint8_t>(nodeBrightnes, 0, 100, 0, 255));
 }

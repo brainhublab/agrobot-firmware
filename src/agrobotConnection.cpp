@@ -1,24 +1,29 @@
 
 #include <agrobotConnection.h>
 
-#include <config.h>
-void AgrobotConnection::publishErrorMessage()
+
+extern mqtt_params_t mqttParams = {"", "", "", "1883"};
+extern http_params_t httpParams = {"", "80", ""};
+
+
+
+void publishErrorMessage()
 {
 
 }
 
-void AgrobotConnection::publishSuccessMessage(char* sucMsg)
+void publishSuccessMessage(char* sucMsg)
 {
 
 }
 
-void AgrobotConnection::reconnectMqtt(PubSubClient* mqttClient)
+void reconnectMqtt(PubSubClient* mqttClient)
 {
   while (!mqttClient->connected())
   {
     Serial.println("Attempting MQTT connection ...");
 
-    if (mqttClient->connect(macId, mqttParams.mqttUser, mqttParams.mqttPass))
+    if (mqttClient->connect(whoami.macAddr, mqttParams.mqttUser, mqttParams.mqttPass))
     {
       Serial.println("Mqtt connected");
 //      if (!pinsCfgFileExists()) //TODO rewrite

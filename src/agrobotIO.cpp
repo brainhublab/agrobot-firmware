@@ -1,10 +1,19 @@
 #include <agrobotIO.h>
 
-char *getPinUID(byte index)
-{
-  char *asd;
-  return asd;
-}
+
+//err msg definition
+
+// errJsonMsg["status"] = (const char*)0;
+// errJsonMsg["err_type"] = (const char*)1;
+// errJsonMsg["details"] = (const char*)"";
+
+
+
+// char *getPinUID(byte index)
+// {
+//   char *asd;
+//   return asd;
+// }
 
 void writeParam(byte addr, byte param)
 {

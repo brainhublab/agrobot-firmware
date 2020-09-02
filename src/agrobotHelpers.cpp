@@ -24,13 +24,13 @@ void generateWhoAmi()
 
 }
 
-double mapDouble(double x, double inMin, double inMax, double outMin, double outMax)
-{
-  return (x-inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-}
+// double mapDouble(double x, double inMin, double inMax, double outMin, double outMax)
+// {
+//   return (x-inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+// }
 
-double valueToPercentsOf(double inp, double maxVal)
-{
-  return 100 / (maxVal /inp);
-  
-}
+// template<typename T>
+// T valueToPercentsOf(T , T maxVal)
+// {
+//   return 100 / (maxVal /inp);
+// }

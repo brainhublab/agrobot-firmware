@@ -1,13 +1,39 @@
 #include "agrobotSetup.h"
 
+void setupWhoami()
+{
+
+  uint8_t mac[6]; //changed from byte
+  WiFi.macAddress(mac);
+  byteArrToStr(mac, WL_MAC_ADDR_LENGTH, whoami.macAddr);
 #if UNIFIED_CONTROLLER
+  whoami.mcuType = 1;
+  snprintf(whoami.title, sizeof(whoami.title), "%s%s", "unified controller:", whoami.macAddr);
+#elif WATER_LEVEL
+  whoami.mcuType = 2;
+  snprintf(whoami.title, sizeof(whoami.title), "%s%s", "water level:", whoami.macAddr);
+
+#elif LIGHT_CONTROL
+  whoami.mcuType = 3;
+  snprintf(whoami.title, sizeof(whoami.title), "%s%s", "light control:", whoami.macAddr);
+
+#elif NUTRITION_CONTROL
+  whoami.mcuType = 4;
+  snprintf(whoami.title, sizeof(whoami.title), "%s%s", "nutrition control:", whoami.macAddr);
 
 #endif
+}
 
-#if WATER_LEVEL
+void setupSrvParams()
+{
+  if(mqttParams.mqttSrv[0] == '\0')
+  {
+    snprintf(mqttParams.mqttSrv, sizeof(mqttParams.mqttSrv),"%s", WiFi.gatewayIP().toString().c_str());
+  }
+  Serial.print("-------------------------------------->MQTT SRV");
+  Serial.println(mqttParams.mqttSrv);
+}
 
-
-#endif
 bool srvCfgFileExists()
 {
   if (SPIFFS.exists("/srv_cfg.json"))
@@ -57,7 +83,7 @@ void setupWifiManager()
 
   //  memset(httpToken, 0, SIZEOF_ARRAY(httpToken));
 
-  if (reseteWifiSettings)
+  if (RESET_CONFIG)
   {
     wifiManager.resetSettings();
   }
@@ -127,6 +153,8 @@ void setupWifiManager()
   strlcpy(mqttParams.mqttSrv,
           mqttSrvParam.getValue(),
           mqttSrvParam.getValueLength());
+  
+
 
   strlcpy(mqttParams.mqttPort,
           mqttPortParam.getValue(),
@@ -149,10 +177,6 @@ void setupWifiManager()
 
   Serial.println(httpTokenParam.getValueLength());
   Serial.println(strlen(httpTokenParam.getValue()));
-
-  uint8_t mac[6]; //changed from byte
-  WiFi.macAddress(mac);
-  byteArrToStr(mac, WL_MAC_ADDR_LENGTH, macId);
 }
 
 void setupMqtt(PubSubClient *mqttClient) //TODO refact

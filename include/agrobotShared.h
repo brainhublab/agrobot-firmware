@@ -1,119 +1,94 @@
 #ifndef AGROBOT_SHARED_H
 #define AGROBOT_SHARED_H
 #include <Arduino.h>
-#include <stdarg.h>
-
 
 #include <stdint.h>
 #include "config.h"
 
+#define TITLE_BUFFER_SIZE 64
+#define ERR_MSG_BUFFER_SIZE 64
+#define PAYLOAD_BUFFER_SIZE 32
 
-//#if UNIFIED_CONTROLLER //TODO not good idea
-    static void readDigitalPin(int, ...);
-    static void writeDigitalPin(int, ...);
-    static void timeSeriesCaller(int, ...);
-    static void trigerCaller(int, ...);
-    static void pwmCaller(int, ...);
-//#elif WATER_LEVEL
+/* Error JSON  messge
+{
+  "status":200,
+  "err_type": 1,
+  "details":"qwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqw"
+}
+*/
 
-//#elif LIGHT_CONTROL
+// const size_t errMsgCapacity = JSON_OBJECT_SIZE(3) + 100;
+// StaticJsonDocument<errMsgCapacity> errJsonMsg;
+typedef struct
+{
+    int status;
+    uint8_t errType;
+    char details[ERR_MSG_BUFFER_SIZE];
+} errMsg_t;
 
-//#elif NUTRITION_CONTROL
+/* data JSON message 
+{
+  "payload":100100123456.23456,
+}
+*/
+// const size_t dataMsgCapacity = JSON_OBJECT_SIZE(1) + 10;
+// StaticJsonDocument<dataMsgCapacity> inJsonMsg;
+// StaticJsonDocument<dataMsgCapacity> outJsonMsg;
+typedef struct
+{
+    unsigned long msgId;
+    char payload[PAYLOAD_BUFFER_SIZE];
+} dataMsg_t;
+/*healthcheck message 
+ {
+    "is_configured": false,
+    "signal_streigth": 1234567890,
+    "battery_level": -1,
+    "self_check":false,
+}
+*/
+// const size_t healthcheckMsgCapacity = JSON_OBJECT_SIZE(4) + 70;
+// StaticJsonDocument<healthcheckMsgCapacity> healtcheckJsonMsg;
+typedef struct
+{
+    bool isConfigured;
+    long signalStreight;
+    int8_t batteryLevel;
+    int selfCheckCode;
+} healtcheck_t;
+/*whoami JSON message 
+{
+    "mcu_type": 100,
+    "title": "qwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqwqw",
+    "macAddr": "10:02:b5:a7:c1:e1",
+}
+*/
+// const size_t whoamiMsgCapacity = JSON_OBJECT_SIZE(3) + 120;
+// StaticJsonDocument<whoamiMsgCapacity> whoamiJsonMsg;
 
-//#endif
+typedef struct
+{
+    char macAddr[12];
+    uint8_t mcuType;
+    char title[TITLE_BUFFER_SIZE];
+} whoami_t;
+
+extern errMsg_t errMsg;
+extern dataMsg_t dataMsgIn;
+extern dataMsg_t dataMsgOut;
+extern healtcheck_t healtcheck;
+extern whoami_t whoami;
 
 //MCU type related vars
-extern uint8_t mcuType; //=0
-
-//wifi shared vars
-extern bool reseteWifiSettings; //=0
-
 //file system vars
 extern bool shouldSaveSrvCfg;
+extern bool isSrvConfigured; // = false;
 
-//functionaly specific vars
-#if UNIFIED_CONTROLLER
-
-#endif
-
-#if WATER_LEVEL
-
-
-
-#endif
-
-#if LIGHT_CONTROL
-//split the day to 10 mins intervals and parse the light intensity map
-//uint8_t lightIntensityMap[96] = {
-//  0, 0, 0, 0,
-//  0, 0, 0, 0,
-//  0, 0, 0, 0,
-//  0, 0, 0, 0,
-//  0, 1, 2, 3,
-//  4, 5, 9, 13,
-//  14, 15, 15, 16,
-//  18, 20, 22, 24,
-//  28, 32, 36, 40,
-//  44, 46, 50, 56,
-//  62, 68, 74, 80,
-//  86, 92, 98, 100,
-//  100, 100, 100, 100,
-//  100, 100, 100, 100,
-//  100, 94, 88, 82,
-//  76, 70, 64, 58,
-//  52, 46, 40, 36,
-//  32, 28, 24, 20,
-//  18, 17, 16, 15,
-//  14, 13, 12, 11,
-//  10, 10, 5, 5,
-//  5, 4, 3, 2,
-//  1, 0, 0, 0,
-//  0, 0, 0, 0
-//};
-//Nutrition controll module config
-#endif
-
-#if NUTRITION_CONTROL
-
-
-#endif
-
-//conn type
-extern bool mqttClientFlag;// = false;
-extern bool httpClientFlag;// = false;
-
-//Mqtt conf
-
-//mqtt topics
-extern char cnfTopic[64];// = "asd";
-extern char dataTopic[64];// = "asd";
-
-//net structs
-
-extern bool isSrvConfigured;// = false;
-typedef struct
-{
-    char mqttUser[32];
-    char mqttPass[32];
-    char mqttSrv[64];
-    char mqttPort[6];
-} mqtt_params_t;
-
-//Http conf
-typedef struct
-{
-    char httpSrv[64];
-    char httpPort[6];
-    char httpToken[128];
-} http_params_t;
-
-extern mqtt_params_t mqttParams;// = {"", "", "", "1883"};
-extern http_params_t httpParams;// = {"", "80", ""};
-
-
-extern  char macId[12];
-
-extern char cfgTopicOut[12];
-extern char cfgTopicIn[12];
+//MQTT topics
+extern char configTopic[38];      // /controller/10:02:b5:a7:c1:e1/config/
+extern char authTopic[18];        // /controller/auth/
+extern char errTopic[36];         ///controller/10:02:b5:a7:c1:e1/config/
+extern char healthCheckTopic[43]; ///controller/10:02:b5:a7:c1:e1/healthcheck/
+extern char rootDataTopic[36];    // /controller/10:02:b5:a7:c1:e1/data/
 
 #endif

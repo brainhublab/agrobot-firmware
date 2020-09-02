@@ -324,3 +324,125 @@ bool UnifiedController::pinsCfgFileExists()
   }
   return false;
 }
+
+
+ void UnifiedController::readDigitalPin(int argCount, ...) //TODO
+{
+    va_list argList;
+    va_start(argList, argCount);
+    byte *pinId = va_arg(argList, byte *);
+    char *inData = va_arg(argList, char *);
+    if (digitalRead(*pinId) == HIGH)
+    {
+        inData[0] = (char)1;
+        Serial.print("------------------------------------------>HIGH");
+    }
+    else
+    {
+        Serial.print("------------------------------------------>LOW");
+        inData[0] = (char)0;
+    }
+    Serial.print("------------------------------------------>");
+    Serial.println(inData[0]);
+
+    va_end(argList);
+}
+
+ void UnifiedController::writeDigitalPin(int argCount, ...)
+{
+    va_list argList;
+    va_start(argList, argCount);
+    byte *pinId = va_arg(argList, byte *);
+    char *data = va_arg(argList, char *);
+    Serial.print("DIGITAL WRITE CALLED    ");
+    Serial.print(*pinId);
+    Serial.print("         ");
+    Serial.print((int)data[0]);
+    if ((int)data[0] == 1)
+    {
+        data[0] = (char)0;
+    }
+    else
+    {
+        data[0] = (char)1;
+    }
+    digitalWrite(*pinId, (int)data[0]);
+    va_end(argList);
+}
+
+ void UnifiedController::timeSeriesCaller(int argCount, ...) //callback is digital write or red (param caount, paramsarr, cb, cb params
+{
+    Serial.println("----------------ENTERING IN TIME SERIES CALLER");
+    //  if ( == NULL)
+    //  {
+    //    Serial.println("ERROR: Cannot call timeseriesCaller with empty params");
+    //    return;
+    //  }
+    va_list argList;
+    va_start(argList, argCount);
+    long *params = va_arg(argList, long *);
+    void (*callback)(int, ...) = va_arg(argList, void (*)(int, ...));
+
+    if (millis() - (params[1]) >= (params[0] * 1000)) //TODO convert it in setup to milliseconds
+    {
+        params[1] = millis();
+        //callback(2, va_arg(argList, byte*), va_arg(argList, char*));
+        //    if (type == DIGITAL_PIN || type == ANALOG_PIN) //TODO only IO pins
+        //    {
+        callback(2, va_arg(argList, byte *), va_arg(argList, char *)); // callback(2, pinID, ioBuff)
+                                                                       //    }
+    }
+    va_end(argList);
+    Serial.println("----------------EXITING IN TIME SERIES CALLER");
+}
+
+ void UnifiedController::trigerCaller(int argCount, ...) //callback is digital write or red
+{
+    va_list argList;
+    va_start(argList, argCount);
+
+    //  long* val = va_arg(argList, long*);
+    //  long* triger = va_arg(argList, long*);
+    long *params = va_arg(argList, long *);
+    void (*callback)(int, ...) = va_arg(argList, void (*)(int, ...));
+
+    if (params[1] == params[0])
+    {
+        Serial.println("TRIGERED");
+        callback(2, va_arg(argList, byte *), va_arg(argList, char *)); // callback(2, pinID, ioBuff)
+    }
+    else
+    {
+        Serial.println("NOT TRIGERED");
+    }
+    va_end(argList);
+}
+
+void UnifiedController::pwmCaller(int argCount, ...) //callback is digital write or red
+{
+    va_list argList;
+    va_start(argList, argCount);
+    long *params = va_arg(argList, long *);
+    byte *pinId = va_arg(argList, byte *);
+
+    if (*pinId == 16 || *pinId == 3 || *pinId == 1)
+    {
+        Serial.println("ERROR: selected pin not support PWM ");
+    }
+    else
+    {
+        if (params[0] > 1023)
+        {
+            params[0] = 1023;
+        }
+        analogWrite(*pinId, params[0]);
+    }
+    //void (*callback)(int, ...) = va_arg(argList, void (*)(int, ...);
+    //long* params, void (*callback)(void*, void*), void* dtParams, void* data
+
+    //  if (pParams == NULL)
+    //  {
+    //    Serial.println("ERROR: pwm params are NULL");
+    //    return;
+    //  }
+}

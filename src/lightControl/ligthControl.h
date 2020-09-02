@@ -7,6 +7,7 @@
 
 #include <ArduinoJson.h>
 #include "agrobotShared.h"
+#include "agrobotHelpers.h"
 
 #include <stdint.h>
 #include "config.h"
@@ -31,14 +32,20 @@ class LightControl
 {
 public:
     LightControl();
+    void begin(); //TODO make configurable with multiple drivers
     void proecessLightControl();
     void correctLightLevel();
 
     void saveLightControlCfgFile();
     void readLightControlCfgFile();
 
+    void setBrightnessLevel(uint8_t , uint8_t);
+    
+
     bool lightControlConfigured; // = false;
     lightControlCfg _lightControlCfg;
+    uint8_t ligtControlPins[LIGHT_CONTROL_N_PINS];
+
 };
 
 #endif

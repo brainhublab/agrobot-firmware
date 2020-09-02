@@ -19,6 +19,9 @@
 
 #include <Wire.h>
 
+
+#include "agrobotConnection.h"
+
 #if UNIFIED_CONTROLLER
 
 #elif WATER_LEVEL
@@ -29,8 +32,9 @@
 
 WaterLevel waterLevel;
 
-#elif LIGHT_CONTROL
-
+#elif LIGHT_CONTROL //TODO add RGB support
+#include "lightControl/ligthControl.h"
+LightControl LightControl;
 #elif NUTRITION_CONTROL
 
 #endif
@@ -62,81 +66,85 @@ bool loopSetup = true;
 void setup(void)
 {
 
-  /* while (WiFi.status() != WL_CONNECTED)
-     {
-     delay(500);
-    // Serial.print(".");
-    }*/
-
   Serial.begin(115200);
 
-  //  if (!SPIFFS.begin())
-  //  {
-  //    Serial.println("ERRPR: Failed to mount FS");
-  //  }
-  //
-  //  if (RESET_CONFIG)
-  //  {
-  //    resetConfig();
-  //    if (FORMAT_FLASH)
-  //    {
-  //      if (SPIFFS.format())
-  //      {
-  //        Serial.println("formated file system");
-  //      }
-  //    }
-  //
-  //  }
-  //
-  //  if (!srvCfgFileExists())
-  //  {
-  //    initSrvCfgFile();
-  //  }
-  //  else
-  //  {
-  //    readSrvCfgFile();
-  //  }
-  //  if (!isSrvConfigured)
-  //  {
-  //    setupWifiManager();
-  //  }
-  //  else
-  //  {
-  //    // setupAutoConnection();
-  //    readSrvCfgFile();
-  //  }
-  //  if (shouldSaveSrvCfg)
-  //  {
-  //    saveSrvParams(&mqttParams, &httpParams, true);
-  //
-  //  }
+   if (!SPIFFS.begin())
+   {
+     Serial.println("ERRPR: Failed to mount FS");
+   }
+  
+   if (RESET_CONFIG)
+   {
+     resetConfig();
+     if (FORMAT_FLASH)
+     {
+       if (SPIFFS.format())
+       {
+         Serial.println("formated file system");
+       }
+     }
+  
+   }
+  
+   if (!srvCfgFileExists())
+   {
+     initSrvCfgFile();
+   }
+   else
+   {
+     readSrvCfgFile();
+   }
+   if (!isSrvConfigured)
+   {
+     setupWifiManager();
+   }
+   else
+   {
+     // setupAutoConnection();
+     readSrvCfgFile();
+   }
+   if (shouldSaveSrvCfg)
+   {
+     saveSrvParams(&mqttParams, &httpParams, true);
+  
+   }
+  setupWhoami();
+    while (WiFi.status() != WL_CONNECTED)
+     {
+     delay(800);
+     Serial.print(".");
+    }
+  setupSrvParams();
 
   //TODO
   #if UNIFIED_CONTROLLER
-  mcuType = 1;
-  if (!pinsCfgFileExists())
-  {
-    initPinsArr();
-    initPinsCfgFile();
-  }
-  else
-  {
-    initPinsArr();
-    //initPinsCfgFile();
-    readPinsConfig();
-    //initPinsArr();
+  //mcuType = 1;
+  // if (!pinsCfgFileExists())
+  // {
+  //   initPinsArr();
+  //   initPinsCfgFile();
+  // }
+  // else
+  // {
+  //   initPinsArr();
+  //   //initPinsCfgFile();
+  //   readPinsConfig();
+  //   //initPinsArr();
 
-  }
-  setupPins();
+  // }
+  // setupPins();
 
   #elif WATER_LEVEL
   mcuType = 2;
   waterLevel.begin();
+  waterLevel.waterLevelRawMax = 170000;
   //setupWaterLevel();
 
 
   #elif LIGHT_CONTROL
   mcuType = 3;
+  LightControl.begin();
+
 
   #elif NUTRITION_CONTROL
   mcuType = 4;
@@ -196,9 +204,18 @@ void loop(void)
 
   // delay(5000);
 
+
+  //Water LEVEL TEST
+  /*
   Serial.print("printed from CODE: ");
   Serial.print(waterLevel.waterFlowOut.flowPulseCount);
   Serial.print("  ----  ");
-    Serial.println(waterLevel.waterFlowIn.flowPulseCount);
-
+  Serial.println(waterLevel.waterFlowIn.flowPulseCount);
+  Serial.print("--------------->");
+  Serial.println(waterLevel.getWaterLevelPercents());
+  Serial.print("--------------->");
+  Serial.println(waterLevel.getWaterLevelPercents());
+  waterLevel.proccesWaterLevel();
+  */
+ //LightControl.setBrightnessLevel(13, 20);
 }

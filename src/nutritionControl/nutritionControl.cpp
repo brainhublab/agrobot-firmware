@@ -14,7 +14,6 @@ NutritionControl::NutritionControl()
         this->_nutritionControlCfg[i] =  {0, 0, 0, 0};
     }
 
- 
 }
 
 void NutritionControl::processNutritionControl()
@@ -40,8 +39,8 @@ void NutritionControl::saveNutritionControlCfgFile()
 
     DynamicJsonDocument nutritionControlJsonCfgOut(nutritionControlCfgCapacity);
 
-    nutritionControlJsonCfgOut["mcuType"] = mcuType; // TODO refactor
-    nutritionControlJsonCfgOut["title"] = "nutrition control ID:" + (String)macId;
+    nutritionControlJsonCfgOut["mcuType"] = whoami.mcuType; // TODO refactor
+    nutritionControlJsonCfgOut["title"] = whoami.title;
     nutritionControlJsonCfgOut["isConfigured"] = this->nutritionControlConfigured;
 
     JsonArray dispensers = nutritionControlJsonCfgOut.createNestedArray("dispensers");
@@ -110,3 +109,5 @@ void NutritionControl::readNutritionControlCfgFile()
     Serial.println("/nutrition_control_cfg.json");
   }
 }
+
+

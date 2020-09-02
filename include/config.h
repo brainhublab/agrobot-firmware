@@ -9,10 +9,10 @@
 //Modules configs
 
 //#define MCU_TYPE 1 //TODO change to shared
-#define UNIFIED_CONTROLLER 0
-#define WATER_LEVEL 1
+#define UNIFIED_CONTROLLER 1
+#define WATER_LEVEL 0
 #define LIGHT_CONTROL 0
-#define NUTRITION_CONTROL 1
+#define NUTRITION_CONTROL 0
 
 //Helping macroses
 //#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
@@ -22,7 +22,7 @@
 
 
 
-#define RESET_CONFIG 0
+#define RESET_CONFIG 1
 #define FORMAT_FLASH 1
 
 //Unified controller params
@@ -69,8 +69,8 @@
 
 //class vars
 #define LOADCELL_DOUT_PIN 16
-#define LOADCELL_SCK_PIN 0
-#define WATER_GATE_SERVO_PIN 15 //ТОДО
+#define LOADCELL_SCK_PIN 5
+#define WATER_GATE_SERVO_PIN 0 //ТОДО
 
 
 #define WATER_TANK_THRESHOLD 5 //TODO make it more cleaner with proper threshold
@@ -81,7 +81,7 @@
 #endif
 
 #if HAS_WATER_FLOW_OUT
-#define WATER_FLOW_OUT_PIN 0 //TODO
+#define WATER_FLOW_OUT_PIN 14 //TODO
 
 #endif
 
@@ -96,6 +96,13 @@
 #define SOLAR_MODE 1
 #define TIMER 2
 #define CONTINUOUS 3
+
+#define LIGHT_CONTROL_N_PINS 2 //TODO change in real tests!!!
+
+#define IN_1_PIN 23
+#define IN_2_PIN 23
+#define IN_3_PIN 2
+#define IN_4_PIN 13
 
 
 //#elif NUTRITION_CONTROL

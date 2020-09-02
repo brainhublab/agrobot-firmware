@@ -9,6 +9,8 @@
 
 #include "config.h"
 #include "agrobotShared.h"
+#include "agrobotConnection.h"
+
 
 #if UNIFIED_CONTROLLER //TODO not good idea
 #include "unifiedController/unifiedController.h"
@@ -22,9 +24,7 @@
 #endif
 #include "nutritionControl/nutritionControl.h"
 
-
-
-char *getPinUID(byte);
+//char *getPinUID(byte);
 void writeParam(byte addr, byte param);
 void resetConfig();
 void loadCfgFiles();
@@ -34,21 +34,7 @@ void saveSrvParams(mqtt_params_t *, http_params_t *, bool);
 void readSrvCfgFile();
 void initCfgFile();
 
-#if UNIFIED_CONTROLLER
 
-#endif
-
-#if WATER_LEVEL
-
-#endif
-
-#if LIGHT_CONTROL
-
-#endif
-
-#if NUTRITION_CONTROL
-
-#endif
 
 void dataCallback(char *, byte *, unsigned int); //TODO check static
 // };

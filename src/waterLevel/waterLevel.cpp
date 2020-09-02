@@ -182,14 +182,14 @@ void WaterLevel::callibrateMinMaxLevel() //TODO add water flow sensors detection
 
 double WaterLevel::getWaterLevelPercents()
 {
-  return valueToPercentsOf(getWaterLevelRawData(), waterLevelRawMax);
+  return valueToPercentsOf<double>(getWaterLevelRawData(), waterLevelRawMax);
 }
 
 double WaterLevel::getWaterLevelRawData()
 {
   while (!waterLevelSensor.is_ready())
   {
-    delay(5);
+    //delay(5);
   }
   return waterLevelSensor.get_value(3);
 }
@@ -212,8 +212,8 @@ void WaterLevel::saveWaterLevelCfgFile()
     const size_t waterLevelCfgCapacity = JSON_OBJECT_SIZE(3) + JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(6);
     DynamicJsonDocument waterLevelJsonCfgOut(waterLevelCfgCapacity);
 
-    waterLevelJsonCfgOut["mcuType"] = mcuType; // MCU_TYPE; //TODO change to shared
-    waterLevelJsonCfgOut["title"] = "water level ID:" + (String)macId;
+    waterLevelJsonCfgOut["mcuType"] = whoami.mcuType; // MCU_TYPE; //TODO change to shared
+    waterLevelJsonCfgOut["title"] = whoami.title;
     waterLevelJsonCfgOut["isConfigured"] = waterLevelConfigured;
 
     JsonObject in = waterLevelJsonCfgOut.createNestedObject("in");

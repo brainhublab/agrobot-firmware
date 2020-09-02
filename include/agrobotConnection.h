@@ -2,19 +2,33 @@
 #define AGROBOT_CONNECTION_H
 //#pragma once //TODO ??
 
-#include "agrobotShared.h"
-
-
 #include <PubSubClient.h>
 
-class AgrobotConnection
+#include "agrobotShared.h"
+
+typedef struct
 {
-public:
-    void publishErrorMessage();
+    char mqttUser[32];
+    char mqttPass[32];
+    char mqttSrv[64];
+    char mqttPort[6];
+} mqtt_params_t;
 
-    void publishSuccessMessage(char *sucMsg);
+//Http conf
+typedef struct
+{
+    char httpSrv[64];
+    char httpPort[6];
+    char httpToken[128];
+} http_params_t;
 
-    void reconnectMqtt(PubSubClient *);
-};
+//wifi shared vars
+
+extern mqtt_params_t mqttParams;
+extern http_params_t httpParams;
+
+void publishErrorMessage();
+void publishSuccessMessage(char *sucMsg);
+void reconnectMqtt(PubSubClient *);
 
 #endif
