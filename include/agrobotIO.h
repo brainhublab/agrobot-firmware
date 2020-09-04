@@ -36,7 +36,7 @@ void initCfgFile();
 
 
 
-void dataCallback(char *, byte *, unsigned int); //TODO check static
+void mqttDataCallback(char *, byte *, unsigned int); //TODO check static
 // };
 
 #endif

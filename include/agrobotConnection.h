@@ -1,8 +1,9 @@
 #ifndef AGROBOT_CONNECTION_H
 #define AGROBOT_CONNECTION_H
 //#pragma once //TODO ??
-
 #include <PubSubClient.h>
+#include <ArduinoJson.h>
+
 
 #include "agrobotShared.h"
 
@@ -23,6 +24,8 @@ typedef struct
 } http_params_t;
 
 //wifi shared vars
+
+
 
 extern mqtt_params_t mqttParams;
 extern http_params_t httpParams;

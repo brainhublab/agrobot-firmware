@@ -6,21 +6,23 @@
 #include "agrobotShared.h"
 #include "agrobotSetup.h"
 
-#include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h> //MOVED to connection
 #include <WiFiClient.h>
+#include <PubSubClient.h>
 
 //ESP Web Server Library to host a web page
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
-#include <WiFiManager.h> //https://github.com/tzapu/WiFiManager
+//#include <WiFiManager.h> //https://github.com/tzapu/WiFiManager
 
 #include <PubSubClient.h>
-#include <ArduinoJson.h>
+//#include <ArduinoJson.h>
 
 #include <Wire.h>
 
-
 #include "agrobotConnection.h"
+WiFiClient espClient;
+PubSubClient mqttClient(espClient);
 
 #if UNIFIED_CONTROLLER
 
@@ -51,9 +53,6 @@ char _errMsg[60];
 //DynamicJsonDocument pinsJsonCfg(pinsCfgCapacity);
 //StaticJsonDocument<pinsCfgCapacity> pinsJsonCfg;
 
-WiFiClient espClient;
-PubSubClient mqttClient(espClient);
-
 long lastMsg = 0;
 char msg[50];
 int value = 0;
@@ -62,62 +61,64 @@ int value = 0;
 int loopPinId = 0;
 bool loopSetup = true;
 
-
 void setup(void)
 {
 
   Serial.begin(115200);
 
-   if (!SPIFFS.begin())
-   {
-     Serial.println("ERRPR: Failed to mount FS");
-   }
-  
-   if (RESET_CONFIG)
-   {
-     resetConfig();
-     if (FORMAT_FLASH)
-     {
-       if (SPIFFS.format())
-       {
-         Serial.println("formated file system");
-       }
-     }
-  
-   }
-  
-   if (!srvCfgFileExists())
-   {
-     initSrvCfgFile();
-   }
-   else
-   {
-     readSrvCfgFile();
-   }
-   if (!isSrvConfigured)
-   {
-     setupWifiManager();
-   }
-   else
-   {
-     // setupAutoConnection();
-     readSrvCfgFile();
-   }
-   if (shouldSaveSrvCfg)
-   {
-     saveSrvParams(&mqttParams, &httpParams, true);
-  
-   }
-  setupWhoami();
-    while (WiFi.status() != WL_CONNECTED)
-     {
-     delay(800);
-     Serial.print(".");
-    }
-  setupSrvParams();
+  if (!SPIFFS.begin())
+  {
+    Serial.println("ERRPR: Failed to mount FS");
+  }
 
-  //TODO
-  #if UNIFIED_CONTROLLER
+  if (RESET_CONFIG)
+  {
+    resetConfig();
+    if (FORMAT_FLASH)
+    {
+      if (SPIFFS.format())
+      {
+        Serial.println("formated file system");
+      }
+    }
+  }
+
+  if (!srvCfgFileExists())
+  {
+    initSrvCfgFile();
+  }
+  else
+  {
+    readSrvCfgFile();
+  }
+  if (!isSrvConfigured)
+  {
+    setupWifiManager();
+  }
+  else
+  {
+    // setupAutoConnection();
+    readSrvCfgFile();
+  }
+  if (shouldSaveSrvCfg)
+  {
+    saveSrvParams(&mqttParams, &httpParams, true);
+  }
+  setupWhoami();
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(800);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  setupSrvAddr();
+  setupMqttTopics();
+  setupMqtt(&mqttClient);
+
+//TODO
+#if UNIFIED_CONTROLLER
   //mcuType = 1;
   // if (!pinsCfgFileExists())
   // {
@@ -134,24 +135,19 @@ void setup(void)
   // }
   // setupPins();
 
-  #elif WATER_LEVEL
+#elif WATER_LEVEL
   mcuType = 2;
   waterLevel.begin();
   waterLevel.waterLevelRawMax = 170000;
   //setupWaterLevel();
 
-
-  #elif LIGHT_CONTROL
+#elif LIGHT_CONTROL
   mcuType = 3;
   LightControl.begin();
 
-
-  #elif NUTRITION_CONTROL
+#elif NUTRITION_CONTROL
   mcuType = 4;
-  #endif
-
-
-
+#endif
 
   // initCfgFiles();
   //  setupCfgFiles();
@@ -159,12 +155,10 @@ void setup(void)
   // initCfgFiles();
   // initIO();
 
-
   //mqttPass
   //reconnectMqtt();
 
   Serial.println("-------------------END SETUP");
-  
 }
 
 void loop(void)
@@ -204,7 +198,6 @@ void loop(void)
 
   // delay(5000);
 
-
   //Water LEVEL TEST
   /*
   Serial.print("printed from CODE: ");
@@ -217,5 +210,11 @@ void loop(void)
   Serial.println(waterLevel.getWaterLevelPercents());
   waterLevel.proccesWaterLevel();
   */
- //LightControl.setBrightnessLevel(13, 20);
+  //LightControl.setBrightnessLevel(13, 20);
+
+  while(!mqttClient.connected())
+  {
+    reconnectMqtt(&mqttClient);
+  }
+  mqttClient.loop();
 }

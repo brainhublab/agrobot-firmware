@@ -3,6 +3,8 @@
 #define AGROBOT_HELPERS_H
 //#pragma once //TODO ??
 #include <stdint.h>
+#include <sstream>
+
 
 void byteArrToStr(uint8_t *, unsigned int, char *);
 void generateWhoAmi();
@@ -17,6 +19,15 @@ template <typename T>
 T valueToPercentsOf(T inp, T maxVal)
 {
     return 100 / (maxVal / inp);
+}
+
+template <typename T>
+T strToDigit(char* inStr)
+{
+    std::stringstream ss(inStr);
+    T out = 0;
+    ss >> out;
+    return out;
 }
 
 

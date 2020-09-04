@@ -87,7 +87,7 @@ extern bool isSrvConfigured; // = false;
 //MQTT topics
 extern char configTopic[38];      // /controller/10:02:b5:a7:c1:e1/config/
 extern char authTopic[18];        // /controller/auth/
-extern char errTopic[36];         ///controller/10:02:b5:a7:c1:e1/config/
+extern char errTopic[37];         ///controller/10:02:b5:a7:c1:e1/config/
 extern char healthCheckTopic[43]; ///controller/10:02:b5:a7:c1:e1/healthcheck/
 extern char rootDataTopic[36];    // /controller/10:02:b5:a7:c1:e1/data/
 

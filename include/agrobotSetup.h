@@ -4,7 +4,6 @@
 //#pragma once //TODO ??
 
 #include <stdint.h>
-
 #include <WiFiManager.h> //https://github.com/tzapu/WiFiManager
 #include <PubSubClient.h>
 
@@ -28,7 +27,8 @@
 
 #endif
 void setupWhoami();
-void setupSrvParams();
+void setupSrvAddr();
+void setupMqttTopics();
 bool srvCfgFileExists();
 bool cfgFilesExists();
 void configModeCallback(WiFiManager *);

@@ -174,6 +174,6 @@ void initCfgFile()
 
 #endif
 
-void dataCallback(char *topic, byte *payload, unsigned int length)
+void mqttDataCallback(char *topic, byte *payload, unsigned int length)
 {
 }

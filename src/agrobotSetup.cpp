@@ -24,14 +24,47 @@ void setupWhoami()
 #endif
 }
 
-void setupSrvParams()
+void setupSrvAddr()
 {
-  if(mqttParams.mqttSrv[0] == '\0')
+  if (mqttParams.mqttSrv[0] == '\0')
   {
-    snprintf(mqttParams.mqttSrv, sizeof(mqttParams.mqttSrv),"%s", WiFi.gatewayIP().toString().c_str());
+    snprintf(mqttParams.mqttSrv, sizeof(mqttParams.mqttSrv), "%s", WiFi.gatewayIP().toString().c_str());
   }
-  Serial.print("-------------------------------------->MQTT SRV");
-  Serial.println(mqttParams.mqttSrv);
+  if (httpParams.httpSrv[0] == '\0')
+  {
+    snprintf(httpParams.httpSrv, sizeof(httpParams.httpSrv), "%s", WiFi.gatewayIP().toString().c_str());
+  }
+  if (httpParams.httpToken[0] == '\0')
+  {
+    Serial.println("Warning: HTTP tokes is not set");
+  }
+}
+
+void setupMqttTopics()
+{
+  snprintf(configTopic, sizeof(configTopic), "/%s/%s/%s/",
+           "controller",
+           whoami.macAddr,
+           "config");
+
+  snprintf(authTopic, sizeof(authTopic), "/%s/%s/",
+           "controller",
+           "auth");
+
+  snprintf(errTopic, sizeof(errTopic), "/%s/%s/%s/",
+           "controller",
+           whoami.macAddr,
+           "error");
+
+  snprintf(healthCheckTopic, sizeof(healthCheckTopic), "/%s/%s/%s/",
+           "controller",
+           whoami.macAddr,
+           "healthcheck");
+
+  snprintf(rootDataTopic, sizeof(healthCheckTopic), "/%s/%s/%s/",
+           "controller",
+           whoami.macAddr,
+           "data");
 }
 
 bool srvCfgFileExists()
@@ -153,8 +186,6 @@ void setupWifiManager()
   strlcpy(mqttParams.mqttSrv,
           mqttSrvParam.getValue(),
           mqttSrvParam.getValueLength());
-  
-
 
   strlcpy(mqttParams.mqttPort,
           mqttPortParam.getValue(),
@@ -182,8 +213,8 @@ void setupWifiManager()
 void setupMqtt(PubSubClient *mqttClient) //TODO refact
 {
   // mqttClient.set
-  mqttClient->setServer(WiFi.gatewayIP(), 1883); //TODO move to another function
-  mqttClient->setCallback(dataCallback);
+  mqttClient->setServer(mqttParams.mqttSrv, strToDigit<int>(mqttParams.mqttPort));
+  mqttClient->setCallback(mqttDataCallback);
 }
 
 void saveSrvCfgCallback()
