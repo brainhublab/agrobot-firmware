@@ -1,0 +1,224 @@
+//waterLevel
+//MQTT config 
+{
+    "in": {
+        "valve": "/10:02:b5:a7:c1:e1/data/out/variableName",
+        "levelPercents": "/10:02:b5:a7:c1:e1/data/out/variableName",
+        "PID": {
+            "Kp": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            "Ki": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            "Kd": "/10:02:b5:a7:c1:e1/data/out/variableName"
+        }
+    },
+    "out": {
+        "valve": "/10:02:b5:a7:c1:e1/data/out/valve",
+        "waterLevel": "/10:02:b5:a7:c1:e1/data/out/waterLevel",
+        "waterFlowIn": "/10:02:b5:a7:c1:e1/data/out/waterFlowIn",
+        "waterFlowOut": "/10:02:b5:a7:c1:e1/data/out/waterFlowOut",
+        "PID": {
+            "Kp": "/10:02:b5:a7:c1:e1/data/out/pid/kp",
+            "Ki": "/10:02:b5:a7:c1:e1/data/out/pid/ki",
+            "Kd": "/10:02:b5:a7:c1:e1/data/out/pid/kd"
+        }
+    }
+}
+//controller file config
+{
+    "valve": {
+        "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+        "val": 100
+    },
+    "levelPercents": {
+        "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+        "val": 100
+    },
+    "PID": {
+        "Kp": {
+            "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            "val": 100
+        },
+        "Ki": {
+            "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            "val": 100
+        },
+        "Kd": {
+            "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            "val": 100
+        }
+    }
+}
+//Light control
+//MQTT config
+{
+    "in": {
+        "lightMode": "/10:02:b5:a7:c1:e1/data/out/variableName",
+        "targetLigstLevel": "/10:02:b5:a7:c1:e1/data/out/variableName",
+        "currentTime": "/10:02:b5:a7:c1:e1/data/out/variableName",
+        "clock": "/10:02:b5:a7:c1:e1/data/out/variableName",
+        "lightIntensityMap": "/10:02:b5:a7:c1:e1/data/out/variableName"
+    },
+    "out": {
+        "lightMode": "/10:02:b5:a7:c1:e1/data/lightMode",
+        "currentLightLevel": "/10:02:b5:a7:c1:e1/data/currentLightLevel",
+        "targetLightLevel": "/10:02:b5:a7:c1:e1/data/targetLightLevel",
+        "currentTime": "/10:02:b5:a7:c1:e1/data/currentTime"
+    }
+}
+//controller file config
+{
+    "in": {
+        "lightMode": {
+            "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            "val": 100
+        },
+        "targetLigstLevel": {
+            "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            "val": 100
+        },
+        "currentTime": {
+            "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            "val": 100
+        },
+        "clock": {
+            "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            "val": 0
+        },
+        "lightIntensityMap": {
+            "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            "val": [
+                0, 0, 0, 0, 
+                0, 0, 0, 0,
+                0, 0, 0, 0,
+                0, 0, 0, 0,
+                0, 1, 2, 3,
+                4, 5, 9, 13,
+                14, 15, 15, 16,
+                18, 20, 22, 24,
+                28, 32, 36, 40,
+                44, 46, 50, 56,
+                62, 68, 74, 80,
+                86, 92, 98, 100,
+                100, 100, 100, 100,
+                100, 100, 100, 100,
+                100, 94, 88, 82,
+                76, 70, 64, 58,
+                52, 46, 40, 36,
+                32, 28, 24, 20,
+                18, 17, 16, 15,
+                14, 13, 12, 11,
+                10, 10, 5, 5,
+                5, 4, 3, 2,
+                1, 0, 0, 0,
+                0, 0, 0, 0
+            ]
+        }
+    }
+}
+//nutrition control
+//MQTT config 
+{
+    "dispensers": [
+        {
+            "in": {
+                "nutritionMode": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                "targetConcentration": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            },
+            "out": {
+                "nutritionMode": "/10:02:b5:a7:c1:e1/data/out/nutritionMode",
+                "currentConcentration": "/10:02:b5:a7:c1:e1/data/out/currentConcentration",
+                "targetConcentration": "/10:02:b5:a7:c1:e1/data/out/targetConcentration"
+            }
+        },
+        {
+            "in": {
+                "nutritionMode": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                "targetConcentration": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            },
+            "out": {
+                "nutritionMode": "/10:02:b5:a7:c1:e1/data/out/nutritionMode",
+                "currentConcentration": "/10:02:b5:a7:c1:e1/data/out/currentConcentration",
+                "targetConcentration": "/10:02:b5:a7:c1:e1/data/out/targetConcentration"
+            }
+        },
+        {
+            "in": {
+                "nutritionMode": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                "targetConcentration": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            },
+            "out": {
+                "nutritionMode": "/10:02:b5:a7:c1:e1/data/out/nutritionMode",
+                "currentConcentration": "/10:02:b5:a7:c1:e1/data/out/currentConcentration",
+                "targetConcentration": "/10:02:b5:a7:c1:e1/data/out/targetConcentration"
+            }
+        },
+        {
+            "in": {
+                "nutritionMode": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                "targetConcentration": "/10:02:b5:a7:c1:e1/data/out/variableName",
+            },
+            "out": {
+                "nutritionMode": "/10:02:b5:a7:c1:e1/data/out/nutritionMode",
+                "currentConcentration": "/10:02:b5:a7:c1:e1/data/out/currentConcentration",
+                "targetConcentration": "/10:02:b5:a7:c1:e1/data/out/targetConcentration"
+            }
+        },
+       
+
+    ]
+}
+
+//controller file config 
+{
+    "dispensers": [
+        {
+            "pump1": {
+                "nutritionMode": {
+                    "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                    "val":100
+                },
+                "targetConcentration":{
+                    "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                    "val":100
+                }
+            }
+        },
+        {
+            "pump2": {
+                "nutritionMode": {
+                    "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                    "val":100
+                },
+                "targetConcentration":{
+                    "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                    "val":100
+                }
+            }
+        },
+        {
+            "pump3": {
+                "nutritionMode": {
+                    "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                    "val":100
+                },
+                "targetConcentration":{
+                    "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                    "val":100
+                }
+            }
+        },
+        {
+            "pump4": {
+                "nutritionMode": {
+                    "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                    "val":100
+                },
+                "targetConcentration":{
+                    "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
+                    "val":100
+                }
+            }
+        },
+       
+
+    ]
+}
