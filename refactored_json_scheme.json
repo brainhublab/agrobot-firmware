@@ -3,7 +3,7 @@
 {
     "in": {
         "valve": "/10:02:b5:a7:c1:e1/data/out/variableName",
-        "level target": "/10:02:b5:a7:c1:e1/data/out/variableName",
+        "level_target": "/10:02:b5:a7:c1:e1/data/out/variableName",
         "PID": {
             "kp": "/10:02:b5:a7:c1:e1/data/out/variableName",
             "ki": "/10:02:b5:a7:c1:e1/data/out/variableName",
@@ -13,6 +13,7 @@
     "out": {
         "valve": "/10:02:b5:a7:c1:e1/data/out/valve",
         "current_level": "/10:02:b5:a7:c1:e1/data/out/waterLevel",
+        "level_target": "/10:02:b5:a7:c1:e1/data/out/variableName",
         "flow_in": "/10:02:b5:a7:c1:e1/data/out/waterFlowIn",
         "flow_out": "/10:02:b5:a7:c1:e1/data/out/waterFlowOut",
         "PID": {
@@ -28,7 +29,7 @@
         "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
         "val": 100
     },
-    "levelPercents": {
+    "level_target": {
         "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
         "val": 100
     },
@@ -67,15 +68,15 @@
 //controller file config
 {
     "in": {
-        "lightMode": {
+        "light_mode": {
             "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
             "val": 100
         },
-        "targetLigstLevel": {
+        "target_brightness": {
             "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
             "val": 100
         },
-        "currentTime": {
+        "current_time": {
             "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
             "val": 100
         },
@@ -83,7 +84,7 @@
             "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
             "val": 0
         },
-        "lightIntensityMap": {
+        "light_intensity_map": {
             "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
             "val": [
                 0, 0, 0, 0, 
@@ -171,48 +172,48 @@
 {
     "dispensers": [
         {
-            "pump1": {
-                "nutritionMode": {
+            "dispenser_1": {
+                "nutrition_mode": {
                     "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
                     "val":100
                 },
-                "targetConcentration":{
+                "target_concentration":{
                     "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
                     "val":100
                 }
             }
         },
         {
-            "pump2": {
-                "nutritionMode": {
+            "dispenser_2": {
+                "nutrition_mode": {
                     "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
                     "val":100
                 },
-                "targetConcentration":{
+                "target_concentration":{
                     "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
                     "val":100
                 }
             }
         },
         {
-            "pump3": {
-                "nutritionMode": {
+            "dispenser_3": {
+                "nutrition_mode": {
                     "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
                     "val":100
                 },
-                "targetConcentration":{
+                "target_concentration":{
                     "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
                     "val":100
                 }
             }
         },
         {
-            "pump4": {
-                "nutritionMode": {
+            "dispenser_4": {
+                "nutrition_mode": {
                     "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
                     "val":100
                 },
-                "targetConcentration":{
+                "target_concentration":{
                     "url": "/10:02:b5:a7:c1:e1/data/out/variableName",
                     "val":100
                 }
